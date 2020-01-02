@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- do not change this -->
-  <groupId>com.thg.accelerator.connectn.ai</groupId>
+  <groupId>com.thg.accelerator19.connectn.ai</groupId>
   <!-- do not change this -->
   <artifactId>${firstname}${surname}</artifactId>
   <!-- change this to a tag (e.g. 1.1, without the SNAPSHOT) when you decide to deploy an entry to artifactory -->
@@ -18,8 +18,8 @@
     <firstname>jeff</firstname>
     <surname>dean</surname>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>13</maven.compiler.source>
+    <maven.compiler.target>13</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -30,7 +30,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.thehutgroup.accelerator.connectn</groupId>
+      <groupId>com.thehutgroup.accelerator19.connectn</groupId>
       <artifactId>player</artifactId>
       <version>1.0</version>
     </dependency>
