@@ -30,3 +30,6 @@ Once you're ready to submit your entry:
 * Push your code to git to keep a record of the source code for version x
 * In your pom.xml, increment x and add -SNAPSHOT at the end (e.g. go from 1.0 to 1.1-SNAPSHOT) to get ready for the next version
 * Update this [spreadsheet](https://hutgroupnorthwich.sharepoint.com/:x:/s/accelerator20202/EdYIuDN_Il1DvcBXBqZOENsBFGjFeRkonB5YDx-t_sJi7A?e=jtqpOs) with this version
+
+## Timelines
+If your solution is in artifactory and the spreadsheet by **Friday 15th Jan 5pm**, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.
