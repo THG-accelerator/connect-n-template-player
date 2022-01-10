@@ -1,22 +1,20 @@
-//TODO: replace name with firstnamesurname -- the artifactId from your pom.xml
-
-package com.thg.accelerator21.connectn.ai.name;
+package com.thg.accelerator21.connectn.ai.shaunhall;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
-//TODO: Rename this class
-public class NameAI extends Player {
-  public NameAI(Counter counter) {
+
+public class ShaunsDestroyer extends Player {
+  public ShaunsDestroyer(Counter counter) {
     //TODO: fill in your name here
-    super(counter, NameAI.class.getName());
+    super(counter, ShaunsDestroyer.class.getName());
   }
 
   @Override
   public int makeMove(Board board) {
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 0;
+    return 4;
   }
 }
