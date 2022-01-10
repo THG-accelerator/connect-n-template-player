@@ -1,6 +1,6 @@
 //TODO: replace name with firstnamesurname -- the artifactId from your pom.xml
 
-package com.thg.accelerator20.connectn.ai.name;
+package com.thg.accelerator21.connectn.ai.name;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
