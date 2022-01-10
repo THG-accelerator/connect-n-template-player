@@ -11,7 +11,7 @@
     <!-- do not change this -->
     <artifactId>${firstname}${surname}</artifactId>
     <!-- change this to a tag (e.g. 1.1, without the SNAPSHOT) when you decide to deploy an entry to artifactory -->
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <name>${firstname}.${surname}'s Connect N AI</name>
 
