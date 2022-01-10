@@ -3,20 +3,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <scm>
+        <connection>scm:git:git@gitlab.io.thehut.local:halls/connect-n-template-player.git</connection>
+        <developerConnection>scm:git:git@gitlab.io.thehut.local:halls/connect-n-template-player.git</developerConnection>
+    </scm>
     <!-- do not change this -->
     <groupId>com.thg.accelerator21.connectn.ai</groupId>
     <!-- do not change this -->
     <artifactId>${firstname}${surname}</artifactId>
     <!-- change this to a tag (e.g. 1.1, without the SNAPSHOT) when you decide to deploy an entry to artifactory -->
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>${firstname}.${surname}'s Connect N AI</name>
 
     <properties>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
-        <firstname>john</firstname>
-        <surname>smith</surname>
+        <firstname>shaun</firstname>
+        <surname>hall</surname>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -73,6 +76,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M5</version>
+                </plugin>
+                <plugin>
+                    <groupId>external.atlassian.jgitflow</groupId>
+                    <artifactId>jgitflow-maven-plugin</artifactId>
+                    <version>1.0-m5.1</version>
+                    <configuration>
+                        <pushReleases>true</pushReleases>
+                        <pushHotfixes>true</pushHotfixes>
+                        <allowUntracked>true</allowUntracked>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
