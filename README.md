@@ -9,7 +9,7 @@
 ## Steps
 * Fork this repo into a personal group on gitlab.io
 * Change the firstname and surname properties in the pom.xml to your name
-* Move the class NameAI from the com.thg.accelerator21.connectn.ai.name package to the com.thg.accelerator20.connectn.ai.firstnamesurname package 
+* Move the class NameAI from the com.thg.accelerator21.connectn.ai.name package to the com.thg.accelerator21.connectn.ai.firstnamesurname package 
 * Rename the NameAI class to whatever you would like to call your AI. Bonus credit for a funny name.
 * Implement your Connect N AI logic inside makeMove
 
