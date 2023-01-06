@@ -1,8 +1,0 @@
-classification:
-  data: internal
-  env: non-production
-  tags:
-  - metrics
-  type: utility
-ownership:
-  team: Accelerator

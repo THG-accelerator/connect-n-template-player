@@ -32,4 +32,4 @@ Once you're ready to submit your entry:
 * Update this [spreadsheet](https://hutgroupnorthwich-my.sharepoint.com/:x:/g/personal/halls_thehutgroup_com/EZez4aAAQdJEqy9wvPqgcO8BI0o3H_UHHiUjySyEZ9T_qQ?e=4N4ogr) with this version
 
 ## Timelines
-If your solution is in artifactory and the spreadsheet by **Monday 17th Jan 5pm**, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.
+If your solution is in artifactory and the spreadsheet by , your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.

@@ -1,4 +1,4 @@
-package com.thg.accelerator21.connectn.ai.shaunhall;
+package com.thg.accelerator23.connectn.ai.shaun;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
