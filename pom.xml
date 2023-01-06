@@ -45,9 +45,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.thehutgroup.accelerator21.connectn</groupId>
+            <groupId>com.thehutgroup.accelerator.connectn</groupId>
             <artifactId>player</artifactId>
-            <version>1.0</version>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 
