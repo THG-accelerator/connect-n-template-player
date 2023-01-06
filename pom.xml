@@ -20,7 +20,6 @@
     <properties>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
         <yourteam>shaun</yourteam>
-        <!-- FIXME Fill in these properties - they need to be lowercase -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -49,6 +48,11 @@
             <groupId>com.github.THG-accelerator</groupId>
             <artifactId>connectn-player</artifactId>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.foamdino</groupId>
+            <artifactId>connect-n-entry</artifactId>
+            <version>v2</version>
         </dependency>
     </dependencies>
 
