@@ -33,4 +33,4 @@ Once you're ready to submit your entry:
 * Update the version in this file when you are happy with this version
 
 ## Timelines
-If your solution is in artifactory and the spreadsheet by Monday 16th Jan, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.
+If your solution is published in jitpack and in member_info by Monday 16th Jan 12pm GMT, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.
