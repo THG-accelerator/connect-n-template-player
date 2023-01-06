@@ -2,23 +2,24 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <scm>
-        <connection>scm:git:git@gitlab.io.thehut.local:halls/connect-n-template-player.git</connection>
-        <developerConnection>scm:git:git@gitlab.io.thehut.local:halls/connect-n-template-player.git</developerConnection>
-    </scm>
     <!-- do not change this -->
-    <groupId>com.thg.accelerator21.connectn.ai</groupId>
+    <groupId>com.thg.accelerator23.connectn.ai</groupId>
     <!-- do not change this -->
-    <artifactId>${firstname}${surname}</artifactId>
-    <!-- change this to a tag (e.g. 1.1, without the SNAPSHOT) when you decide to deploy an entry to artifactory -->
-    <version>1.4</version>
+    <artifactId>${yourteam}</artifactId>
+    <version>1.0</version>
 
-    <name>${firstname}.${surname}'s Connect N AI</name>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <name>${yourteam}'s Connect N AI</name>
 
     <properties>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
-        <firstname>shaun</firstname>
-        <surname>hall</surname>
+        <yourteam>shaun</yourteam>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
@@ -45,24 +46,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.thehutgroup.accelerator21.connectn</groupId>
-            <artifactId>player</artifactId>
-            <version>1.0</version>
+            <groupId>com.github.THG-accelerator</groupId>
+            <artifactId>connectn-player</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>Releases</name>
-            <url>https://artifactory.io.thehut.local/artifactory/libs-release-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Snapshots</name>
-            <url>https://artifactory.io.thehut.local/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
     <build>
         <pluginManagement>
             <plugins>
