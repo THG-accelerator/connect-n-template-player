@@ -11,12 +11,14 @@ public class Connecty extends Player {
   public Connecty(Counter counter) {
     //TODO: fill in your name here
     super(counter, Connecty.class.getName());
+    System.out.println("Building");
   }
 
   @Override
   public int makeMove(Board board) {
     Random rand = new Random();
-    int randomNumber = rand.nextInt(10);
+    int randomNumber = rand.nextInt(9);
+    System.out.println("Hello");
     return randomNumber;
   }
 }
