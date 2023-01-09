@@ -15,9 +15,9 @@ public class AlanisMorconnect extends Player {
 
   @Override
   public int makeMove(Board board) {
-//    int xMove = ThreadLocalRandom.current().nextInt(0, 9);
+    int xMove = ThreadLocalRandom.current().nextInt(0, 9);
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 1;
+    return xMove;
   }
 }
