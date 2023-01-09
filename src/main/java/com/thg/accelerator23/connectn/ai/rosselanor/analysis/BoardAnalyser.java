@@ -121,6 +121,10 @@ public class BoardAnalyser {
             );
   }
 
+  public int analyse(Board board){
+    return 1;
+  }
+
 //  public int evaluate() {
 //    int player1Score = 0;
 //    int player2Score = 0;

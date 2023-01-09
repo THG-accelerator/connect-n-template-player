@@ -6,22 +6,14 @@ public class Move {
 	private int value;
 
 	public Move() {
-
 	}
 
-	public Move(int col) {
-		this.column = col;
-	}
-
-	public Move(int value) {
+	public Move(Integer col, int value) {
+		if (col != null) {
+			this.column = col;
+		}
 		this.value = value;
 	}
-
-	public Move(int col, int value) {
-		this.column = col;
-		this.value = value;
-	}
-
 
 	public int getColumn() {
 		return column;
