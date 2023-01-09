@@ -7,10 +7,9 @@ import com.thehutgroup.accelerator.connectn.player.Position;
 
 import java.util.Random;
 
-public class NameAi extends Player {
-  public NameAi(Counter counter) {
-    //TODO: fill in your name here
-    super(counter, NameAi.class.getName());
+public class FunConcertoAi extends Player {
+  public FunConcertoAi(Counter counter) {
+    super(counter, FunConcertoAi.class.getName());
   }
 
   @Override
