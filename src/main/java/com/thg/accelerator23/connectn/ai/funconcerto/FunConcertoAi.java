@@ -21,11 +21,12 @@ public class FunConcertoAi extends Player {
         moveScores[i] = scoreBoard(copyBoard, analyzer);
       } catch (InvalidMoveException e) {
         System.out.println("Invalid move");
+        moveScores[i] = -999999999;
       }
     }
 
     for (int moveScore : moveScores) {
-      bestScore = Math.max(bestScore, moveScore);
+        bestScore = Math.max(bestScore, moveScore);
     }
 
     for(int i = 0; i < moveScores.length; i++) {
