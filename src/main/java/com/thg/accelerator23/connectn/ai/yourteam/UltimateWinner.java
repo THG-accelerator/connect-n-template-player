@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.ultimatewinner;
+package com.thg.accelerator23.connectn.ai.yourteam;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
