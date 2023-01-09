@@ -8,8 +8,6 @@ public class BoardAnalyser {
 //     public BoardAnalyser(Board board){
 //          this.board = board;
 //     }
-
-
      public boolean checkForFullColumn(int column,Board board){
           if(board.getCounterAtPosition(new Position(column,board.getConfig().getHeight()-1))==null){
                return true;
@@ -18,6 +16,22 @@ public class BoardAnalyser {
           }
      }
 
+     public int minMaxTreeSeach(int node, int depth, boolean isMaxPlayer, int alpha,int beta){
+          if (depth == 0){
+               return alpha;
+          }
+          if (isMaxPlayer){
+
+          } else {
+
+
+          }
+
+
+          return 1;
+     }
+
+//     public int MTTS(int node,)
 
 }
 
