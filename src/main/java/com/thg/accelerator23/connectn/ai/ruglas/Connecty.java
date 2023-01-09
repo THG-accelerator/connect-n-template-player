@@ -31,6 +31,22 @@ public class Connecty extends Player {
 
     return (maxInARow == 3);
   }
+//TODO: RusFunction takes in the board as an argument and returns the locations of all 3 in a rows for this.Counter.
+
+
+  private ArrayList<Position> getAllPositions(Board board) {
+
+    ArrayList<Position> positions = new ArrayList<>();
+
+    for (int x=0; x < board.getConfig().getWidth(); x++) {
+      for ( int y=0 ; y< board.getConfig().getHeight(); y++) {
+        Position position = new Position(x,y);
+        positions.add(position);
+      }
+    }
+    return positions;
+  }
+
 
   private boolean canWin(Board board) {
     return checkThreeInARow(board, this.getCounter()) && isMoveValid( RusFunction(board, this.getCounter()) );
@@ -45,8 +61,6 @@ public class Connecty extends Player {
     System.out.println("No 3 in a row with an empty space afterwards.");
     return null;
   }
-
-
 
   @Override
   public int makeMove(Board board) {
