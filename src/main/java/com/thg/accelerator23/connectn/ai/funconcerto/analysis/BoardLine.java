@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.funconcerto;
+package com.thg.accelerator23.connectn.ai.funconcerto.analysis;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
