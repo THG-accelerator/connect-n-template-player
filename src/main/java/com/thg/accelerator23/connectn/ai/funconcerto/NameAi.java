@@ -3,7 +3,9 @@ package com.thg.accelerator23.connectn.ai.funconcerto;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thehutgroup.accelerator.connectn.player.Position;
 
+import java.util.Random;
 
 public class NameAi extends Player {
   public NameAi(Counter counter) {
@@ -13,8 +15,11 @@ public class NameAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 4;
+    Random r = new Random();
+    int randomColumn;
+    do {
+      randomColumn = r.nextInt(10);
+    }while(board.getCounterAtPosition(new Position(randomColumn, 0)) != null);
+    return randomColumn;
   }
 }
