@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ConnectBot extends Player {
   public ConnectBot(Counter counter) {
-    //TODO: fill in your name here
     super(counter, ConnectBot.class.getName());
   }
 
