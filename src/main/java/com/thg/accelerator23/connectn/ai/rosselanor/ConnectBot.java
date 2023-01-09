@@ -7,18 +7,18 @@ import com.thehutgroup.accelerator.connectn.player.Position;
 
 import java.util.stream.IntStream;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class ConnectBot extends Player {
   public ConnectBot(Counter counter) {
-    //TODO: fill in your name here
     super(counter, ConnectBot.class.getName());
   }
 
   @Override
   public int makeMove(Board board) {
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    int position = 4;
+  
+    int position = ThreadLocalRandom.current().nextInt(0, 10);
     
     if (isColumnFull(board, position)){
       return position + 1;
