@@ -18,7 +18,7 @@ public class FunConcertoAi extends Player {
     int randomColumn;
     do {
       randomColumn = r.nextInt(10);
-    }while(board.getCounterAtPosition(new Position(randomColumn, 0)) != null);
+    }while(board.getCounterAtPosition(new Position(randomColumn, 7)) != null);
     return randomColumn;
   }
 }
