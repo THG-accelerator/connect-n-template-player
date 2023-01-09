@@ -1,13 +1,10 @@
 # Connect N Player Template
 
 ## Primary Goal
-* Publish an implementation of Player to artifactory. Become familiar with software workflows and artifact deployment.
+* Publish an implementation of Player to a maven repository. Become familiar with software workflows and artifact deployment.
 
 ## Secondary Goal
 * Produce a champion connect N AI.
-
-## Prerequisites
-Install maven from [here](https://maven.apache.org/download.cgi). Do not use Homebrew to install it.
 
 ## Steps
 * Decide if you're working on your own or in a group of up to three.
@@ -26,7 +23,7 @@ Install maven from [here](https://maven.apache.org/download.cgi). Do not use Hom
 
 ## Making your submission
 Once you're ready to submit your entry:
-* Perform a release in github
+* Perform a release in github (we will go through how to do this)
 * Enter your repo url into https://jitpack.io/, click "get it", then check the status of the job
 * Make a note of the groupId and artifactId -- you will need to specify these in the next step
 * Add a json file representing your team into this [repo](https://github.com/THG-accelerator/member_info/tree/main/connect-n)
