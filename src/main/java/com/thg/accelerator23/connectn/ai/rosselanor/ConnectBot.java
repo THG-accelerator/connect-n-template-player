@@ -1,14 +1,14 @@
-package com.thg.accelerator23.connectn.ai.yourteam;
+package com.thg.accelerator23.connectn.ai.rosselanor;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 
-public class NameAi extends Player {
-  public NameAi(Counter counter) {
+public class ConnectBot extends Player {
+  public ConnectBot(Counter counter) {
     //TODO: fill in your name here
-    super(counter, NameAi.class.getName());
+    super(counter, ConnectBot.class.getName());
   }
 
   @Override
