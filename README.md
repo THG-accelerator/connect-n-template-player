@@ -10,7 +10,7 @@
 * Decide if you're working on your own or in a group of up to three.
 * Fork this repo into your personal space in github (ensure that it is publicly available)
 * Change the name on line 22 of pom.xml (this will set your artifact id)
-* Move the class NameAI from the com.thg.accelerator23.connectn.ai.yourteam package to replace yourteam with the name of your team (lowercase). 
+* Move the class NameAI from the com.thg.accelerator23.connectn.ai.lucky_randomizer package to replace yourteam with the name of your team (lowercase). 
 * Rename the NameAI class to whatever you would like to call your AI. Bonus credit for a funny name.
 * Implement your Connect N AI logic inside makeMove
 
