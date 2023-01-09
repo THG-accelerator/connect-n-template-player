@@ -4,8 +4,6 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
-import java.util.Random;
-
 
 public class NameAi extends Player {
   public NameAi(Counter counter) {
@@ -37,9 +35,13 @@ public class NameAi extends Player {
      *
      *
      * */
+    BoardAnalyser moveChecker = new BoardAnalyser();
+    int randomColumn = 4;
 
-    int randomColumn = (int) (Math.random() * (10));
 
+    while(!moveChecker.checkForFullColumn(randomColumn,board)){
+      randomColumn = (int) (Math.random() * (10));
+    }
 
 
 
