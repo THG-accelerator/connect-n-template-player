@@ -8,17 +8,14 @@ import com.thg.accelerator23.connectn.ai.fermion.board.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.fermion.board.GameState;
 import com.thg.accelerator23.connectn.ai.fermion.board.localBoardAnalyser;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Node {
 
     private State state;
     Node parent;
     private int move;
-    private List<Node> children;
+    private List<Node> children = new ArrayList<>();
 
     public Node(Counter counter){
         this.state = new State(counter);
@@ -32,6 +29,7 @@ public class Node {
 
     public Node(Node parent, int move,Counter counter){
         this.state = new State(counter);
+        this.state.setBoard(parent.state.getBoard());
         this.parent = parent;
         this.move = move;
     }
@@ -64,7 +62,8 @@ public class Node {
 //    }
 
     public void addChild(){
-        children.add(new Node(this,playRandomMove(),this.getState().getCounterOpposite()));
+        Node interNode =new Node(this,playRandomMove(this.getState().getBoard()),this.getState().getCounterOpposite());
+        children.add(interNode);
     }
 
 
@@ -84,8 +83,9 @@ public class Node {
         }
     }
 
-    public int playRandomMove() {
-        localBoardAnalyser lba = new localBoardAnalyser();
+    public int playRandomMove(Board board) {
+
+        localBoardAnalyser lba = new localBoardAnalyser(board);
         boolean freeColumns[] = lba.freeColumns();
         Random r = new Random();
         // infinite loop if no available moves

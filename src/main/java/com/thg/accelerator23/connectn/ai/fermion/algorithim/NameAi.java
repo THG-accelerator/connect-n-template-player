@@ -8,12 +8,10 @@ import com.thg.accelerator23.connectn.ai.fermion.board.localBoardAnalyser;
 
 public class NameAi extends Player {
 
-  private final MCTS mcts;
 
   public NameAi(Counter counter) {
     //TODO: fill in your name here
     super(counter, NameAi.class.getName());
-    this.mcts = new MCTS();
   }
 
   @Override
@@ -52,11 +50,11 @@ public class NameAi extends Player {
 //
 //
 ////    return validMove.get(new Random().nextInt(validMove.size())
-//
-//
 
-
-      return mcts.actualPlay(getCounter());
+//
+      MCTS algo = new MCTS(board);
+      return algo.actualPlay(getCounter());
+//      return mcts.actualPlay(getCounter(),board);
 
   }
 }

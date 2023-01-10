@@ -5,22 +5,22 @@ import com.thehutgroup.accelerator.connectn.player.Position;
 
 public class localBoardAnalyser {
      private Board board;
-//     public BoardAnalyser(Board board){
-//          this.board = board;
-//     }
-     public boolean checkForFullColumn(int column,Board board){
+     public localBoardAnalyser(Board board){
+          this.board = board;
+     }
+     public boolean checkForFullColumn(int column){
           if(board.getCounterAtPosition(new Position(column,board.getConfig().getHeight()-1))==null){
-               return true;
-          }else {
                return false;
+          }else {
+               return true;
           }
      }
 
      public boolean[] freeColumns() {
           boolean emptyColumns[] = new boolean[11];
-          for(int i=1; i<10; i++) {
+          for(int i=0; i<10; i++) {
                emptyColumns[i] = true;
-               if(checkForFullColumn(i, board)) {
+               if(checkForFullColumn(i)) {
                     emptyColumns[i] = false;
                }
           }

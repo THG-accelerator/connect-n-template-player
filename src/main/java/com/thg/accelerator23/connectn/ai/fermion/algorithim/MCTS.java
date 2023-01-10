@@ -16,7 +16,11 @@ public class MCTS {
     Board board;
     Counter rootCounter;
 
+    public MCTS(Board board) {
+        this.board = board;
+    }
     public Node selectHighestUTCNode(Node parentNode) {
+
         Node node = parentNode;
         while (node.getChildren().size() != 0) {
             node = Collections.max(parentNode.getChildren(), Comparator.comparing(Node::getUTCValue));
@@ -29,26 +33,30 @@ public class MCTS {
     }
 
     public int actualPlay(Counter counter) {
+//        this.board = board;
         Node rootNode = new Node(counter);
         Tree tree = new Tree(rootNode);
 
         rootNode.getState().setBoard(this.board);
         rootNode.getState().setRootCounter(counter);
-        System.out.println("Before while loop");
+        System.out.println(rootNode.getState().getBoard()+"Roort");
         System.out.println(System.currentTimeMillis());
         long currentTime = System.currentTimeMillis();
 
 
 
         while (System.currentTimeMillis()-currentTime < 8500) {
-            System.out.println("In while loop");
             Node promisingNode = selectHighestUTCNode(rootNode);
+            System.out.println(promisingNode.getState().getBoard()+"proom]");
+
             promisingNode.addChild();
+
             Node nodeToExplore = randomChildNode(promisingNode);
 
             int results = simulateMoves(nodeToExplore);
             System.out.println("Results"+results);
             backpropagation(nodeToExplore,results);
+
         }
         System.out.println("After the while loop");
         Node winnerNode = rootNode.childMostVisits();
@@ -58,22 +66,22 @@ public class MCTS {
 
     private int simulateMoves(Node nodeToExplore) {
         BoardAnalyser boardChecker =  new BoardAnalyser(new GameConfig(10,8,4));
-        GameState gameState = boardChecker.calculateGameState(board);
+        GameState gameState = boardChecker.calculateGameState(this.board);
         Node interNode = new Node(nodeToExplore);
         State interState = interNode.getState();
         System.out.println("Simulating games");
         while(!gameState.isEnd()){
+            System.out.println("Has the game ended:"+gameState.isEnd());
             try {
-                board = new Board(board, interNode.playRandomMove(), interState.getCounter());
-                boardChecker.calculateGameState(board);
-
+                interState.setBoard(new Board(new Board(new GameConfig(10,8,4)), interNode.playRandomMove(interState.getBoard()), interState.getCounter()));
+                boardChecker.calculateGameState(interState.getBoard());
                 interState.invertCounter();
 
             }catch(InvalidMoveException e){
                 throw new RuntimeException(e);
             }
         }
-
+        System.out.println("Out of the while loop");
         if(gameState.getWinner() == nodeToExplore.getState().getCounter()){
             return 1;
         } else if (gameState.getWinner() == nodeToExplore.getState().getCounterOpposite()) {

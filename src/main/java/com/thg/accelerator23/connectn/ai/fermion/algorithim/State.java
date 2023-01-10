@@ -47,4 +47,10 @@ public class State {
     public void invertCounter(){
         rootCounter = getCounterOpposite();
     }
+
+
+
+    public Board getBoard() {
+        return board;
+    }
 }
