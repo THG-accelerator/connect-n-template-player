@@ -139,6 +139,7 @@ public class BoardAnalyser {
     public int analyse(Board board, Counter myCounter) {
         BoardAnalyser analysis = new BoardAnalyser(board.getConfig());
         List<Line> lines = analysis.getLines(board);
+
         Counter otherCounter = otherPlayer(myCounter);
         int playerOneScore = 0;
         int playerTwoScore = 0;
