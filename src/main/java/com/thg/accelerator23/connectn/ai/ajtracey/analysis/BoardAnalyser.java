@@ -132,38 +132,6 @@ public class BoardAnalyser {
     }
 
 
-//
-//    public List<Position> checkWithinColumns(Board board, Counter counter, int numberInARowToAddPositionsOf){
-//        ArrayList<> verticalLines = new ArrayList<>();
-//
-//        Function<Position, Position> functionToMoveHorizontally = hMover;
-//        List<Position> startPosition = positionsByFunction.get(hMover);
-//
-//        verticalLines.addAll(startPosition.stream()
-//                                          .map(p -> new BoardLine(board, p, functionToMoveHorizontally))
-//                                          .map(boardLine -> {
-//
-//                                              Map<Counter, List<Position>> listOfCounterPositionMap = new HashMap<>();
-//                                              Map<Counter, Integer> counterOccuranceMap = new HashMap<>();
-//                                              while (boardLine.hasNext()){
-//                                                  Position currentPosition = boardLine.getCurrentPosition();
-//                                                  Counter currentCounter = boardLine.next();
-//                                                  if(!listOfCounterPositionMap.containsKey(currentCounter)){
-//                                                      listOfCounterPositionMap.put(currentCounter, new ArrayList<>()).add(currentPosition);
-//                                                      counterOccuranceMap.put(currentCounter, 1);
-//                                                  }
-//                                                  else{
-//                                                      listOfCounterPositionMap.get(currentCounter).add(currentPosition);
-//                                                      counterOccuranceMap.replace(currentCounter, counterOccuranceMap.get(counter) + 1);
-//                                                  }
-//                                              }
-//
-//                                              return //;
-//                                          })
-//                                          .collect(Collectors.toList()));
-//
-//    }
-
     public GameState calculateGameState(Board board) {
         List<Line> lines = getLines(board);
         Map<Counter, Integer> bestRunByColour = new HashMap<>();
