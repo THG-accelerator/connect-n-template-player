@@ -29,8 +29,6 @@ public class Connecty extends Player {
 
   @Override
   public int makeMove(Board board) {
-    Random rand = new Random();
-    int randomNumber = rand.nextInt(board.getConfig().getWidth());
 
     ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
 
@@ -49,10 +47,14 @@ public class Connecty extends Player {
       }
       if (moveChooser.getPlayLocation() != null) {
         return moveChooser.getPlayLocation();
+      } else {
+        int randomNumber;
+        do {
+          Random rand = new Random();
+          randomNumber = rand.nextInt(board.getConfig().getWidth());
+        } while (TestMove.doesMoveGiveOpponentWin(board, randomNumber, this.getCounter()));
+        return randomNumber;
       }
-
-//      neaten the code above maybe into a while loop
-      return randomNumber;
     }
   }
 }

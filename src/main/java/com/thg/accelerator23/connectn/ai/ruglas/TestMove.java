@@ -6,7 +6,7 @@ import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
 public class TestMove {
 
-    private static Board tryMove(Board board, int column, Counter counter) throws InvalidMoveException {
+    private static Board tryMove(Board board, int column, Counter counter) {
         try {
             return new Board(board, column, counter);
         } catch (InvalidMoveException e) {
@@ -16,7 +16,7 @@ public class TestMove {
     }
     // (The Board constructor automatically finds valid move within a column if there is one)
 
-    public static boolean isGameOverAfterMove(Board board, int column, Counter counter) throws InvalidMoveException {
+    public static boolean isGameOverAfterMove(Board board, int column, Counter counter){
         Board tryBoard = tryMove(board, column, counter);
         BoardAnalyser boardAnalyser = new BoardAnalyser(tryBoard.getConfig());
         GameState gameState = boardAnalyser.calculateGameState(tryBoard);
@@ -28,9 +28,11 @@ public class TestMove {
         return false;
     }
 
-    public static boolean doesMoveGiveOpponentWin(Board board, int column, Counter counter) throws InvalidMoveException {
+    public static boolean doesMoveGiveOpponentWin(Board board, int column, Counter counter) {
         Counter opponentCounter = counter.getOther();
-        Board tryBoard = tryMove(board,column, counter);
+        Board tryBoard = null;
+            tryBoard = tryMove(board, column, counter);
+
         if (isGameOverAfterMove(tryBoard, column, opponentCounter)) {
             return true;
         }

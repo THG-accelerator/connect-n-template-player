@@ -38,8 +38,7 @@ public class ChooseMove {
             }
         }
     }
-
-    public void selectBestMove() throws InvalidMoveException {
+    public Integer selectBestMove() throws InvalidMoveException {
         findWinPosition();
         if (this.playLocation == null ) {
             findBlockPosition();
@@ -47,6 +46,7 @@ public class ChooseMove {
 //        if (this.playLocation == null){
 ////            other stuff so that this.playLocation isn't null.
 //        }
+        return this.playLocation;
     }
 
     public Integer getPlayLocation() {
