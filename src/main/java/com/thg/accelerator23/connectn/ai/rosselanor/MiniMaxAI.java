@@ -66,7 +66,7 @@ public class MiniMaxAI {
          * then a heuristic is calculated on the state and the move returned.
          */
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            return new Move(lastMove, boardAnalyser.analyse(board));
+            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
@@ -94,7 +94,6 @@ public class MiniMaxAI {
             }
             childCol++;
         }
-
         return maxMove;
 
     }
@@ -107,7 +106,7 @@ public class MiniMaxAI {
          * then a heuristic is calculated on the state and the move returned.
          */
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            return new Move(lastMove, boardAnalyser.analyse(board));
+            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
