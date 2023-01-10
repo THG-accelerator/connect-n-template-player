@@ -1,9 +1,6 @@
 package com.thg.accelerator23.connectn.ai.lucychloeanca;
 
-import com.thehutgroup.accelerator.connectn.player.Board;
-import com.thehutgroup.accelerator.connectn.player.Counter;
-import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thehutgroup.accelerator.connectn.player.Position;
+import com.thehutgroup.accelerator.connectn.player.*;
 
 import java.util.Random;
 
@@ -40,4 +37,16 @@ public class ConnectyBot extends Player {
     return false;
   }
 
+  private int scoreCalculator(Board board, int columnNumber){
+    int score;
+    try {
+      Board possibleNewBoard = new Board(board, columnNumber, getCounter());
+      GameConfig newConfig = possibleNewBoard.getConfig();
+
+    }catch (InvalidMoveException e){
+      score = -1000;
+    }
+
+    return 1;
+  }
 }
