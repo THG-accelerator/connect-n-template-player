@@ -4,9 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Position;
+import com.thg.accelerator23.connectn.ai.rosselanor.ConnectBot;
 import com.thg.accelerator23.connectn.ai.rosselanor.model.Line;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,41 +73,95 @@ public class BoardAnalyser {
             i -> board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight() - 1)));
   }
 
-  public List<Line> getLines(Board board) {
-    ArrayList<Line> lines = new ArrayList<>();
-    for (Map.Entry<Function<Position, Position>, List<Position>> entry : positionsByFunction
-        .entrySet()) {
-      Function<Position, Position> function = entry.getKey();
-      List<Position> startPositions = entry.getValue();
-      lines.addAll(startPositions.stream().map(p -> new BoardLine(board, p, function)).collect(Collectors.toList()));
-    }
-    return lines;
-  }
+      private List<Line> getLines (Board board){
+          ArrayList<Line> lines = new ArrayList<>();
+          for (Map.Entry<Function<Position, Position>, List<Position>> entry : positionsByFunction
+                  .entrySet()) {
+              Function<Position, Position> function = entry.getKey();
+              List<Position> startPositions = entry.getValue();
 
-  public Map<Counter, Integer> getBestRunByColour(Line line) {
-    HashMap<Counter, Integer> bestRunByColour = new HashMap<>();
-    for (Counter c : Counter.values()) {
-      bestRunByColour.put(c, 0);
-    }
-    Counter current = null;
-    int currentRunLength = 0;
-    while (line.hasNext()) {
-      Counter next = line.next();
-      if (current != next) {
-        if (current != null) {
-          if (Math.max(currentRunLength, 1) > bestRunByColour.get(current)) {
-            bestRunByColour.put(current, Math.max(currentRunLength, 1));
+              lines.addAll(startPositions.stream().map(p -> new BoardLine(board, p, function))
+                      .collect(Collectors.toList()));
+
           }
-        }
-        currentRunLength = 1;
-        current = next;
-      } else {
-        currentRunLength++;
+          return lines;
       }
+
+
+      private Map<Counter, Integer> getBestRunByColour (Line line){
+          HashMap<Counter, Integer> bestRunByColour = new HashMap<>();
+          for (Counter c : Counter.values()) {
+              bestRunByColour.put(c, 0);
+          }
+          Counter current = null;
+          int currentRunLength = 0;
+          while (line.hasNext()) {
+              Counter next = line.next();
+              if (current != next) {
+                  if (current != null) {
+                      if (Math.max(currentRunLength, 1) > bestRunByColour.get(current)) {
+                          bestRunByColour.put(current, Math.max(currentRunLength, 1));
+                      }
+                  }
+                  currentRunLength = 1;
+                  current = next;
+              } else {
+                  currentRunLength++;
+              }
+          }
+          if (current != null && Math.max(currentRunLength, 1) > bestRunByColour.get(current)) {
+              bestRunByColour.put(current, Math.max(currentRunLength, 1));
+          }
+          return bestRunByColour;
+      }
+
+
+      public boolean isColumnFull (Board board,int position){
+          return IntStream.range(0, board.getConfig().getHeight())
+                  .allMatch(
+                          j -> board.hasCounterAtPosition(new Position(position, j))
+                  );
+      }
+
+    public Counter otherPlayer(Counter myCounter){
+        if (myCounter == Counter.X){
+            return Counter.O;
+        } else if (myCounter == Counter.O) {
+            return Counter.X;
+        }
+        return null;
     }
-    if (current != null && Math.max(currentRunLength, 1) > bestRunByColour.get(current)) {
-      bestRunByColour.put(current, Math.max(currentRunLength, 1));
-    }
-    return bestRunByColour;
-  }
+
+    public int analyse(Board board, Counter myCounter){
+      BoardAnalyser analysis = new BoardAnalyser(board.getConfig());
+          List<Line> lines = analysis.getLines(board);
+          Counter otherCounter = otherPlayer(myCounter);
+          int playerOneScore = 0;
+          int playerTwoScore = 0;
+          for (int i = 0; i < lines.size(); i++) {
+              Map<Counter, Integer> result = analysis.getBestRunByColour(lines.get(1));
+
+              if (result.get(myCounter) == 2) {
+                  playerOneScore = playerOneScore + 1;
+                  playerTwoScore = playerTwoScore - 1;
+              }
+              if (result.get(otherCounter) == 2) {
+                  playerOneScore = playerOneScore - 1;
+                  playerTwoScore = playerTwoScore + 1;
+              }
+              if (result.get(myCounter) == 3) {
+                  playerOneScore = playerOneScore + 10;
+                  playerTwoScore = playerTwoScore - 10;
+              }
+              if (result.get(otherCounter) == 3) {
+                  playerOneScore = playerOneScore - 10;
+                  playerTwoScore = playerTwoScore + 10;
+              }
+          }
+          int difference = playerOneScore - playerTwoScore;
+          return difference;
+
+      }
 }
+
+
