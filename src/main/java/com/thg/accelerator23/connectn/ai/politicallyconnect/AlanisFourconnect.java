@@ -13,11 +13,13 @@ public class AlanisFourconnect extends Player {
 
   @Override
   public int makeMove(Board board) {
-    Position position = new Position(0,5);
-    System.out.printf(String.valueOf(board.hasCounterAtPosition(position)));
+//    Position position = new Position(0,5);
+
 //    int middleColumn = (int) Math.floor((board.getConfig().getWidth() / 2));
 //    for (int i = 0; i < board.getConfig().getWidth(); i++) {
-    if (!board.hasCounterAtPosition(position)){
+    if (!board.hasCounterAtPosition(new Position(5, 0))){
+//      System.out.println(board.getCounterAtPosition(new Position(5, 0)));
+//      System.out.println(!board.hasCounterAtPosition(new Position(0, 5)));
       return (int) Math.floor((board.getConfig().getWidth() / 2));
     } else {
       System.out.println("lol");
