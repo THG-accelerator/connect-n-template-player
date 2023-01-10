@@ -20,6 +20,7 @@ public class ConnectBot extends Player {
         miniMaxAI = new MiniMaxAI(5, myCounter);
     }
 
+
     @Override
     public int makeMove(Board board) {
         miniMaxAI.setBoard(board);
@@ -32,4 +33,8 @@ public class ConnectBot extends Player {
         }
     }
 
+    ;
+
+
 }
+
