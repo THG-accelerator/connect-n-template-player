@@ -4,6 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
+import java.util.Random;
+
 
 public class LuckyRandomX extends Player {
   public LuckyRandomX(Counter counter) {
@@ -13,9 +15,9 @@ public class LuckyRandomX extends Player {
 
   @Override
   public int makeMove(Board board) {
-    System.out.println("HELLO");
+    int generateRandomNumber = new Random().nextInt(1, 10);
+    System.out.println(generateRandomNumber);
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 4;
+    return generateRandomNumber;
   }
 }
-//test test
