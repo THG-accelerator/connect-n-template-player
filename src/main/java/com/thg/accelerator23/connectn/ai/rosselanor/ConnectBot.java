@@ -18,32 +18,33 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ConnectBot extends Player {
 
-  private final String teamCounter;
+  Counter teamCounter;
 
   public ConnectBot(Counter counter) {
     super(counter, ConnectBot.class.getName());
-    String teamCounter = counter.getStringRepresentation();
     this.teamCounter = teamCounter;
   }
 
 
-
-
-
   @Override
   public int makeMove(Board board) {
-  
+
     int position = ThreadLocalRandom.current().nextInt(0, 10);
 
-    if (isColumnFull(board, position)){
-      return position+1;
-    }
-    else if (horizontalTrio(board)){
+    if (isColumnFull(board, position)) {
+      return position + 1;
+    } else {
       return position;
     }
-    else {
-      return position;
+  }
+
+  private Counter otherPlayer(){
+    if (this.teamCounter == Counter.X){
+      return Counter.O;
+    } else if (this.teamCounter == Counter.O) {
+      return Counter.X;
     }
+    return null;
   }
 
   private boolean isColumnFull(Board board, int position) {
@@ -55,23 +56,37 @@ public class ConnectBot extends Player {
             );
   }
 
-  private boolean horizontalTrio(Board board) {
+  private int boardEvaluator(Board board) {
     BoardAnalyser analysis = new BoardAnalyser(board.getConfig());
     List<Line> lines = analysis.getLines(board);
-    for (int i = 0; i < lines.size(); i++) {
-      Map result = analysis.getBestRunByColour(lines.get(i));
-      if (result.containsValue(3)) {
-        System.out.println(result);
-        int comparison = (int) result.get(Counter.X);
-        if (comparison == 3) {
-          System.out.println('X');
-        }
-        else {
-          System.out.println('O');
-        }
-        return true;
+    Counter otherCounter = otherPlayer();
+    int playerOneScore = 0;
+    int playerTwoScore = 0;
+    for (int i = 0; i < lines.size(); i++){
+      Map<Counter, Integer> result = analysis.getBestRunByColour(lines.get(1));
+
+      if (result.get(this.teamCounter) == 2){
+        playerOneScore = playerOneScore + 1;
+        playerTwoScore = playerTwoScore - 1;
+      }
+      if (result.get(otherCounter) == 2){
+        playerOneScore = playerOneScore - 1;
+        playerTwoScore = playerTwoScore + 1;
+      }
+      if (result.get(this.teamCounter) == 3){
+        playerOneScore = playerOneScore + 10;
+        playerTwoScore = playerTwoScore - 10;
+      }
+      if (result.get(otherCounter) == 3){
+        playerOneScore = playerOneScore - 10;
+        playerTwoScore = playerTwoScore + 10;
       }
     }
-    return false;
+    int difference = playerOneScore - playerTwoScore;
+    return difference;
+
   }
+
+
 }
+
