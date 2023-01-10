@@ -25,7 +25,8 @@ public class LiveAndDirect extends Player {
       } catch (InvalidMoveException e) {
       }
     }
-    return possibleMoves.get(new Random().nextInt(possibleMoves.size()));
+    return BA.returnsXValueForOurBestMove(board, getCounter());
+    //return possibleMoves.get(new Random().nextInt(possibleMoves.size()));
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
   }

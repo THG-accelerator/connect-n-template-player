@@ -20,6 +20,10 @@ public class BoardLine implements Line {
         this.movementFunction = movementFunction;
     }
 
+    public Position getCurrentPosition(){
+        return currentPosition;
+    }
+
     @Override
     public boolean hasNext() {
         return board.isWithinBoard(currentPosition);
