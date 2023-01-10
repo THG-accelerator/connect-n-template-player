@@ -1,10 +1,10 @@
-package analysis;
+package com.thg.accelerator23.connectn.ai.ruglas.analysis;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import model.Line;
+import com.thg.accelerator23.connectn.ai.ruglas.model.Line;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class BoardAnalyser {
             i -> board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight() - 1)));
   }
 
-  public List<Line> getLines(Board board) {
+  private List<Line> getLines(Board board) {
     ArrayList<Line> lines = new ArrayList<>();
     for (Map.Entry<Function<Position, Position>, List<Position>> entry : positionsByFunction
         .entrySet()) {

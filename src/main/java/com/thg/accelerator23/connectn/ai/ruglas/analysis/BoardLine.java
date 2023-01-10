@@ -1,9 +1,9 @@
-package analysis;
+package com.thg.accelerator23.connectn.ai.ruglas.analysis;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import model.Line;
+import com.thg.accelerator23.connectn.ai.ruglas.model.Line;
 
 import java.util.Objects;
 import java.util.function.Function;
