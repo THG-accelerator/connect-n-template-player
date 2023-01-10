@@ -140,10 +140,7 @@ public class BoardAnalyser {
 
         List<Line> lines = getLines(board);
 
-        Counter otherCounter = otherPlayer(myCounter);
-
         int playerOneScore = 0;
-        int playerTwoScore = 0;
 
         for (Line line : lines) {
 
@@ -151,23 +148,17 @@ public class BoardAnalyser {
 
             if (result.get(myCounter) == 2) {
                 playerOneScore += 1;
-                playerTwoScore -= 1;
-            }
-            if (result.get(otherCounter) == 2) {
-                playerOneScore -= 1;
-                playerTwoScore += 1;
             }
             if (result.get(myCounter) == 3) {
-                playerOneScore = playerOneScore + 10;
-                playerTwoScore = playerTwoScore - 10;
+                playerOneScore += 10;
             }
-            if (result.get(otherCounter) == 3) {
-                playerOneScore = playerOneScore - 10;
-                playerTwoScore = playerTwoScore + 10;
+
+            if (result.get(myCounter) == 4) {
+                playerOneScore += 1000;
             }
         }
-        return playerOneScore - playerTwoScore;
 
+        return playerOneScore;
 
     }
 }

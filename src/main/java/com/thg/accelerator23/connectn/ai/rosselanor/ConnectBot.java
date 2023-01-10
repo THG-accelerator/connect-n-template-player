@@ -9,17 +9,13 @@ import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
 
 public class ConnectBot extends Player {
     Counter myCounter;
-
-    BoardAnalyser boardAnalyser;
     MiniMaxAI miniMaxAI;
-
 
     public ConnectBot(Counter myCounter) {
         super(myCounter, ConnectBot.class.getName());
         this.myCounter = myCounter;
-        miniMaxAI = new MiniMaxAI(5, myCounter);
+        miniMaxAI = new MiniMaxAI(1, myCounter);
     }
-
 
     @Override
     public int makeMove(Board board) {
