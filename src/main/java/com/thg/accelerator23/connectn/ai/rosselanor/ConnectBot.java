@@ -33,8 +33,6 @@ public class ConnectBot extends Player {
         }
     }
 
-    ;
-
 
 }
 

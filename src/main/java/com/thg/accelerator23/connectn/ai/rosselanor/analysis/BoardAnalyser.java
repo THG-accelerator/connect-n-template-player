@@ -137,7 +137,9 @@ public class BoardAnalyser {
     }
 
     public int analyse(Board board, Counter myCounter) {
+
         List<Line> lines = getLines(board);
+
         Counter otherCounter = otherPlayer(myCounter);
 
         int playerOneScore = 0;
