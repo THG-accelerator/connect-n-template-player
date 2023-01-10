@@ -1,9 +1,9 @@
-package com.thg.accelerator23.connectn.ai.fermion;
+package com.thg.accelerator23.connectn.ai.fermion.board;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Position;
 
-public class BoardAnalyser {
+public class localBoardAnalyser {
      private Board board;
 //     public BoardAnalyser(Board board){
 //          this.board = board;
@@ -14,6 +14,17 @@ public class BoardAnalyser {
           }else {
                return false;
           }
+     }
+
+     public boolean[] freeColumns() {
+          boolean emptyColumns[] = new boolean[11];
+          for(int i=1; i<10; i++) {
+               emptyColumns[i] = true;
+               if(checkForFullColumn(i, board)) {
+                    emptyColumns[i] = false;
+               }
+          }
+          return emptyColumns;
      }
 
      public int minMaxTreeSeach(int node, int depth, boolean isMaxPlayer, int alpha,int beta){

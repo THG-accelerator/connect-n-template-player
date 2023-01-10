@@ -1,14 +1,19 @@
-package com.thg.accelerator23.connectn.ai.fermion;
+package com.thg.accelerator23.connectn.ai.fermion.algorithim;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thg.accelerator23.connectn.ai.fermion.board.localBoardAnalyser;
 
 
 public class NameAi extends Player {
+
+  private final MCTS mcts;
+
   public NameAi(Counter counter) {
     //TODO: fill in your name here
     super(counter, NameAi.class.getName());
+    this.mcts = new MCTS();
   }
 
   @Override
@@ -35,20 +40,24 @@ public class NameAi extends Player {
      *
      *
      * */
-    BoardAnalyser moveChecker = new BoardAnalyser();
-    int randomColumn = 4;
+//    localBoardAnalyser moveChecker = new localBoardAnalyser();
+//    int randomColumn = 4;
+//
+//
+//    while(!moveChecker.checkForFullColumn(randomColumn,board)){
+//      randomColumn = (int) (Math.random() * (10));
+//    }
+//
+//
+//
+//
+////    return validMove.get(new Random().nextInt(validMove.size())
+//
+//
 
 
-    while(!moveChecker.checkForFullColumn(randomColumn,board)){
-      randomColumn = (int) (Math.random() * (10));
-    }
+      return mcts.actualPlay(getCounter());
 
-
-
-
-//    return validMove.get(new Random().nextInt(validMove.size())
-
-    return randomColumn;
   }
 }
 
