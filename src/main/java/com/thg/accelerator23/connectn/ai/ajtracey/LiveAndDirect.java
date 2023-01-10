@@ -17,15 +17,25 @@ public class LiveAndDirect extends Player {
   @Override
   public int makeMove(Board board) {
     BoardAnalyser BA = new BoardAnalyser(board.getConfig());
-    List<Integer> possibleMoves = new ArrayList<>();
-    for (int i = 0; i < board.getConfig().getWidth(); i++) {
-      try {
-        new Board(board, i, this.getCounter());
-        possibleMoves.add(i);
-      } catch (InvalidMoveException e) {
+
+      if(BA.winningPositionExists(this.getCounter(), board)){
+        return BA.winningPosition(this.getCounter(),board);
+      } else if (BA.winningPositionExists(this.getCounter().getOther(), board)){
+      return BA.winningPosition(this.getCounter().getOther(), board);
+
+    } else {
+        List<Integer> possibleMoves = new ArrayList<>();
+        for (int i = 0; i < board.getConfig().getWidth(); i++) {
+          try {
+            new Board(board, i, this.getCounter());
+            possibleMoves.add(i);
+          } catch (InvalidMoveException e) {
+          }
+        }
+        return possibleMoves.get(new Random().nextInt(possibleMoves.size()));
       }
-    }
-    return possibleMoves.get(new Random().nextInt(possibleMoves.size()));
+
+
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
   }
