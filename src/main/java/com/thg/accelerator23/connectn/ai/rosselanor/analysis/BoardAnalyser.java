@@ -142,29 +142,24 @@ public class BoardAnalyser {
 
         Counter otherCounter = otherPlayer(myCounter);
         int playerOneScore = 0;
-        int playerTwoScore = 0;
         for (int i = 0; i < lines.size(); i++) {
-            Map<Counter, Integer> result = analysis.getBestRunByColour(lines.get(1));
+
+            Map<Counter, Integer> result = analysis.getBestRunByColour(lines.get(i));
 
             if (result.get(myCounter) == 2) {
                 playerOneScore = playerOneScore + 1;
-                playerTwoScore = playerTwoScore - 1;
             }
             if (result.get(otherCounter) == 2) {
                 playerOneScore = playerOneScore - 1;
-                playerTwoScore = playerTwoScore + 1;
             }
             if (result.get(myCounter) == 3) {
                 playerOneScore = playerOneScore + 10;
-                playerTwoScore = playerTwoScore - 10;
             }
             if (result.get(otherCounter) == 3) {
                 playerOneScore = playerOneScore - 10;
-                playerTwoScore = playerTwoScore + 10;
             }
         }
-        int difference = playerOneScore - playerTwoScore;
-        return difference;
+        return playerOneScore;
 
     }
 }
