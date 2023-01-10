@@ -13,10 +13,12 @@ public class Connecty extends Player {
 
   GameConfig config;
   BoardAnalyser analyser;
+  Counter opponent;
 
   public Connecty(Counter counter) {
-
     super(counter, Connecty.class.getName());
+    opponent = getOpponent(this.getCounter());
+
 
     GameConfig config = new GameConfig(10,8, 4);
 //    Board board = new Board(config);
@@ -28,10 +30,18 @@ public class Connecty extends Player {
 
     ArrayList<Counter> threeInARowArray = new ArrayList<>();
     int maxInARow = analyser.calculateGameState(board).getMaxInARowByCounter().get(counter);
-
     return (maxInARow == 3);
   }
+
 //TODO: RusFunction takes in the board as an argument and returns the locations of all 3 in a rows for this.Counter.
+
+  private Counter getOpponent() {
+    return switch (this.getCounter()) {
+      case X -> Counter.O;
+      case O -> Counter.X;
+      default -> null;
+    };
+  }
 
 
   private ArrayList<Position> getAllPositions(Board board) {
