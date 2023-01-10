@@ -17,19 +17,27 @@ public class FunConcertoAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int[] scoreAndColumn = miniMax(board, 1, -999999999, 999999999, true, getCounter());
+    int[] scoreAndColumn = miniMax(board, 6, -999999999, 999999999, true, getCounter());
     System.out.println(scoreAndColumn[0]); // Prints out the score
     return scoreAndColumn[1];
   }
 
   public int scoreBoard(Board board, Counter counter) {
     int score = 0;
-    if(board.getCounterAtPosition(new Position(5,0)) == counter){
-      score += 1;
-    }
-    if(board.getCounterAtPosition(new Position(5,0)) == counter.getOther()){
-      score -= 1;
-    }
+
+    ArrayList<Counter> centreCounters = new ArrayList<Counter>();
+    centreCounters.add(board.getCounterAtPosition(new Position(5,0)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,1)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,2)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,3)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,4)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,5)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,6)));
+    centreCounters.add(board.getCounterAtPosition(new Position(5,7)));
+    int numberOfCentreCountersForPlayer = Collections.frequency(centreCounters, counter);
+    int numberOfCentreCountersForOtherPlayer = Collections.frequency(centreCounters, counter.getOther());
+    score+=numberOfCentreCountersForPlayer;
+    score-=numberOfCentreCountersForOtherPlayer;
     return score;
   }
 
@@ -76,7 +84,6 @@ public class FunConcertoAi extends Player {
             break;
           }
           int newScore = miniMax(copyBoard, depth-1, alpha, beta, false, counter)[0];
-          System.out.println(newScore);
           if(newScore > value){
             value = newScore;
             column = listOfValidLocations.get(i);
