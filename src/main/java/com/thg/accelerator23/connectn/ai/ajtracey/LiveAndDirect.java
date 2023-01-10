@@ -22,6 +22,7 @@ public class LiveAndDirect extends Player {
         return BA.winningPosition(this.getCounter(),board);
       } else if (BA.winningPositionExists(this.getCounter().getOther(), board)){
       return BA.winningPosition(this.getCounter().getOther(), board);
+
     } else {
         List<Integer> possibleMoves = new ArrayList<>();
         for (int i = 0; i < board.getConfig().getWidth(); i++) {
