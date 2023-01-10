@@ -54,12 +54,15 @@ public class BoardAnalyser {
         if(boardWidth % 2 == 0) {
             maxDistanceFromCentre--;
         }
+
         for(int i = Math.floorDiv(boardWidth, 2) -1; i>= 0 ; i--){
-            mapForDistancesFromCentreSpace.put(i, maxDistanceFromCentre-i);
+            mapForDistancesFromCentreSpace.put(i, maxDistanceFromCentre+1);
+            maxDistanceFromCentre--;
         }
+        maxDistanceFromCentre = Math.floorDiv(boardWidth, 2);
         for(int i=Math.floorDiv(boardWidth, 2); i <= boardWidth-1; i++){
             mapForDistancesFromCentreSpace.put(i,maxDistanceFromCentre);
-            maxDistanceFromCentre --;
+            maxDistanceFromCentre--;
         }
         distanceFromCentreSpaces = mapForDistancesFromCentreSpace;
     }
@@ -119,6 +122,7 @@ public class BoardAnalyser {
             xAndCorrespondingBinaryValue.put(i, returnsBinaryValueOfOurMoveForAGivenX(i, board, counter));
         }
         List<Map.Entry<Integer, Integer>> valueToUse = xAndCorrespondingBinaryValue.entrySet().stream().toList();
+        System.out.println(xAndCorrespondingBinaryValue.values());
         int currentMaxInt = 0;
         int xValueToUse = Math.floorDiv(boardWidth, 2);
         for(int i=0; i<valueToUse.size(); i++) {
