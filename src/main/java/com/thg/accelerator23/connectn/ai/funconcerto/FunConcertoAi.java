@@ -17,27 +17,9 @@ public class FunConcertoAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-
-    int bestScore = 0;
-    int[] moveScores = new int[10];
-    for (int i = 0; i < 10; i++) {
-      try {
-        Board copyBoard = new Board(board, i, this.getCounter());
-        moveScores[i] = scoreBoard(copyBoard, getCounter());
-      } catch (InvalidMoveException e) {
-        System.out.println("Invalid move");
-        moveScores[i] = -999999999;
-      }
-    }
-
-    for (int moveScore : moveScores) {
-        bestScore = Math.max(bestScore, moveScore);
-    }
-
-    for(int i = 0; i < moveScores.length; i++) {
-      if(moveScores[i] == bestScore) return i;
-    }
-    return -1;
+    int[] scoreAndColumn = miniMax(board, 3, -9999999, 9999999, true, getCounter());
+    System.out.println(scoreAndColumn[0]); // Prints out the score
+    return scoreAndColumn[1];
   }
 
   public int scoreBoard(Board board, Counter counter) {
