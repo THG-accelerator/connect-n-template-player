@@ -17,13 +17,20 @@ public class FunConcertoAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int[] scoreAndColumn = miniMax(board, 3, -999999999, 999999999, true, getCounter());
+    int[] scoreAndColumn = miniMax(board, 1, -999999999, 999999999, true, getCounter());
     System.out.println(scoreAndColumn[0]); // Prints out the score
     return scoreAndColumn[1];
   }
 
   public int scoreBoard(Board board, Counter counter) {
-    return 0;
+    int score = 0;
+    if(board.getCounterAtPosition(new Position(5,0)) == counter){
+      score += 1;
+    }
+    if(board.getCounterAtPosition(new Position(5,0)) == counter.getOther()){
+      score -= 1;
+    }
+    return score;
   }
 
   public LinkedList<Integer> getValidLocations(Board board){
@@ -68,7 +75,8 @@ public class FunConcertoAi extends Player {
           if(alpha >= beta){
             break;
           }
-          int newScore = miniMax(board, depth-1, alpha, beta, false, counter)[0];
+          int newScore = miniMax(copyBoard, depth-1, alpha, beta, false, counter)[0];
+          System.out.println(newScore);
           if(newScore > value){
             value = newScore;
             column = listOfValidLocations.get(i);
@@ -88,7 +96,7 @@ public class FunConcertoAi extends Player {
           if (alpha >= beta) {
             break;
           }
-          int newScore = miniMax(board, depth-1, alpha, beta, true, counter)[0];
+          int newScore = miniMax(copyBoard, depth-1, alpha, beta, true, counter)[0];
           if(newScore < value){
             value = newScore;
             column = listOfValidLocations.get(i);
