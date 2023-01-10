@@ -136,29 +136,29 @@ public class BoardAnalyser {
         return null;
     }
 
-    public int analyse(Board board, Counter myCounter) {
+    public int analyse(Board board, Counter counter) {
 
         List<Line> lines = getLines(board);
 
-        int playerOneScore = 0;
+        int score = 0;
 
         for (Line line : lines) {
 
             Map<Counter, Integer> result = getBestRunByColour(line);
 
-            if (result.get(myCounter) == 2) {
-                playerOneScore += 1;
+            if (result.get(counter) == 2) {
+                score += 1;
             }
-            if (result.get(myCounter) == 3) {
-                playerOneScore += 10;
+            if (result.get(counter) == 3) {
+                score += 10;
             }
 
-            if (result.get(myCounter) == 4) {
-                playerOneScore += 1000;
+            if (result.get(counter) == 4) {
+                score += 1000;
             }
         }
 
-        return playerOneScore;
+        return score;
 
     }
 }

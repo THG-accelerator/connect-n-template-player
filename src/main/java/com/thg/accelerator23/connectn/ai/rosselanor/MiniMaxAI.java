@@ -4,6 +4,7 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
+import com.thg.accelerator23.connectn.ai.rosselanor.analysis.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,8 @@ public class MiniMaxAI {
 
     //Initiates the MiniMax algorithm
     public int getMove() throws InvalidMoveException {
-        Move maxMove = max(board, 0);
+//        new Board(board.getConfig());
+        Move maxMove = max(new Board(board.getConfig()), 0);
         return maxMove.getColumn();
     }
 
@@ -50,12 +52,21 @@ public class MiniMaxAI {
 
 
     public Move max(Board board, int depth) throws InvalidMoveException {
-        Random r = new Random();
+        GameState gameState = boardAnalyser.calculateGameState(board);
 
-        if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            System.out.println(boardAnalyser.analyse(board, maximisingCounter));
+        if (gameState.isEnd() || (depth == maxDepth)) {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
+//        if (gameState.isEnd() || (depth == maxDepth)) {
+//            if (gameState.isEnd()) {
+//                if (gameState.getWinner() == maximisingCounter) {
+//                    return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
+//                } else if (gameState.getWinner() == boardAnalyser.otherPlayer(maximisingCounter)) {
+//                    new Move(lastMove, Integer.MIN_VALUE);
+//                }
+//            }
+//            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
+//        }
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
 
@@ -63,14 +74,13 @@ public class MiniMaxAI {
         int childCol = 0;
 
         for (Board child : children) {
-
             Move move = min(child, depth + 1);
 
             if (move.getValue() >= maxMove.getValue()) {
                 lastMove = childCol;
                 if ((move.getValue() == maxMove.getValue())) {
 
-                    if (r.nextInt(2) == 0) {
+                    if (new Random().nextInt(2) == 0) {
                         maxMove.setColumn(childCol);
                         maxMove.setValue(move.getValue());
                     }
@@ -86,13 +96,23 @@ public class MiniMaxAI {
     }
 
     public Move min(Board board, int depth) throws InvalidMoveException {
-        Random r = new Random();
+        GameState gameState = boardAnalyser.calculateGameState(board);
 
-        if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            System.out.println(boardAnalyser.analyse(board, maximisingCounter));
-
+        if (gameState.isEnd() || (depth == maxDepth)) {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
+//        GameState gameState = boardAnalyser.calculateGameState(board);
+//
+//        if (gameState.isEnd() || (depth == maxDepth)) {
+//            if (gameState.isEnd()) {
+//                if (gameState.getWinner() == maximisingCounter) {
+//                    return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
+//                } else if (gameState.getWinner() == boardAnalyser.otherPlayer(maximisingCounter)) {
+//                    new Move(lastMove, Integer.MIN_VALUE);
+//                }
+//            }
+//            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
+//        }
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
 
@@ -100,12 +120,11 @@ public class MiniMaxAI {
         int childCol = 0;
 
         for (Board child : children) {
-
             Move move = max(child, depth + 1);
             if (move.getValue() <= minMove.getValue()) {
                 lastMove = childCol;
                 if ((move.getValue() == minMove.getValue())) {
-                    if (r.nextInt(2) == 0) {
+                    if (new Random().nextInt(2) == 0) {
                         minMove.setColumn(childCol);
                         minMove.setValue(move.getValue());
                     }
