@@ -24,7 +24,12 @@ public class LiveAndDirect extends Player {
       return BA.winningPosition(this.getCounter().getOther(), board);
 
     } else {
-        return BA.returnsXValueForOurBestMove(board, getCounter());
+        List<Integer> theseAllHaveTheSameBinaryValue = BA.returnsXValueForOurBestMove(board, getCounter());
+        Random randomGen = new Random();
+          System.out.println(theseAllHaveTheSameBinaryValue);
+        int thisXToBeUsed = randomGen.nextInt(theseAllHaveTheSameBinaryValue.size());
+          System.out.println(thisXToBeUsed);
+        return theseAllHaveTheSameBinaryValue.get(thisXToBeUsed);
       }
 
 

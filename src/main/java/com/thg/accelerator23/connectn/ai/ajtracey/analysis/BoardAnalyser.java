@@ -116,7 +116,7 @@ public class BoardAnalyser {
         return theBinaryValueOfThisChaos;
     }
 
-    public int returnsXValueForOurBestMove(Board board, Counter counter){
+    public List<Integer> returnsXValueForOurBestMove(Board board, Counter counter){
         Map<Integer, Integer> xAndCorrespondingBinaryValue = new HashMap<>(boardWidth);
         for(int i=0; i<boardWidth; i++){
             xAndCorrespondingBinaryValue.put(i, returnsBinaryValueOfOurMoveForAGivenX(i, board, counter));
@@ -124,14 +124,21 @@ public class BoardAnalyser {
         List<Map.Entry<Integer, Integer>> valueToUse = xAndCorrespondingBinaryValue.entrySet().stream().toList();
         int currentMaxInt = 0;
         int xValueToUse = Math.floorDiv(boardWidth, 2);
+        List<Integer> xValuesWhichCanBeUsed = new ArrayList<>();
         for(int i=0; i<valueToUse.size(); i++) {
-            if(valueToUse.get(i).getValue() >= currentMaxInt) {
+            if(valueToUse.get(i).getValue() > currentMaxInt) {
                 currentMaxInt = valueToUse.get(i).getValue();
                 xValueToUse = valueToUse.get(i).getKey();
+                xValuesWhichCanBeUsed = new ArrayList<>();
+                xValuesWhichCanBeUsed.add(xValueToUse);
+            }
+            else if(valueToUse.get(i).getValue().equals(currentMaxInt)){
+                xValuesWhichCanBeUsed.add(valueToUse.get(i).getKey());
             }
         }
 
-        return xValueToUse;
+
+        return xValuesWhichCanBeUsed;
     }
 
 
