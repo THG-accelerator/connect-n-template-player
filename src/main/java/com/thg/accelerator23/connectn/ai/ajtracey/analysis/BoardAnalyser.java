@@ -122,7 +122,6 @@ public class BoardAnalyser {
             xAndCorrespondingBinaryValue.put(i, returnsBinaryValueOfOurMoveForAGivenX(i, board, counter));
         }
         List<Map.Entry<Integer, Integer>> valueToUse = xAndCorrespondingBinaryValue.entrySet().stream().toList();
-        System.out.println(xAndCorrespondingBinaryValue.values());
         int currentMaxInt = 0;
         int xValueToUse = Math.floorDiv(boardWidth, 2);
         for(int i=0; i<valueToUse.size(); i++) {
