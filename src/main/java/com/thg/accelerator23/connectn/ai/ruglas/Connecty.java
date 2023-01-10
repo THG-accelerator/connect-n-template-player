@@ -13,10 +13,12 @@ import java.util.Random;
 
 public class Connecty extends Player {
   Counter opponentCounter;
+
   public Connecty(Counter counter) {
     super(counter, Connecty.class.getName());
     this.opponentCounter = getOpponent();
   }
+
   private Counter getOpponent() {
     return switch (this.getCounter()) {
       case X -> Counter.O;
@@ -24,30 +26,33 @@ public class Connecty extends Player {
       default -> null;
     };
   }
+
   @Override
   public int makeMove(Board board) {
     Random rand = new Random();
     int randomNumber = rand.nextInt(board.getConfig().getWidth());
 
-    CheckMoveForGameOver checkForWinningMove = null;
+    ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
+
     try {
-      checkForWinningMove = new CheckMoveForGameOver(board, this.getCounter());
+      moveChooser.findWinPosition();
     } catch (InvalidMoveException e) {
+      throw new RuntimeException(e);
     }
-    if (checkForWinningMove.isGameOver()) {
-      return checkForWinningMove.getPlayLocation();
+    if (moveChooser.getPlayLocation() != null) {
+      return moveChooser.getPlayLocation();
+    } else {
+      try {
+        moveChooser.findBlockPosition();
+      } catch (InvalidMoveException e) {
+        throw new RuntimeException(e);
+      }
+      if (moveChooser.getPlayLocation() != null) {
+        return moveChooser.getPlayLocation();
+      }
+
+//      neaten the code above maybe into a while loop
+      return randomNumber;
     }
-    CheckMoveForGameOver checkForLosingMove = null;
-    try {
-      checkForLosingMove = new CheckMoveForGameOver(board, opponentCounter);
-    } catch (InvalidMoveException e) {
-    }
-    if (checkForLosingMove.isGameOver()) {
-      return checkForLosingMove.getPlayLocation();
-    }
-    return randomNumber;
   }
-
-
-
 }

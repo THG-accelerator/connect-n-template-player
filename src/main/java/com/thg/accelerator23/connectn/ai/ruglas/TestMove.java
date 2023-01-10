@@ -5,6 +5,7 @@ import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
 public class TestMove {
+
     private static Board tryMove(Board board, int column, Counter counter) throws InvalidMoveException {
         try {
             return new Board(board, column, counter);
@@ -21,6 +22,7 @@ public class TestMove {
         GameState gameState = boardAnalyser.calculateGameState(tryBoard);
 
         if (gameState.isWin()) {
+            System.out.println("Game would end if counter " + counter + "is placed at position " + column);
             return true;
         }
         return false;
@@ -34,11 +36,8 @@ public class TestMove {
         }
         return false;
     }
-//    sometimes there is no other option but to make a move that let's the opponent
+//    sometimes there is no other option but to make a move that lets the opponent !
 }
-
-
-
 
 //
 //    private boolean checkThreeInARow(Board board, Counter counter) {
@@ -60,4 +59,3 @@ public class TestMove {
 //        }
 //        return positions;
 //    }
-}

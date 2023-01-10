@@ -13,7 +13,4 @@ public class MiniMax {
         this.counter = counter;
     }
 
-
-
-
 }
