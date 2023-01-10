@@ -45,7 +45,6 @@ public class MiniMaxAI {
                 children.add(child);
             }
         }
-        System.out.println(children.size());
         return children;
     }
 

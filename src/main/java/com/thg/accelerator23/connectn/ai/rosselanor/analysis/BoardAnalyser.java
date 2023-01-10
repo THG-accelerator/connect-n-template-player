@@ -137,22 +137,25 @@ public class BoardAnalyser {
     }
 
     public int analyse(Board board, Counter myCounter) {
-        BoardAnalyser analysis = new BoardAnalyser(board.getConfig());
-        List<Line> lines = analysis.getLines(board);
+
+        List<Line> lines = getLines(board);
 
         Counter otherCounter = otherPlayer(myCounter);
+
         int playerOneScore = 0;
         int playerTwoScore = 0;
-        for (int i = 0; i < lines.size(); i++) {
-            Map<Counter, Integer> result = analysis.getBestRunByColour(lines.get(1));
+
+        for (Line line : lines) {
+
+            Map<Counter, Integer> result = getBestRunByColour(line);
 
             if (result.get(myCounter) == 2) {
-                playerOneScore = playerOneScore + 1;
-                playerTwoScore = playerTwoScore - 1;
+                playerOneScore += 1;
+                playerTwoScore -= 1;
             }
             if (result.get(otherCounter) == 2) {
-                playerOneScore = playerOneScore - 1;
-                playerTwoScore = playerTwoScore + 1;
+                playerOneScore -= 1;
+                playerTwoScore += 1;
             }
             if (result.get(myCounter) == 3) {
                 playerOneScore = playerOneScore + 10;
@@ -163,8 +166,8 @@ public class BoardAnalyser {
                 playerTwoScore = playerTwoScore + 10;
             }
         }
-        int difference = playerOneScore - playerTwoScore;
-        return difference;
+        return playerOneScore - playerTwoScore;
+
 
     }
 }
