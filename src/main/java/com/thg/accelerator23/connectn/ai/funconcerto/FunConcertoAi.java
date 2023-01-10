@@ -17,7 +17,7 @@ public class FunConcertoAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int[] scoreAndColumn = miniMax(board, 3, -9999999, 9999999, true, getCounter());
+    int[] scoreAndColumn = miniMax(board, 3, -999999999, 999999999, true, getCounter());
     System.out.println(scoreAndColumn[0]); // Prints out the score
     return scoreAndColumn[1];
   }
