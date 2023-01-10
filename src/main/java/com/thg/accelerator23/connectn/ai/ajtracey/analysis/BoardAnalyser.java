@@ -175,6 +175,48 @@ public class BoardAnalyser {
         return new GameState(bestRunByColour, board.getConfig(), boardFull);
     }
 
+    private boolean nMinus1InARow(Counter counter, Board board) {
+        return calculateGameState(board).getMaxInARowByCounter().get(counter) ==board.getConfig().getnInARowForWin()-1;
+    }
+
+    public List<Line> nMinus1Lines(Counter counter, Board board) {
+        List<Line> linesWithNMinus1 = new ArrayList<>();
+        if (nMinus1InARow(counter, board)) {
+            List<Line> lines = getLines(board);
+            for (Line line : lines) {
+            if (getBestRunByColour(line).get(counter) == board.getConfig().getnInARowForWin()-1){
+                linesWithNMinus1.add(line);
+            }
+        }
+        }
+        return linesWithNMinus1;
+    }
+
+    public boolean winningPositionExists(Counter counter, Board board){
+        for (int i=0; i<board.getConfig().getWidth();i++) {
+            try {
+                Board futureBoard = new Board(board, i, counter);
+                if (calculateGameState(futureBoard).isWin()) {
+                    return true;
+                }
+            } catch(InvalidMoveException e){
+            }
+        }
+        return false;
+    }
+
+    public int winningPosition(Counter counter, Board board){
+        for (int i=0; i<board.getConfig().getWidth();i++) {
+            try {
+                Board futureBoard = new Board(board, i, counter);
+                if (calculateGameState(futureBoard).isWin()) {
+                    return i;
+                }
+            } catch (InvalidMoveException e){}
+        }
+        return -1;
+    }
+
     private Map<Counter, Integer> maxMap(Map<Counter, Integer> map1, Map<Counter, Integer> map2) {
         HashMap<Counter, Integer> maxMap = new HashMap<>();
         for (Map.Entry<Counter, Integer> entry : map1.entrySet()) {

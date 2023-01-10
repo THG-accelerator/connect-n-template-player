@@ -20,7 +20,7 @@ public class BoardLine implements Line {
         this.movementFunction = movementFunction;
     }
 
-    public Position getCurrentPosition(){
+    public Position getCurrentPosition() {
         return currentPosition;
     }
 
