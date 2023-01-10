@@ -11,21 +11,17 @@ import java.util.Random;
 
 public class MiniMaxAI {
 
-    //Variable that holds the maximum depth the MiniMax algorithm will reach for this player
     private int maxDepth;
-    //Variable that holds which letter this player controls
     private Counter maximisingCounter;
     private BoardAnalyser boardAnalyser;
     private Board board;
-    private Move lastMove;
+    private int lastMove;
 
 
-    public MiniMaxAI(int maxDepth, Counter maximisingCounter, Board board) {
+    public MiniMaxAI(int maxDepth, Counter maximisingCounter) {
         this.maxDepth = maxDepth;
         this.maximisingCounter = maximisingCounter;
-        this.board = board;
-        this.boardAnalyser = new BoardAnalyser(board.getConfig());
-        this.lastMove = null;
+//        this.lastMove = null;
     }
 
     public int getMaxDepth() {
@@ -36,9 +32,18 @@ public class MiniMaxAI {
         this.maxDepth = maxDepth;
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setBoardAnalyser(BoardAnalyser boardAnalyser) {
+        this.boardAnalyser = boardAnalyser;
+    }
+
     //Initiates the MiniMax algorithm
-    public int runMiniMax() {
-        return 1;
+    public int getMove() throws InvalidMoveException {
+        Move maxMove = max(board, 0);
+        return maxMove.getColumn();
     }
 
     private List<Board> getChildren(Counter counter) throws InvalidMoveException {
@@ -54,28 +59,28 @@ public class MiniMaxAI {
 
 
     // The max and min functions are called interchangeably, one after another until a max depth is reached
-    public Move max(Board board, int depth, Counter counter) throws InvalidMoveException {
+    public Move max(Board board, int depth) throws InvalidMoveException {
         Random r = new Random();
 
         /* If MAX is called on a state that is terminal or after a maximum depth is reached,
          * then a heuristic is calculated on the state and the move returned.
          */
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            return lastMove;
+            return new Move(lastMove, boardAnalyser.analyse(board));
         }
 
-        List<Board> children = new ArrayList<>(getChildren(counter));
+        List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
+
 
         Move maxMove = new Move(null, Integer.MIN_VALUE);
-        int lastMoveCol = 0;
         int childCol = 0;
 
         for (Board child : children) {
             //And for each child min is called, on a lower depth
-            Move move = min(child, depth + 1, counter);
+            Move move = min(child, depth + 1);
             //The child-move with the greatest value is selected and returned by max
             if (move.getValue() >= maxMove.getValue()) {
-                lastMoveCol = childCol;
+                lastMove = childCol;
                 if ((move.getValue() == maxMove.getValue())) {
                     //If the heuristic has the same value then we randomly choose one of the two moves
                     if (r.nextInt(2) == 0) {
@@ -89,34 +94,34 @@ public class MiniMaxAI {
             }
             childCol++;
         }
-        lastMove = new Move(lastMoveCol, boardAnalyser.analyse(board));
+
         return maxMove;
+
     }
 
     //Min works similarly to max
-    public Move min(Board board, int depth, Counter counter) throws InvalidMoveException {
+    public Move min(Board board, int depth) throws InvalidMoveException {
         Random r = new Random();
 
         /* If MIN is called on a state that is terminal or after a maximum depth is reached,
          * then a heuristic is calculated on the state and the move returned.
          */
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
-            return lastMove;
+            return new Move(lastMove, boardAnalyser.analyse(board));
         }
 
-        List<Board> children = new ArrayList<>(getChildren(counter));
+        List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
 
         Move minMove = new Move(null, Integer.MAX_VALUE);
-        int lastMoveCol = 0;
         int childCol = 0;
 
         for (Board child : children) {
 
             //And for each child min is called, on a lower depth
-            Move move = max(child, depth + 1, counter);
+            Move move = max(child, depth + 1);
             //The child-move with the greatest value is selected and returned by max
             if (move.getValue() <= minMove.getValue()) {
-                lastMoveCol = childCol;
+                lastMove = childCol;
                 if ((move.getValue() == minMove.getValue())) {
                     //If the heuristic has the same value then we randomly choose one of the two moves
                     if (r.nextInt(2) == 0) {
@@ -130,7 +135,6 @@ public class MiniMaxAI {
             }
             childCol++;
         }
-        lastMove = new Move(lastMoveCol, boardAnalyser.analyse(board));
         return minMove;
     }
 
