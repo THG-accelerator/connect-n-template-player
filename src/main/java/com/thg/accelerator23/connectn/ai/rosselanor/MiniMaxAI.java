@@ -53,6 +53,7 @@ public class MiniMaxAI {
         Random r = new Random();
 
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
+            System.out.println(boardAnalyser.analyse(board, maximisingCounter));
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 
@@ -62,6 +63,7 @@ public class MiniMaxAI {
         int childCol = 0;
 
         for (Board child : children) {
+
             Move move = min(child, depth + 1);
 
             if (move.getValue() >= maxMove.getValue()) {
@@ -87,6 +89,8 @@ public class MiniMaxAI {
         Random r = new Random();
 
         if ((boardAnalyser.calculateGameState(board)).isEnd() || (depth == maxDepth)) {
+            System.out.println(boardAnalyser.analyse(board, maximisingCounter));
+
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 

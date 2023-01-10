@@ -1,6 +1,8 @@
 package com.thg.accelerator23.connectn.ai.rosselanor;
 
-import com.thehutgroup.accelerator.connectn.player.*;
+import com.thehutgroup.accelerator.connectn.player.Board;
+import com.thehutgroup.accelerator.connectn.player.Counter;
+import com.thehutgroup.accelerator.connectn.player.Player;
 import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -8,29 +10,32 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomBot extends Player {
     Counter myCounter;
-
     BoardAnalyser boardAnalyser;
-    MiniMaxAI miniMaxAI;
 
 
     public RandomBot(Counter myCounter) {
         super(myCounter, RandomBot.class.getName());
         this.myCounter = myCounter;
-        miniMaxAI = new MiniMaxAI(5, myCounter);
     }
 
+    int getRandomInt(){
+        return ThreadLocalRandom.current().nextInt(0, 10);
+    }
 
     @Override
     public int makeMove(Board board) {
+        boardAnalyser = new BoardAnalyser(board.getConfig());
+        boolean isValid = false;
+        Integer position = null;
 
-        BoardAnalyser boardanalyser = new BoardAnalyser(board.getConfig());
-        int position = ThreadLocalRandom.current().nextInt(0, 10);
-
-        if (boardanalyser.isColumnFull(board, position)){
-            return position + 1;
+        while(!isValid){
+            position = getRandomInt();
+            if (!boardAnalyser.isColumnFull(board, position)) {
+                isValid = true;
+            }
         }
-        else {
-        return position;}
+        return position;
+
     }
 
 
