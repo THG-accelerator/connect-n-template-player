@@ -2,7 +2,7 @@ package com.thg.accelerator23.connectn.ai.lucychloeanca;
 
 import com.thehutgroup.accelerator.connectn.player.*;
 
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 
@@ -14,7 +14,7 @@ public class ConnectyBot extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int position = randomMove(board);
+    int position = getOptimalCol(board);
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
     return position;
@@ -38,6 +38,15 @@ public class ConnectyBot extends Player {
     return false;
   }
 
+  private List<Integer> getAvailableCol(Board board){
+    List<Integer> availableCol = new ArrayList<>();
+    for (int col = 0; col<board.getConfig().getWidth(); col++){
+      if (this.isSpaceAvailable(board, col)){
+        availableCol.add(col);
+      }
+    }
+    return availableCol;
+  }
 
 
   private int columnScoreCalculator(Board board, int columnNumber){
@@ -85,4 +94,25 @@ public class ConnectyBot extends Player {
     }
   }
 
+  private Map<Integer, Integer> getAllColScores(Board board){
+    Map<Integer, Integer> colScores = new HashMap<>();
+    List<Integer> availableCol = getAvailableCol(board);
+    availableCol.stream().forEach((colNumber) -> {
+      int score = miniMax(colNumber, 3, true, board);
+      colScores.put(colNumber, score);
+    });
+    return colScores;
+  }
+
+  private int getOptimalCol(Board board){
+    Map<Integer, Integer> colScores = getAllColScores(board);
+    int highestScoringCol = colScores.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+    int highestScore = colScores.get(highestScoringCol);
+    if (highestScore>0) {
+      return highestScoringCol;
+    }else {
+      System.out.println("random");
+      return randomMove(board);
+    }
+  }
 }
