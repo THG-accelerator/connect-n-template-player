@@ -1,5 +1,5 @@
 
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;

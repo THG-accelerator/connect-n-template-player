@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
@@ -22,17 +22,19 @@ public class GetScore {
     public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
         totalScore = 0;
+        System.out.println("Zero depth Total score");
         if(gameState.isDraw()){return 0;} else if (gameState.isWin()) { return 10000;
 
         }
         else{
             totalScore += getScoreFromAgjPositions(positionToCheck, boardToCheck, counter);
-            if (positionToCheck.getX() == 5 || positionToCheck.getX() == 5){
+            if (positionToCheck.getX() == 4 || positionToCheck.getX() == 5){
                 totalScore += 10;
             }
-            else if (positionToCheck.getX() == 4 || positionToCheck.getX() == 7){
+            else if (positionToCheck.getX() == 3 || positionToCheck.getX() == 6){
                 totalScore += 5;
             }
+            System.out.println("Total Score" + totalScore);
             return totalScore;
         }
 
@@ -95,6 +97,7 @@ public class GetScore {
 
             }
         }
+        System.out.println("Score " + score);
         return score;
     }
 

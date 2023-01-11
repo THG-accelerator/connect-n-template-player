@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
@@ -15,7 +15,7 @@ public class MiniMaxScoring {
 
     int bestScore;
 
-    MiniMaxScoring(Counter counter) {
+    public MiniMaxScoring(Counter counter) {
         this.counter = counter;
         this.oppositionCounter = counter.getOther();
     }
@@ -26,7 +26,6 @@ public class MiniMaxScoring {
            if (isMax){
            score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
            else {score = - getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
-           System.out.println("column " + column + " score " + score);
            return score;}
         else if (isMax) {
              bestScore = -1000;

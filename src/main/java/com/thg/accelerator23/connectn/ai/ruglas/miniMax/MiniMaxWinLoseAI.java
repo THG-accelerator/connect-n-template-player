@@ -1,11 +1,9 @@
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
-
-import java.util.Random;
 
 public class MiniMaxWinLoseAI extends Player {
     public MiniMaxWinLoseAI(Counter counter) {
