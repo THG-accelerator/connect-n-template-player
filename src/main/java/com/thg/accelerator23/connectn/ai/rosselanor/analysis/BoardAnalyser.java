@@ -117,7 +117,6 @@ public class BoardAnalyser {
         return bestRunByColour;
     }
 
-
     public boolean isColumnFull(Board board, int position) {
         return IntStream.range(0, board.getConfig().getHeight())
                 .allMatch(
@@ -165,12 +164,11 @@ public class BoardAnalyser {
                 myScore -= 1E6;
             }
         }
-        System.out.println("MY SCORE: " + myScore );
+        System.out.println("MY SCORE: " + myScore);
         System.out.println(myScore);
 
         return myScore;
     }
-
 
 }
 
