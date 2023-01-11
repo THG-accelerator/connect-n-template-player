@@ -24,11 +24,13 @@ public class AlanisFourconnect extends Player {
   public int makeMove(Board board) {
     AIAnalyser slayIAnalyser = new AIAnalyser(board.getConfig());
     try {
-      if (slayIAnalyser.winningColumn(board, getCounter()) != null) {
-        return slayIAnalyser.winningColumn(board, getCounter());
+      Integer winningMove = slayIAnalyser.winningColumn(board, getCounter());
+      if (winningMove != null) {
+        return winningMove;
       }
-      else if (slayIAnalyser.winningColumn(board, getCounter().getOther()) != null){
-        return slayIAnalyser.winningColumn(board, getCounter().getOther());
+      Integer blockingAWin = slayIAnalyser.winningColumn(board, getCounter().getOther());
+      if (blockingAWin != null){
+        return blockingAWin;
       }
       else {
       return validRandomMove(board);
