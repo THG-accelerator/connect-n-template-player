@@ -14,7 +14,7 @@ public class ConnectBot extends Player {
     public ConnectBot(Counter myCounter) {
         super(myCounter, ConnectBot.class.getName());
         this.myCounter = myCounter;
-        miniMaxAI = new MiniMaxAI(1, myCounter);
+        miniMaxAI = new MiniMaxAI(4, myCounter);
     }
 
     @Override
