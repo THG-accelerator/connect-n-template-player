@@ -161,6 +161,7 @@ public class BoardAnalyser {
             }
             if (result.get(oppositionCounter) == 4) {
                 myScore -= 1E6;
+
             }
         }
 
