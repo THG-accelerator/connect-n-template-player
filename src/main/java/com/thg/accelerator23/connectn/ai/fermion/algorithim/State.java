@@ -6,12 +6,12 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 public class State {
     private Counter rootCounter;
     private int nodeWins = 0;
-    private int nodeVists = 0;
+    private int nodeVisits = 0;
     private int possibleMoves;
     private Board board;
 
     public State(Counter counter){
-        rootCounter = counter;
+        this.rootCounter = counter;
     }
 
     public void setRootCounter(Counter rootCounter) {
@@ -23,20 +23,30 @@ public class State {
     }
 
     public int getNodeWins() {
-        return nodeWins;
+        return this.nodeWins;
     }
 
-    public int getNodeVists() {
-        return nodeVists;
+    public int getNodeVisits() {
+        return this.nodeVisits;
+    }
+
+    public void setNodeWins(int wins) {
+        this.nodeWins = wins;
     }
 
     public void addVisit() {
-        this.nodeVists += 1;
+        this.nodeVisits += 1;
     }
 
     public void addWin(int addBy) {
         this.nodeWins += addBy;
     }
+
+    public void addWin() { this.nodeWins += 1; }
+
+    public void subWin(int subBy) { this.nodeWins -= subBy; }
+
+    public void subWin() { this.nodeWins -= 1; }
 
     public Counter getCounter() {
         return rootCounter;
@@ -48,9 +58,8 @@ public class State {
         rootCounter = getCounterOpposite();
     }
 
-
-
     public Board getBoard() {
         return board;
     }
+
 }
