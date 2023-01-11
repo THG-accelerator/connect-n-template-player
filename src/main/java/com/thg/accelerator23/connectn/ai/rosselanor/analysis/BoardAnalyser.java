@@ -154,12 +154,12 @@ public class BoardAnalyser {
                 myScore -= 100;
             }
             if (result.get(myCounter) == 4) {
-                myScore = Integer.MAX_VALUE;
+                myScore = 1000;
                 //oppositionScore = Integer.MIN_VALUE;
             }
             if (result.get(oppositionCounter) == 4) {
                 //myScore = Integer.MIN_VALUE;
-                myScore = Integer.MIN_VALUE;
+                myScore = -1000;
             }
         }
         System.out.println("MY SCORE: " + myScore );
