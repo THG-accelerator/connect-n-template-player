@@ -4,10 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
-import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
-public class MiniMax {
+public class MiniMaxScoring {
     Counter counter;
 
     Counter oppositionCounter;
@@ -17,32 +15,27 @@ public class MiniMax {
 
     int bestScore;
 
-    MiniMax(Counter counter) {
+    MiniMaxScoring(Counter counter) {
         this.counter = counter;
-        this.oppositionCounter = getOpponent(counter);
+        this.oppositionCounter = counter.getOther();
     }
-   public int miniMaxMove(Board boardPlay, boolean isMax, int depth) throws InvalidMoveException {
-        BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
+   public int miniMaxMove(Board boardPlay, boolean isMax, int depth, int column) throws InvalidMoveException {
+        GetScore getScore = new GetScore(boardPlay);
         System.out.println("Depth " + depth);
        System.out.println("isMax " + isMax);
-       System.out.println(boardPlay.getConfig().getWidth());
 
-       if (depth == 0) {return bestScore;}
+       if (depth == 0) {
+           Counter counterPlay = getCounter(isMax);
+           score = getScore.getScoreFromAgjPositions(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);
+           return score;}
         else if (isMax) {
              bestScore = -1000;
             for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++){
                 System.out.println("Column " + xMax);
                 Position checkPosition = new Position(xMax, getMinY(xMax, boardPlay));
                 if (boardPlay.isWithinBoard(checkPosition)){
-            Board tempBoard = makeMove(boardPlay,counter, xMax);
-            GameState gameState = boardAnalyser.calculateGameState(tempBoard);
-                if (gameState.isWin()) {
-                score = 1;
-            } else if (gameState.isDraw()) {
-                score = 0;
-            } else {
-                    score = miniMaxMove(tempBoard, false, depth - 1);
-                }
+                    Board tempBoard = makeMove(boardPlay,counter, xMax);
+                    score = miniMaxMove(tempBoard, false, depth - 1, xMax);
                 if (score>bestScore){this.bestColumn = xMax;
                     System.out.println("xmax " + xMax);
                     bestScore = score;}
@@ -54,14 +47,7 @@ public class MiniMax {
                Position checkPosition = new Position(xMin, getMinY(xMin, boardPlay));
                if (boardPlay.isWithinBoard(checkPosition)){
                 Board tempBoard = makeMove(boardPlay, oppositionCounter, xMin);
-                GameState gameState = boardAnalyser.calculateGameState(tempBoard);
-                if (gameState.isWin()) {
-                    score = -1;
-                } else if (gameState.isDraw()) {
-                    score = 0;
-                } else {
-                    score = miniMaxMove(tempBoard, false, depth - 1);
-                }
+                score = miniMaxMove(tempBoard, false, depth - 1, xMin);
                    if (score<bestScore){this.bestColumn = xMin;
                        System.out.println("xmin " + xMin);
                        bestScore = score;}
@@ -84,14 +70,11 @@ public class MiniMax {
                 return 0;
             }
 
-
-            private Counter getOpponent (Counter counter){
-                return switch (counter) {
-                    case X -> Counter.O;
-                    case O -> Counter.X;
-                };
-
+            private Counter getCounter(boolean isMax){
+        if (isMax) return counter;
+        else{return oppositionCounter;}
             }
+
 
     public int getBestColumn() {
         return bestColumn;
