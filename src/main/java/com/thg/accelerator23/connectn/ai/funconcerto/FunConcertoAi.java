@@ -53,6 +53,8 @@ public class FunConcertoAi extends Player {
     ArrayList<Integer> validMoves = getValidLocations(tree.getState());
     for (int i = 0; i < validMoves.size(); i++) {
       try {
+        System.out.println("get");
+        System.out.println(tree.getCounter());
         tree.addNode(validMoves.get(i));
       } catch (InvalidMoveException e) {
         System.out.println("This shouldn't happen2");

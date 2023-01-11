@@ -16,7 +16,7 @@ public class MoveTree {
     private final List<MoveTree> moveList = new ArrayList<MoveTree>();
 
     public MoveTree() {
-        this.counter = Counter.O;
+        this.counter = Counter.X;
         this.depth = 1;
         GameConfig config = new GameConfig(10, 8, 4);
         this.state = new Board(config);
