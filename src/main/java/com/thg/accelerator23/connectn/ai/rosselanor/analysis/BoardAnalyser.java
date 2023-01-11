@@ -145,32 +145,32 @@ public class BoardAnalyser {
         for (Line line : lines) {
 
             Map<Counter, Integer> result = getBestRunByColour(line);
-
+            
             if (result.get(myCounter) == 2) {
-                myScore += 1;
-                oppositionScore -=1;
-            }
-            if (result.get(oppositionCounter) == 2){
-                myScore -= 1;
-                oppositionScore +=1;
-            }
-            if (result.get(myCounter) == 3) {
                 myScore += 10;
                 oppositionScore -=10;
             }
-            if (result.get(oppositionCounter) == 3){
+            if (result.get(oppositionCounter) == 2){
                 myScore -= 10;
-                oppositionScore += 10;
+                oppositionScore +=10;
+            }
+            if (result.get(myCounter) == 3) {
+                myScore += 100;
+                oppositionScore -=100;
+            }
+            if (result.get(oppositionCounter) == 3){
+                myScore -= 100;
+                oppositionScore += 100;
             }
 
-            if (result.get(counter) == 4) {
-                myScore += Integer.MAX_VALUE;
-                oppositionScore -= Integer.MAX_VALUE;
+            if (result.get(myCounter) == 4) {
+                myScore = Integer.MAX_VALUE;
+                oppositionScore = Integer.MIN_VALUE;
 
             }
             if (result.get(oppositionCounter) == 4) {
-                myScore -= 1000;
-                oppositionScore += 1000;
+                myScore = Integer.MIN_VALUE;
+                oppositionScore = Integer.MAX_VALUE;
             }
             }
         return myScore - oppositionScore;
