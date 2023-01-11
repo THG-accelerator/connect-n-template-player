@@ -39,10 +39,7 @@ public class MCTS {
         }
         return node;
     }
-//
-//    public void expandNode(Node node) {
-//        node.addChild();
-//    }
+
 
     public int actualPlay(Counter counter) {
         Node rootNode = new Node(counter);
@@ -61,9 +58,6 @@ public class MCTS {
             if (!analyser.calculateGameState(promisingNode.getState().getBoard()).isEnd()) {
                 promisingNode.generateChildrenNodes();
             }
-//            else {
-//                System.out.println("terminal node");
-//            }
 
             Node nodeToExplore = randomChildNode(promisingNode);
 
@@ -72,6 +66,21 @@ public class MCTS {
             backpropagation(nodeToExplore,results);
 
         }
+        System.out.println("_________________TOP___Total moves "+ moveCounter.size()+" Wins "+winCounter.size());
+        System.out.println("0: Total-"+Collections.frequency(moveCounter,0)+" Wins-"+Collections.frequency(winCounter,0));
+        System.out.println("1: Total-"+Collections.frequency(moveCounter,1)+" Wins-"+Collections.frequency(winCounter,1));
+        System.out.println("2: Total-"+Collections.frequency(moveCounter,2)+" Wins-"+Collections.frequency(winCounter,2));
+        System.out.println("3: Total-"+Collections.frequency(moveCounter,3)+" Wins-"+Collections.frequency(winCounter,3));
+        System.out.println("4: Total-"+Collections.frequency(moveCounter,4)+" Wins-"+Collections.frequency(winCounter,4));
+        System.out.println("5: Total-"+Collections.frequency(moveCounter,5)+" Wins-"+Collections.frequency(winCounter,5));
+        System.out.println("6: Total-"+Collections.frequency(moveCounter,6)+" Wins-"+Collections.frequency(winCounter,6));
+        System.out.println("7: Total-"+Collections.frequency(moveCounter,7)+" Wins-"+Collections.frequency(winCounter,7));
+        System.out.println("8: Total-"+Collections.frequency(moveCounter,8)+" Wins-"+Collections.frequency(winCounter,8));
+        System.out.println("9: Total-"+Collections.frequency(moveCounter,9)+" Wins-"+Collections.frequency(winCounter,9));
+
+
+
+        System.out.println("_________________MIDDDLE");
 
         for (Node child : rootNode.getChildren()) {
             System.out.println(child.getMove() +" "+ child.getState().getNodeVisits() +" "+ child.getState().getNodeWins());
@@ -91,19 +100,11 @@ public class MCTS {
         Node interNode = new Node(nodeToExplore);
         State interState = interNode.getState();
 
-//        if (gameState.getWinner() == rootCounter.getOther()){
-//            nodeToExplore.getParent().getState().setNodeWins(Integer.MIN_VALUE);
-//            return  nodeToExplore.getState().getCounter();
-//        }
-//
-//        if (gameState.getWinner() == rootCounter) {
-//            nodeToExplore.getParent().getState().setNodeWins(Integer.MAX_VALUE);
-//            return  nodeToExplore.getState().getCounter();
-//        }
 
         while(gameState.isEnd() == false){
             try {
                 interState.invertCounter();
+
                 int move = interNode.playRandomMove(interState.getBoard());
 
                 interState.setBoard(new Board(interState.getBoard(), move, interState.getCounter()));
@@ -115,25 +116,16 @@ public class MCTS {
                 throw new RuntimeException(e);
             }
         }
-//        System.out.println(gameState.getWinner());
         moveCounter.add(nodeToExplore.getMove());
-        if(gameState.getWinner() == nodeToExplore.getState().getCounter()){
+        if(gameState.getWinner().getStringRepresentation().equals(rootCounter.getStringRepresentation()) ){
             winCounter.add(nodeToExplore.getMove());
+        }else{
         }
-//        System.out.println(moveCounter.contains(nodeToExplore.getMove())+"win "+winCounter.contains(nodeToExplore.getMove()));
+
 
 
         return gameState.getWinner();
-//        if(gameState.getWinner() == nodeToExplore.getState().getCounter()){
-////            System.out.println("Win");
-//            return 1;
-//        } else if (gameState.getWinner() == nodeToExplore.getState().getCounterOpposite()) {
-////            System.out.println("Lost");
-//            return -1;
-//        } else {
-////            System.out.println("Draw");
-//            return 0;
-//        }
+
     }
 
 
@@ -156,7 +148,7 @@ public class MCTS {
                 upNode.getState().addWin();
             }else {
 
-                upNode.getState().subWin();
+//                upNode.getState().subWin();
             }
             upNode = upNode.getParent();
 
@@ -164,29 +156,4 @@ public class MCTS {
     }
 }
 
-
-//
-//    public int play(){
-//        root = firstNode;
-//        root.generateChildrenNodes();
-//
-//        for (int i = 0; i < 10; i++) {
-//
-//            root.simulate();
-//            root.chooseHighValueNode();
-//            root.simulation();
-//            root.backpropagate();
-//        }
-//        root.chooseHighValueNode();
-//        return root.getMove();
-//        root.playRandomMove();
-//        roo
-//
-//    }
-//
-//
-//
-//
-//
-//}
 
