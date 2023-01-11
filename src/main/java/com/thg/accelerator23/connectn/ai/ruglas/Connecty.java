@@ -1,13 +1,10 @@
 package com.thg.accelerator23.connectn.ai.ruglas;
 
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -28,6 +25,13 @@ public class Connecty extends Player {
   }
   @Override
   public int makeMove(Board board) {
+    MiniMax miniMax = new MiniMax(getCounter());
+    try {
+
+      miniMax.miniMaxMove(board, true, 5);
+      System.out.println("best position " + miniMax.getBestColumn());
+    } catch (InvalidMoveException e) {
+    }
     Random rand = new Random();
     int randomNumber = rand.nextInt(board.getConfig().getWidth());
 
@@ -47,7 +51,7 @@ public class Connecty extends Player {
     if (checkForLosingMove.isGameOver()) {
       return checkForLosingMove.getPlayLocation();
     }
-    return randomNumber;
+    return miniMax.bestColumn;
   }
 
 

@@ -13,8 +13,6 @@ public class MiniMax {
 
     int bestColumn;
 
-    int depth = 0;
-
     int bestScore;
     int score;
 
@@ -24,7 +22,7 @@ public class MiniMax {
     }
 
 
-   public int miniMaxMove(Board boardPlay, boolean isMax, int depth, int tempScore) throws InvalidMoveException {
+   public int miniMaxMove(Board boardPlay, boolean isMax, int depth) throws InvalidMoveException {
         BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
         System.out.println("Depth " + depth);
        System.out.println("isMax " + isMax);
@@ -44,7 +42,7 @@ public class MiniMax {
             } else if (gameState.isDraw()) {
                 score = 0;
             } else {
-                    score = miniMaxMove(tempBoard, false, depth - 1, tempScore);
+                    score = miniMaxMove(tempBoard, false, depth - 1);
                 }
                 if (score>bestScore){this.bestColumn = xMax;
                     System.out.println("xmax " + xMax);
@@ -63,7 +61,7 @@ public class MiniMax {
                 } else if (gameState.isDraw()) {
                     score = 0;
                 } else {
-                    score = miniMaxMove(tempBoard, false, depth - 1, tempScore);
+                    score = miniMaxMove(tempBoard, false, depth - 1);
                 }
                    if (score<bestScore){this.bestColumn = xMin;
                        System.out.println("xmin " + xMin);
