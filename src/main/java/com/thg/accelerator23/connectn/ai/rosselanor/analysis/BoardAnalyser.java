@@ -177,19 +177,19 @@ public class BoardAnalyser {
             Map<Counter, Integer> result = getBestRunByColour(line);
 
             if (result.get(myCounter) == 2) {
-                myScore += 10;
-                //oppositionScore -=10;
+                myScore += 1;
+                oppositionScore -= 1;
             }
-            if (result.get(oppositionCounter) == 2){
-                //myScore -= 10;
-                oppositionScore +=10;
+            if (result.get(oppositionCounter) == 2) {
+                myScore -= 1;
+                oppositionScore += 1;
             }
             if (result.get(myCounter) == 3) {
                 myScore += 100;
-                //oppositionScore -=100;
+                oppositionScore -= 100;
             }
-            if (result.get(oppositionCounter) == 3){
-                //myScore -= 100;
+            if (result.get(oppositionCounter) == 3) {
+                myScore -= 100;
                 oppositionScore += 100;
             }
             if (blockingMove(board, myCounter)){
@@ -204,9 +204,7 @@ public class BoardAnalyser {
                 //myScore = Integer.MIN_VALUE;
                 oppositionScore = Integer.MAX_VALUE;
             }
-            }
-        System.out.println("MYCOUNTER: " + myCounter);
-        System.out.println(myScore-oppositionScore);
+
         return myScore - oppositionScore;
     }
 
