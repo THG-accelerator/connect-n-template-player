@@ -37,36 +37,36 @@ public class FunConcertoAi extends Player {
   public int makeMove(Board board) {
     if(!isBlankBoard(board)) {
       int previousMove = getPreviousMove(board);
-      System.out.println(previousMove);
       ArrayList<Integer> validMovesForPreviousMove = getValidLocations(previousBoard);
-      //if(isBlankBoard(previousBoard)){
-        for (int i = 0; i < validMovesForPreviousMove.size(); i++) {
-          try {
-            tree.addNode(validMovesForPreviousMove.get(i));
-          } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen");
-          }
-        //}
+
+      for (int i = 0; i < validMovesForPreviousMove.size(); i++) {
+        try {
+          tree.addNode(validMovesForPreviousMove.get(i));
+        } catch (InvalidMoveException e) {
+          System.out.println("This shouldn't happen1");
+        }
+
       }
       tree = tree.getChildAtPosition(indexOf(validMovesForPreviousMove, previousMove));
     }
 
-    ArrayList<Integer> validMoves = getValidLocations(board);
+    ArrayList<Integer> validMoves = getValidLocations(tree.getState());
     for (int i = 0; i < validMoves.size(); i++) {
       try {
-        System.out.println("Adding");
         tree.addNode(validMoves.get(i));
       } catch (InvalidMoveException e) {
-        System.out.println("This shouldn't happen");
+        System.out.println("This shouldn't happen2");
       }
     }
     int[] newMove = mM.miniMax(tree,true);
-    tree = tree.getChildAtPosition(indexOf(validMoves, newMove[1]));
+    System.out.println("Returned from minimax");
+    System.out.println(newMove[1]);
     try {
-      previousBoard = new Board(tree.getState(), newMove[1],getCounter());
+      previousBoard = new Board(board, newMove[1],getCounter());
     } catch (InvalidMoveException e) {
-      System.out.println("This shouldn't happen");
+      System.out.println("This shouldn't happen3");
     }
+    tree = tree.getChildAtPosition(indexOf(validMoves, newMove[1]));
     return newMove[1];
   }
 
@@ -95,7 +95,9 @@ public class FunConcertoAi extends Player {
           Board newBoard1 = new Board(previousBoard, i, getCounter().getOther());
           Counter counter = getTopCounterOnColumn(newBoard1, i);
           Counter counter1 = getTopCounterOnColumn(newBoard, i);
-          if(counter == counter1 && counter!=null) {
+          int index1 = getTopIndexOfCounterOnColumn(newBoard1, i, counter);
+          int index2 = getTopIndexOfCounterOnColumn(newBoard, i, counter);
+          if(index1 == index2) {
             return i;
           }
         }catch(InvalidMoveException e){
@@ -104,6 +106,15 @@ public class FunConcertoAi extends Player {
       }
       return -1;
     };
+
+  public int getTopIndexOfCounterOnColumn(Board board, int column, Counter counter){
+    for(int i = 7; i >= 0; i--){
+      if(board.getCounterAtPosition(new Position(column, i)) == counter) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   public Counter getTopCounterOnColumn(Board board, int column) {
     for(int i = 7; i >= 0; i--){

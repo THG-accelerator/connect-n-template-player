@@ -33,6 +33,7 @@ public class MinMax {
     }
 
     public int[] miniMax(MoveTree tree, Boolean maximizingPlayer) {
+        System.out.println("Running miniMax");
         int value;
         int column = -1;
         Board board = tree.getState();
@@ -59,6 +60,7 @@ public class MinMax {
                         column = tree.getChildren().get(i).getPosition();
                     }
                 }
+                System.out.println(value);
             }else{
                 value = Integer.MAX_VALUE;
                 for (int i = 0; i < tree.getChildren().size(); i++) {
