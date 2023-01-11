@@ -5,6 +5,7 @@ import java.util.List;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
+import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 
 public class MoveTree {
     private final Counter counter;
@@ -43,14 +44,14 @@ public class MoveTree {
         return this.mostRecentPosition;
     }
 
-    public void addNode(int position){
+    public void addNode(int position) throws InvalidMoveException {
         Counter newCounter = counter.getOther();
         int newDepth = depth + 1;
         Board newState = new Board(state, position, newCounter);
         MoveTree newNode = new MoveTree(counter.getOther(), depth + 1, newState, position);
     }
     public void removeNode(List<Integer> moveListToGetToNode){
-        System.out.println('sjhviw');
+        System.out.println("sjhviw");
     }
     public List<MoveTree> getLeaves(){
         List<MoveTree> leafList = new ArrayList<>();
