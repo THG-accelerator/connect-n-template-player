@@ -26,7 +26,7 @@ public class BoardAnalyser {
     public BoardAnalyser(GameConfig config) {
         positionsByFunction = new HashMap<>();
         List<Position> leftEdge = IntStream.range(0, config.getHeight())
-                .mapToObj(Integer::new)
+                . mapToObj(Integer::new)
                 .map(i -> new Position(0, i))
                 .collect(Collectors.toList());
         List<Position> bottomEdge = IntStream.range(0, config.getWidth())
