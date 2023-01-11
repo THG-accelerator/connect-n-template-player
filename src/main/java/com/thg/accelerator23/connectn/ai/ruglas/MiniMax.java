@@ -7,10 +7,10 @@ public class MiniMax {
     Board board;
     Counter counter;
     Counter oppositionCounter;
+    int score;
 
     MiniMax(Board board, Counter counter) {
         this.board = board;
         this.counter = counter;
     }
-
 }
