@@ -4,6 +4,7 @@ import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.funconcerto.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.funconcerto.analysis.GameState;
 
+import javax.swing.*;
 import java.util.*;
 
 public class FunConcertoAi extends Player {
@@ -17,8 +18,7 @@ public class FunConcertoAi extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int[] scoreAndColumn = miniMax(board, 6, -999999999, 999999999, true, getCounter());
-    System.out.println(scoreAndColumn[0]); // Prints out the score
+    int[] scoreAndColumn = miniMax(board, 5, -Integer.MAX_VALUE, Integer.MAX_VALUE, true, getCounter());
     return scoreAndColumn[1];
   }
 
@@ -26,18 +26,37 @@ public class FunConcertoAi extends Player {
     int score = 0;
 
     ArrayList<Counter> centreCounters = new ArrayList<Counter>();
-    centreCounters.add(board.getCounterAtPosition(new Position(5,0)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,1)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,2)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,3)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,4)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,5)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,6)));
-    centreCounters.add(board.getCounterAtPosition(new Position(5,7)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,0)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,1)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,2)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,3)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,4)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,5)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,6)));
+    centreCounters.add(board.getCounterAtPosition(new Position(4,7)));
+
     int numberOfCentreCountersForPlayer = Collections.frequency(centreCounters, counter);
     int numberOfCentreCountersForOtherPlayer = Collections.frequency(centreCounters, counter.getOther());
-    score+=numberOfCentreCountersForPlayer;
-    score-=numberOfCentreCountersForOtherPlayer;
+    score+=numberOfCentreCountersForPlayer*5;
+    score-=numberOfCentreCountersForOtherPlayer*5;
+
+    ArrayList<Counter> row2Counters = new ArrayList<Counter>();
+    row2Counters.add(board.getCounterAtPosition(new Position(0,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(1,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(2,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(3,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(4,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(5,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(6,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(7,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(8,1)));
+    row2Counters.add(board.getCounterAtPosition(new Position(9,1)));
+
+    int numberOfRow2CountersForPlayer = Collections.frequency(row2Counters, counter);
+    int numberOfRow2CountersForOtherPlayer = Collections.frequency(row2Counters, counter.getOther());
+    score+=numberOfRow2CountersForPlayer;
+    score-=numberOfRow2CountersForOtherPlayer;
+
     return score;
   }
 
@@ -63,9 +82,9 @@ public class FunConcertoAi extends Player {
     if(depth == 0 || isTerminal){
       if(isTerminal){
         if(checkWin(board, analyzer, counter)){
-          return new int[]{100000000, -1};
+          return new int[]{10000000*(depth+1), -1};
         }else if(checkWin(board, analyzer, counter.getOther())){
-          return new int[]{-100000000,-1};
+          return new int[]{-100000000*(depth+1),-1};
         }else{ // Game is a draw as there are no more valid moves
           return new int[]{0, -1};
         }
@@ -74,7 +93,7 @@ public class FunConcertoAi extends Player {
       }
     }
     if(maximizingPlayer){
-      value = -999999999;
+      value = -Integer.MAX_VALUE;
       column = -1;
       for(int i = 0; i < listOfValidLocations.size(); i++){
         try {
@@ -83,18 +102,25 @@ public class FunConcertoAi extends Player {
           if(alpha >= beta){
             break;
           }
-          int newScore = miniMax(copyBoard, depth-1, alpha, beta, false, counter)[0];
-          if(newScore > value){
-            value = newScore;
+          int[] newScoreAndColumn = miniMax(copyBoard, depth-1, alpha, beta, false, counter);
+
+          if(newScoreAndColumn[0] > value){
+            value = newScoreAndColumn[0];
             column = listOfValidLocations.get(i);
           }
+//          if(newScoreAndColumn[0] == value){
+//            int[] arrayForRandom = new int[]{listOfValidLocations.get(i), column};
+//            Random r = new Random();
+//            int randomIndex = r.nextInt(2);
+//            column = arrayForRandom[randomIndex];
+//          }
         }catch(InvalidMoveException e){
           System.out.println("This shouldn't happen");
         }
       }
       return new int[]{value, column};
     }else{
-      value = 999999999;
+      value = Integer.MAX_VALUE;
       column = -1;
       for(int i = 0; i < listOfValidLocations.size(); i++) {
         try {
@@ -103,11 +129,18 @@ public class FunConcertoAi extends Player {
           if (alpha >= beta) {
             break;
           }
-          int newScore = miniMax(copyBoard, depth-1, alpha, beta, true, counter)[0];
-          if(newScore < value){
-            value = newScore;
+          int[] newScoreAndColumn = miniMax(copyBoard, depth-1, alpha, beta, true, counter);
+
+          if(newScoreAndColumn[0] < value){
+            value = newScoreAndColumn[0];
             column = listOfValidLocations.get(i);
           }
+//          if(newScoreAndColumn[0] == value){
+//            int[] arrayForRandom = new int[]{listOfValidLocations.get(i), column};
+//            Random r = new Random();
+//            int randomIndex = r.nextInt(2);
+//            column = arrayForRandom[randomIndex];
+//          }
         }catch(InvalidMoveException e){
           System.out.println("This shouldn't happen");
         }
