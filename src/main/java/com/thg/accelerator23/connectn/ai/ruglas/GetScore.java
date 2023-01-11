@@ -13,7 +13,7 @@ import java.util.List;
 public class GetScore {
     Board board;
     BoardAnalyser boardAnalyser;
-
+    int totalScore;
     public GetScore(Board board) {
         this.board = board;
         this.boardAnalyser = new BoardAnalyser(this.board.getConfig());
@@ -21,11 +21,19 @@ public class GetScore {
 
     public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
+        totalScore = 0;
         if(gameState.isDraw()){return 0;} else if (gameState.isWin()) { return 10000;
 
         }
         else{
-            return getScoreFromAgjPositions(positionToCheck, boardToCheck, counter);
+            totalScore += getScoreFromAgjPositions(positionToCheck, boardToCheck, counter);
+            if (positionToCheck.getX() == 5 || positionToCheck.getX() == 5){
+                totalScore += 10;
+            }
+            else if (positionToCheck.getX() == 4 || positionToCheck.getX() == 7){
+                totalScore += 5;
+            }
+            return totalScore;
         }
 
 
@@ -96,7 +104,7 @@ public class GetScore {
             long counterCount = counterList.stream().filter(counter -> counter== playerCounter).count();
             if(counterCount == 2){return 10;}
             else if(counterCount == 3) {return 20;}
-            else return 0;
+            else return 5;
         }
 
     }

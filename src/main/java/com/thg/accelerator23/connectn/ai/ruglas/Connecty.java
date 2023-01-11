@@ -30,31 +30,13 @@ public class Connecty extends Player {
   @Override
   public int makeMove(Board board) {
 
-    ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
-
+    MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this.getCounter());
     try {
-      moveChooser.findWinPosition();
+      miniMaxScoring.miniMaxMove(board, true, 4, 0);
+      return miniMaxScoring.getBestColumn();
     } catch (InvalidMoveException e) {
-      throw new RuntimeException(e);
     }
-    if (moveChooser.getPlayLocation() != null) {
-      return moveChooser.getPlayLocation();
-    } else {
-      try {
-        moveChooser.findBlockPosition();
-      } catch (InvalidMoveException e) {
-        throw new RuntimeException(e);
-      }
-      if (moveChooser.getPlayLocation() != null) {
-        return moveChooser.getPlayLocation();
-      } else {
-        int randomNumber;
-        do {
-          Random rand = new Random();
-          randomNumber = rand.nextInt(board.getConfig().getWidth());
-        } while (TestMove.doesMoveGiveOpponentWin(board, randomNumber, this.getCounter()));
-        return randomNumber;
-      }
-    }
+    System.out.println("No position found");
+    return 5;
   }
 }
