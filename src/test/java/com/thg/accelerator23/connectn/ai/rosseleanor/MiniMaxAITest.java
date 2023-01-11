@@ -1,20 +1,83 @@
-package com.thg.accelerator23.connectn.ai.rosselanor;
+package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 import com.thehutgroup.accelerator.connectn.player.*;
-import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.thehutgroup.accelerator.connectn.player.Counter.O;
 import static com.thehutgroup.accelerator.connectn.player.Counter.X;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MiniMaxAITest {
-
     MiniMaxAI miniMaxAI;
+
+    @BeforeEach
+    void setUp() {
+    }
+
+    @AfterEach
+    void tearDown() {
+    }
+
+    @Disabled
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    void getMoveWin(int depth) throws InvalidMoveException {
+        int numInARow = 4;
+        int width = 10;
+        int height = 5;
+
+        Counter[][] counters = new Counter[height][width];
+        counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[2] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
+        counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
+        counters[0] = new Counter[]{O, X, X, null, null, null, null, null, null, null};
+        counters = rotateBoard(counters);
+
+        Board board = new Board(counters, new GameConfig(width, height, numInARow));
+
+        miniMaxAI = new MiniMaxAI(depth, O);
+        miniMaxAI.setBoard(board);
+        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+
+        int move = miniMaxAI.getMove();
+
+        Assertions.assertEquals(0, move);
+
+    }
+
+    @Disabled
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    void getMoveBlocking(int depth) throws InvalidMoveException {
+        int numInARow = 4;
+        int width = 10;
+        int height = 5;
+
+        Counter[][] counters = new Counter[height][width];
+        counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[2] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
+        counters[0] = new Counter[]{O, X, X, X, null, null, null, null, null, null};
+        counters = rotateBoard(counters);
+
+        Board board = new Board(counters, new GameConfig(width, height, numInARow));
+
+        miniMaxAI = new MiniMaxAI(depth, O);
+        miniMaxAI.setBoard(board);
+        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+
+        int move = miniMaxAI.getMove();
+
+        Assertions.assertEquals(4, move);
+    }
+
 
     @Test
     void getChildrenTest() throws InvalidMoveException {
@@ -73,7 +136,6 @@ class MiniMaxAITest {
         Assertions.assertEquals(5, numberChildren);
     }
 
-
     private Counter[][] rotateBoard(Counter[][] board) {
         Counter[][] newBoard = new Counter[board[0].length][board.length];
         for (int i = 0; i < board[0].length; i++) {
@@ -84,3 +146,6 @@ class MiniMaxAITest {
         return newBoard;
     }
 }
+
+;
+

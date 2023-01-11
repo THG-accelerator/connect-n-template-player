@@ -1,9 +1,9 @@
-package com.thg.accelerator23.connectn.ai.rosselanor;
+package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
+import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
 
 import java.util.concurrent.ThreadLocalRandom;
 

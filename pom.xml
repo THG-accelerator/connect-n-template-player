@@ -19,7 +19,7 @@
 
     <properties>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
-        <yourteam>rosselanor</yourteam>
+        <yourteam>rosseleanor</yourteam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -44,6 +44,13 @@
             <version>5.9.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.github.THG-accelerator</groupId>
             <artifactId>connectn-player</artifactId>
