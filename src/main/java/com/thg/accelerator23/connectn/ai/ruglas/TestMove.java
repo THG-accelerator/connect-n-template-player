@@ -19,12 +19,22 @@ public class TestMove {
     // (The Board constructor automatically finds valid move within a column if there is one)
 
 
-    public static boolean isGameOverAfterMove(Board board, int column, Counter counter){
+    public static boolean isGameWonAfterMove(Board board, int column, Counter counter){
         Board tryBoard = tryMove(board, column, counter);
         BoardAnalyser boardAnalyser = new BoardAnalyser(tryBoard.getConfig());
         GameState gameState = boardAnalyser.calculateGameState(tryBoard);
 
         if (gameState.isWin()) {
+            return true;
+        }
+        return false;
+    }
+    public static boolean isGameDrawAfterMove(Board board, int column, Counter counter){
+        Board tryBoard = tryMove(board, column, counter);
+        BoardAnalyser boardAnalyser = new BoardAnalyser(tryBoard.getConfig());
+        GameState gameState = boardAnalyser.calculateGameState(tryBoard);
+
+        if (gameState.isDraw()) {
             return true;
         }
         return false;
@@ -35,25 +45,12 @@ public class TestMove {
         Board tryBoard = null;
             tryBoard = tryMove(board, column, counter);
 
-        if (isGameOverAfterMove(tryBoard, column, opponentCounter)) {
+        if (isGameWonAfterMove(tryBoard, column, opponentCounter)) {
             return true;
         }
         return false;
     }
 
-
-/*    TODO: function that takes in a position or int ad returns if there is a line of three in 4 spaces surrounding it. May involve tryMove on surrounding squares. */
-    private boolean checkThreeInARow(Board board, Counter counter) {
-
-        ArrayList<Counter> threeInARowArray = new ArrayList<>();
-
-        GameConfig config = new GameConfig(10,8, 4);
-        BoardAnalyser analyser = new BoardAnalyser(config);
-
-        int maxInARow = analyser.calculateGameState(board).getMaxInARowByCounter().get(counter);
-
-        return (maxInARow == 3);
-    }
 
     public static ArrayList<ArrayList<Position>> getAdjacentNPositions(Board board, Position position, int n) {
         ArrayList<ArrayList<Position>> positions = new ArrayList<>();
@@ -70,17 +67,10 @@ public class TestMove {
 
         for ( int i=1-n; i < n ; i++) {
 
-//            Position leftPosition = new Position(x-i,y);
             Position horizontalPosition = new Position(x+i, y);
             Position verticalPosition = new Position(x,y+i);
             Position upwardsDiagonalPosition = new Position(x+i,y+i);
             Position downwardsDiagonalPosition = new Position(x+i,y-i);
-
-//            Position belowPosition = new Position(x,y-i);
-//            Position diagRightUp = new Position(x+i,y+i);
-
-
-
 
             if (board.isWithinBoard(horizontalPosition)) {
                 horizontal.add(horizontalPosition);
