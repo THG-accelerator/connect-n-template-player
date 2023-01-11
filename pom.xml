@@ -6,7 +6,7 @@
     <groupId>com.thg.accelerator23.connectn.ai</groupId>
     <!-- do not change this -->
     <artifactId>${yourteam}</artifactId>
-    <version>lol</version>
+    <version>1.2.0</version>
 
     <repositories>
         <repository>
