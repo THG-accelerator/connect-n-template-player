@@ -1,18 +1,18 @@
-package com.thg.accelerator23.connectn.ai.rosselanor;
+package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
+import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
 
 
-public class ConnectBot extends Player {
+public class ConnectFourTheWin extends Player {
     Counter myCounter;
     MiniMaxAI miniMaxAI;
 
-    public ConnectBot(Counter myCounter) {
-        super(myCounter, ConnectBot.class.getName());
+    public ConnectFourTheWin(Counter myCounter) {
+        super(myCounter, ConnectFourTheWin.class.getName());
         this.myCounter = myCounter;
         miniMaxAI = new MiniMaxAI(4, myCounter);
     }

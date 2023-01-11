@@ -1,10 +1,10 @@
-package com.thg.accelerator23.connectn.ai.rosselanor.analysis;
+package com.thg.accelerator23.connectn.ai.rosseleanor.analysis;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import com.thg.accelerator23.connectn.ai.rosselanor.model.Line;
+import com.thg.accelerator23.connectn.ai.rosseleanor.model.Line;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,16 +160,12 @@ public class BoardAnalyser {
                 myScore += 1E6;
             }
             if (result.get(oppositionCounter) == 4) {
-                //myScore = Integer.MIN_VALUE;
                 myScore -= 1E6;
             }
         }
-        System.out.println("MY SCORE: " + myScore);
-        System.out.println(myScore);
 
         return myScore;
     }
-
 }
 
 

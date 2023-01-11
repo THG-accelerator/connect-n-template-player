@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.rosselanor;
+package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 public class Move {
 

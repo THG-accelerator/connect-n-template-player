@@ -1,19 +1,20 @@
-package com.thg.accelerator23.connectn.ai.rosselanor;
+package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-import com.thg.accelerator23.connectn.ai.rosselanor.analysis.BoardAnalyser;
-import com.thg.accelerator23.connectn.ai.rosselanor.analysis.GameState;
+import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
+import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.GameState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MiniMaxAI {
-
-    private int maxDepth;
-    private Counter maximisingCounter;
+    private final int maxDepth;
+    private final Counter maximisingCounter;
+    private final Random r;
+    GameState gameState;
     private Counter minimisingCounter;
     private BoardAnalyser boardAnalyser;
     private Board board;
@@ -23,6 +24,8 @@ public class MiniMaxAI {
     public MiniMaxAI(int maxDepth, Counter maximisingCounter) {
         this.maxDepth = maxDepth;
         this.maximisingCounter = maximisingCounter;
+        this.r = new Random();
+        r.setSeed(10);
     }
 
     public void setBoard(Board board) {
@@ -53,7 +56,7 @@ public class MiniMaxAI {
 
 
     public Move max(Board board, int depth) throws InvalidMoveException {
-        GameState gameState = boardAnalyser.calculateGameState(board);
+        gameState = boardAnalyser.calculateGameState(board);
 
         if (gameState.isEnd() || (depth == maxDepth)) {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
@@ -70,7 +73,7 @@ public class MiniMaxAI {
             if (move.getValue() >= maxMove.getValue()) {
                 lastMove = childCol;
                 if ((move.getValue() == maxMove.getValue())) {
-                    if (new Random().nextInt(2) == 0) {
+                    if (r.nextInt(2) == 0) {
                         maxMove.setColumn(childCol);
                         maxMove.setValue(move.getValue());
                     }
@@ -86,7 +89,7 @@ public class MiniMaxAI {
     }
 
     public Move min(Board board, int depth) throws InvalidMoveException {
-        GameState gameState = boardAnalyser.calculateGameState(board);
+        gameState = boardAnalyser.calculateGameState(board);
 
         if (gameState.isEnd() || (depth == maxDepth)) {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
@@ -102,7 +105,7 @@ public class MiniMaxAI {
             if (move.getValue() <= minMove.getValue()) {
                 lastMove = childCol;
                 if ((move.getValue() == minMove.getValue())) {
-                    if (new Random().nextInt(2) == 0) {
+                    if (r.nextInt(2) == 0) {
                         minMove.setColumn(childCol);
                         minMove.setValue(move.getValue());
                     }

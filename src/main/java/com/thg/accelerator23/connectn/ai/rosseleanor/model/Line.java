@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.rosselanor.model;
+package com.thg.accelerator23.connectn.ai.rosseleanor.model;
 
 import com.thehutgroup.accelerator.connectn.player.Counter;
 
