@@ -99,7 +99,7 @@ public class MiniMaxAI {
         GameState gameState = boardAnalyser.calculateGameState(board);
 
         if (gameState.isEnd() || (depth == maxDepth)) {
-            return new Move(lastMove, boardAnalyser.analyse(board, minimisingCounter) * -1);
+            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 //        GameState gameState = boardAnalyser.calculateGameState(board);
 //
