@@ -140,7 +140,6 @@ public class BoardAnalyser {
         Counter oppositionCounter = otherPlayer(myCounter);
 
         int myScore = 0;
-        int oppositionScore = 0;
 
         for (Line line : lines) {
 
@@ -148,33 +147,28 @@ public class BoardAnalyser {
 
             if (result.get(myCounter) == 2) {
                 myScore += 1;
-                oppositionScore -= 1;
             }
             if (result.get(oppositionCounter) == 2) {
                 myScore -= 1;
-                oppositionScore += 1;
             }
             if (result.get(myCounter) == 3) {
                 myScore += 100;
-                oppositionScore -= 100;
             }
             if (result.get(oppositionCounter) == 3) {
                 myScore -= 100;
-                oppositionScore += 100;
             }
-
             if (result.get(myCounter) == 4) {
-                myScore = Integer.MAX_VALUE;
-                oppositionScore = Integer.MIN_VALUE;
-
+                myScore += 1E6;
             }
             if (result.get(oppositionCounter) == 4) {
-                myScore = Integer.MIN_VALUE;
-                oppositionScore = Integer.MAX_VALUE;
+                //myScore = Integer.MIN_VALUE;
+                myScore -= 1E6;
             }
-
         }
-        return myScore - oppositionScore;
+        System.out.println("MY SCORE: " + myScore );
+        System.out.println(myScore);
+
+        return myScore;
     }
 
 
