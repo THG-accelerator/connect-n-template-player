@@ -56,19 +56,8 @@ public class MiniMaxAI {
         GameState gameState = boardAnalyser.calculateGameState(board);
 
         if (gameState.isEnd() || (depth == maxDepth)) {
-
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
-//        if (gameState.isEnd() || (depth == maxDepth)) {
-//            if (gameState.isEnd() ) {
-//                if (gameState.getWinner() == maximisingCounter) {
-//                    return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
-//                } else if (gameState.getWinner() == minimisingCounter) {
-//                    new Move(lastMove, Integer.MIN_VALUE);
-//                }
-//            }
-//            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
-//        }
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
 
@@ -102,18 +91,6 @@ public class MiniMaxAI {
         if (gameState.isEnd() || (depth == maxDepth)) {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
-//        GameState gameState = boardAnalyser.calculateGameState(board);
-//
-//        if (gameState.isEnd() || (depth == maxDepth)) {
-//            if (gameState.isEnd()) {
-//                if (gameState.getWinner() == maximisingCounter) {
-//                    return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
-//                } else if (gameState.getWinner() == boardAnalyser.otherPlayer(maximisingCounter)) {
-//                    new Move(lastMove, Integer.MIN_VALUE);
-//                }
-//            }
-//            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
-//        }
 
         List<Board> children = new ArrayList<>(getChildren(minimisingCounter));
 

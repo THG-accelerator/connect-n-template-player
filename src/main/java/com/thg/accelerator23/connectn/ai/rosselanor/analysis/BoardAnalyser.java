@@ -6,7 +6,10 @@ import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Position;
 import com.thg.accelerator23.connectn.ai.rosselanor.model.Line;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -154,16 +157,16 @@ public class BoardAnalyser {
                 myScore -= 100;
             }
             if (result.get(myCounter) == 4) {
-                myScore = Integer.MAX_VALUE;
-                //oppositionScore = Integer.MIN_VALUE;
+                myScore += 1E6;
             }
             if (result.get(oppositionCounter) == 4) {
                 //myScore = Integer.MIN_VALUE;
-                myScore = Integer.MIN_VALUE;
+                myScore -= 1E6;
             }
         }
-        System.out.println("MY SCORE: " + myScore );
+        System.out.println("MY SCORE: " + myScore);
         System.out.println(myScore);
+
         return myScore;
     }
 
