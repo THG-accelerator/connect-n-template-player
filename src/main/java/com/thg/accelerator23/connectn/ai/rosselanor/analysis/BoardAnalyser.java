@@ -114,40 +114,6 @@ public class BoardAnalyser {
         return bestRunByColour;
     }
 
-    private boolean blockingMove(Board board, Counter myCounter){
-
-        List<Line> lines = getLines(board);
-
-        for (Line line : lines) {
-            Counter current = null;
-            int currentRunLength = 0;
-            while (line.hasNext()) {
-                Counter next = line.next();
-                if (current != next) {
-                    if (current != null) {
-                        if (current == otherPlayer(myCounter)){
-                            if (currentRunLength == 3){
-                                if (next == myCounter){
-                                    return true;
-                                }
-                                else {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    currentRunLength = 1;
-                    current = next;
-                    } else {
-                    currentRunLength++;
-                }
-            }
-
-        }
-        return false;
-    }
-
-
     public boolean isColumnFull(Board board, int position) {
         return IntStream.range(0, board.getConfig().getHeight())
                 .allMatch(
@@ -170,7 +136,6 @@ public class BoardAnalyser {
         Counter oppositionCounter = otherPlayer(myCounter);
 
         int myScore = 0;
-        int oppositionScore = 0;
 
         for (Line line : lines) {
 
@@ -178,36 +143,29 @@ public class BoardAnalyser {
 
             if (result.get(myCounter) == 2) {
                 myScore += 1;
-                oppositionScore -= 1;
             }
             if (result.get(oppositionCounter) == 2) {
                 myScore -= 1;
-                oppositionScore += 1;
             }
             if (result.get(myCounter) == 3) {
                 myScore += 100;
-                oppositionScore -= 100;
             }
             if (result.get(oppositionCounter) == 3) {
                 myScore -= 100;
-                oppositionScore += 100;
-            }
-            if (blockingMove(board, myCounter)){
-                myScore += 1000;
             }
             if (result.get(myCounter) == 4) {
-                myScore += Integer.MAX_VALUE;
+                myScore = Integer.MAX_VALUE;
                 //oppositionScore = Integer.MIN_VALUE;
-
             }
             if (result.get(oppositionCounter) == 4) {
                 //myScore = Integer.MIN_VALUE;
-                oppositionScore = Integer.MAX_VALUE;
+                myScore = Integer.MIN_VALUE;
             }
-
-        return myScore - oppositionScore;
+        }
+        System.out.println("MY SCORE: " + myScore );
+        System.out.println(myScore);
+        return myScore;
     }
-
 
 }
 
