@@ -11,21 +11,35 @@ public class AlanisFourconnect extends Player {
     super(counter, AlanisFourconnect.class.getName());
   }
 
+  public int validRandomMove(Board board){
+    int randomMove;
+    do {
+      randomMove = ThreadLocalRandom.current().nextInt(0, board.getConfig().getWidth());
+    } while (board.hasCounterAtPosition(new Position(randomMove, board.getConfig().getHeight()-1)));
+    return randomMove;
+  }
+
+
   @Override
   public int makeMove(Board board) {
-//    Position position = new Position(0,5);
-
-//    int middleColumn = (int) Math.floor((board.getConfig().getWidth() / 2));
-//    for (int i = 0; i < board.getConfig().getWidth(); i++) {
-    if (!board.hasCounterAtPosition(new Position(5, 0))){
-//      System.out.println(board.getCounterAtPosition(new Position(5, 0)));
-//      System.out.println(!board.hasCounterAtPosition(new Position(0, 5)));
-      return (int) Math.floor((board.getConfig().getWidth() / 2));
-    } else {
-      System.out.println("lol");
-      return ThreadLocalRandom.current().nextInt(0, 9);
+    AIAnalyser slayIAnalyser = new AIAnalyser(board.getConfig());
+    try {
+      if (slayIAnalyser.winningColumn(board, getCounter()) != null) {
+        return slayIAnalyser.winningColumn(board, getCounter());
+      }
+      else if (slayIAnalyser.winningColumn(board, getCounter().getOther()) != null){
+        return slayIAnalyser.winningColumn(board, getCounter().getOther());
+      }
+      else {
+      return validRandomMove(board);
+    }} catch(Exception exception){
+      return validRandomMove(board);
     }
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
   }
 }
+
+//   if (!board.hasCounterAtPosition(new Position((board.getConfig().getWidth() / 2), 0))){
+//           return (int) Math.floor((board.getConfig().getWidth() / 2));
+//           }
