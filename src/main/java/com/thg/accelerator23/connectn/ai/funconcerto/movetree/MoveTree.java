@@ -10,7 +10,7 @@ public class MoveTree {
     private final Counter counter;
     private final int depth;
     private final Board state;
-    private int fromWhichInitialMove;
+    private int mostRecentPosition;
     private List<MoveTree> moveList;
 
     public MoveTree() {
