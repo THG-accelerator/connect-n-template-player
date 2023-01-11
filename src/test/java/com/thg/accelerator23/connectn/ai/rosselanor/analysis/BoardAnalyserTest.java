@@ -106,8 +106,8 @@ class BoardAnalyserTest {
         int colO = boardAnalyser.analyse(board, O);
         int colX = boardAnalyser.analyse(board, X);
 
-        Assertions.assertEquals(Integer.MAX_VALUE, colO);
-        Assertions.assertEquals(Integer.MIN_VALUE, colX);
+        Assertions.assertEquals(1000000, colO);
+        Assertions.assertEquals(-1000000, colX);
 
     }
 
