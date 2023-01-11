@@ -162,6 +162,7 @@ public class BoardAnalyser {
             if (result.get(oppositionCounter) == 4) {
                 //myScore = Integer.MIN_VALUE;
                 myScore -= 1E6;
+
             }
         }
         System.out.println("MY SCORE: " + myScore);
