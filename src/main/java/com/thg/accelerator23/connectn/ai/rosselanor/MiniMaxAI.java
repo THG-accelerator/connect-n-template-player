@@ -40,7 +40,7 @@ public class MiniMaxAI {
         return maxMove.getColumn();
     }
 
-    private List<Board> getChildren(Counter counter) throws InvalidMoveException {
+    protected List<Board> getChildren(Counter counter) throws InvalidMoveException {
         List<Board> children = new ArrayList<>();
         for (int col = 0; col < board.getConfig().getWidth(); col++) {
             if (!boardAnalyser.isColumnFull(board, col)) {
