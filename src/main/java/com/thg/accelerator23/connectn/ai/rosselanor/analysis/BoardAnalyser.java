@@ -49,8 +49,6 @@ public class BoardAnalyser {
     }
 
 
-    // returns a GameState
-    // Counter : best run length
     public GameState calculateGameState(Board board) {
         List<Line> lines = getLines(board);
         Map<Counter, Integer> bestRunByColour = new HashMap<>();
@@ -165,9 +163,10 @@ public class BoardAnalyser {
                 oppositionScore += 10;
             }
 
-            if (result.get(myCounter) == 4) {
-                myScore += 1000;
-                oppositionScore -= 1000;
+            if (result.get(counter) == 4) {
+                myScore += Integer.MAX_VALUE;
+                oppositionScore -= Integer.MAX_VALUE;
+
             }
             if (result.get(oppositionCounter) == 4) {
                 myScore -= 1000;
