@@ -5,10 +5,10 @@ import com.thehutgroup.accelerator.connectn.player.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FullColumnsChecker {
+public class CheckWhichColumnsAreEmpty {
     private final Board board;
 
-    public  FullColumnsChecker(Board board){
+    public CheckWhichColumnsAreEmpty(Board board){
         this.board = board;
     }
 
