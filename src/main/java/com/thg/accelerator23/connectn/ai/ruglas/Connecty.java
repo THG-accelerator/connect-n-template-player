@@ -10,12 +10,12 @@ import java.util.Random;
 
 public class Connecty extends Player {
   Counter opponentCounter;
+
   public Connecty(Counter counter) {
-    //TODO: fill in your name here
     super(counter, Connecty.class.getName());
     this.opponentCounter = getOpponent();
-
   }
+
   private Counter getOpponent() {
     return switch (this.getCounter()) {
       case X -> Counter.O;
@@ -23,8 +23,10 @@ public class Connecty extends Player {
       default -> null;
     };
   }
+
   @Override
   public int makeMove(Board board) {
+<<<<<<< HEAD
     MiniMax miniMax = new MiniMax(getCounter());
     try {
 
@@ -34,15 +36,36 @@ public class Connecty extends Player {
     }
     Random rand = new Random();
     int randomNumber = rand.nextInt(board.getConfig().getWidth());
+=======
+>>>>>>> 7fe2fca42d1e1478483b5c5a8c2ff8b9ad5bd864
 
-    CheckMoveForGameOver checkForWinningMove = null;
+    ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
+
     try {
-      checkForWinningMove = new CheckMoveForGameOver(board, this.getCounter());
+      moveChooser.findWinPosition();
     } catch (InvalidMoveException e) {
+      throw new RuntimeException(e);
     }
-    if (checkForWinningMove.isGameOver()){
-      return checkForWinningMove.getPlayLocation();
+    if (moveChooser.getPlayLocation() != null) {
+      return moveChooser.getPlayLocation();
+    } else {
+      try {
+        moveChooser.findBlockPosition();
+      } catch (InvalidMoveException e) {
+        throw new RuntimeException(e);
+      }
+      if (moveChooser.getPlayLocation() != null) {
+        return moveChooser.getPlayLocation();
+      } else {
+        int randomNumber;
+        do {
+          Random rand = new Random();
+          randomNumber = rand.nextInt(board.getConfig().getWidth());
+        } while (TestMove.doesMoveGiveOpponentWin(board, randomNumber, this.getCounter()));
+        return randomNumber;
+      }
     }
+<<<<<<< HEAD
     CheckMoveForGameOver checkForLosingMove = null;
     try {
       checkForLosingMove = new CheckMoveForGameOver(board, opponentCounter);
@@ -52,8 +75,7 @@ public class Connecty extends Player {
       return checkForLosingMove.getPlayLocation();
     }
     return miniMax.bestColumn;
+=======
+>>>>>>> 7fe2fca42d1e1478483b5c5a8c2ff8b9ad5bd864
   }
-
-
-
 }
