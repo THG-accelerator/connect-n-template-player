@@ -3,51 +3,52 @@ package com.thg.accelerator23.connectn.ai.funconcerto;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
+import com.thehutgroup.accelerator.connectn.player.Position;
 import com.thg.accelerator23.connectn.ai.funconcerto.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.funconcerto.analysis.GameState;
 import com.thg.accelerator23.connectn.ai.funconcerto.movetree.MoveTree;
 
 public class MinMax {
 
-    static GameConfig config = new GameConfig(10,8,4);
-    static BoardAnalyser analyzer = new BoardAnalyser(config);
-    static Counter playerCounter;
+    GameConfig config = new GameConfig(10,8,4);
+    BoardAnalyser analyzer = new BoardAnalyser(config);
+    Counter playerCounter;
 
     public MinMax(Counter playerCounter) {
-        MinMax.playerCounter = playerCounter;
+        this.playerCounter = playerCounter;
     }
 
-    public static boolean checkWin(Board board, BoardAnalyser analyser, Counter counter){
+    public boolean checkWin(Board board, BoardAnalyser analyser, Counter counter){
         GameState state = analyser.calculateGameState(board);
         return state.isWin() && state.getWinner() == counter ;
     }
 
-    public static boolean checkDraw(Board board, BoardAnalyser analyser){
+    public boolean checkDraw(Board board, BoardAnalyser analyser){
         GameState state = analyser.calculateGameState(board);
         return state.isDraw();
     }
 
-    public static boolean isTerminalNode(Board board){
+    public boolean isTerminalNode(Board board){
         return checkWin(board, analyzer, playerCounter) || checkWin(board,analyzer, playerCounter.getOther()) || checkDraw(board,analyzer);
     }
 
-    public static int[] miniMax(MoveTree tree, Boolean maximizingPlayer) {
+    public int[] miniMax(MoveTree tree, Boolean maximizingPlayer) {
         int value;
         int column = -1;
         Board board = tree.getState();
         boolean isTerminal = isTerminalNode(board);
         if(isTerminal){
             if(checkWin(board, analyzer, playerCounter)){
-                return new int[]{10000000, -1};
+                return new int[]{10000000, tree.getPosition()};
             }else if(checkWin(board, analyzer, playerCounter.getOther())){
-                return new int[]{-100000000,-1};
+                return new int[]{-100000000,tree.getPosition()};
             }else{ // Game is a draw as there are no more valid moves
-                return new int[]{0, -1};
+                return new int[]{0, tree.getPosition()};
             }
 
         }else{
             if(tree.getChildren().size() == 0){
-                return new int[]{Score.ScoreCalculator(board), tree.getPosition()};
+                return new int[]{Score.ScoreCalculator(board, playerCounter), tree.getPosition()};
             }
             if(maximizingPlayer) {
                 value = -Integer.MAX_VALUE;
