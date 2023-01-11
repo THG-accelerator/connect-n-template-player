@@ -1,10 +1,10 @@
 package com.thg.accelerator23.connectn.ai.politicallyconnect;
 
-import com.thehutgroup.accelerator.connectn.player.Board;
-import com.thehutgroup.accelerator.connectn.player.Counter;
-import com.thehutgroup.accelerator.connectn.player.GameConfig;
-import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
+import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.politicallyconnect.analysis.BoardAnalyser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AIAnalyser {
     BoardAnalyser boardAnalyser;
@@ -23,7 +23,7 @@ public class AIAnalyser {
     }
 
     public Integer winningColumn(Board board, Counter counter) {
-        for (int column = 0; column < board.getConfig().getWidth(); column++){
+        for (int column = 0; column < board.getConfig().getWidth(); column++) {
             if (isWin(column, board, counter)) {
                 return column;
             }
@@ -31,5 +31,22 @@ public class AIAnalyser {
         return null;
     }
 
-}
+    public boolean isColumnFull(Board board, int column) {
+        return board.getCounterAtPosition(new Position(column, board.getConfig().getHeight() - 1)) != null;
+    }
 
+    public List<Integer> movesNotBelowGameEndingSpace(Board board, Counter counter) {
+        List<Integer> propaDecentMoves = new ArrayList<>();
+        for (int column = 0; column < board.getConfig().getWidth(); column++) {
+            try {
+                Board copyOfBoard = new Board(board, column, counter);
+                if (!isWin(column, copyOfBoard, counter) && !isWin(column, copyOfBoard, counter.getOther())) {
+                    propaDecentMoves.add(column);
+                }
+            } catch (InvalidMoveException exception) {
+                continue;
+            }
+        }
+        return propaDecentMoves;
+    }
+}
