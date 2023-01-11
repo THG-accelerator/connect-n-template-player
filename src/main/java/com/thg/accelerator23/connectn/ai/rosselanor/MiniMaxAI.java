@@ -14,6 +14,7 @@ public class MiniMaxAI {
 
     private int maxDepth;
     private Counter maximisingCounter;
+    private Counter minimisingCounter;
     private BoardAnalyser boardAnalyser;
     private Board board;
     private int lastMove;
@@ -34,8 +35,9 @@ public class MiniMaxAI {
 
     //Initiates the MiniMax algorithm
     public int getMove() throws InvalidMoveException {
-//        new Board(board.getConfig());
-        Move maxMove = max(new Board(board.getConfig()), 0);
+        this.minimisingCounter = boardAnalyser.otherPlayer(maximisingCounter);
+
+        Move maxMove = max(board, 0);
         return maxMove.getColumn();
     }
 
@@ -58,10 +60,10 @@ public class MiniMaxAI {
             return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
         }
 //        if (gameState.isEnd() || (depth == maxDepth)) {
-//            if (gameState.isEnd()) {
+//            if (gameState.isEnd() ) {
 //                if (gameState.getWinner() == maximisingCounter) {
 //                    return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
-//                } else if (gameState.getWinner() == boardAnalyser.otherPlayer(maximisingCounter)) {
+//                } else if (gameState.getWinner() == minimisingCounter) {
 //                    new Move(lastMove, Integer.MIN_VALUE);
 //                }
 //            }
@@ -79,7 +81,6 @@ public class MiniMaxAI {
             if (move.getValue() >= maxMove.getValue()) {
                 lastMove = childCol;
                 if ((move.getValue() == maxMove.getValue())) {
-
                     if (new Random().nextInt(2) == 0) {
                         maxMove.setColumn(childCol);
                         maxMove.setValue(move.getValue());
@@ -99,7 +100,7 @@ public class MiniMaxAI {
         GameState gameState = boardAnalyser.calculateGameState(board);
 
         if (gameState.isEnd() || (depth == maxDepth)) {
-            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
+            return new Move(lastMove, boardAnalyser.analyse(board, minimisingCounter) * -1);
         }
 //        GameState gameState = boardAnalyser.calculateGameState(board);
 //
@@ -114,7 +115,7 @@ public class MiniMaxAI {
 //            return new Move(lastMove, boardAnalyser.analyse(board, maximisingCounter));
 //        }
 
-        List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
+        List<Board> children = new ArrayList<>(getChildren(minimisingCounter));
 
         Move minMove = new Move(null, Integer.MAX_VALUE);
         int childCol = 0;
