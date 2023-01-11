@@ -36,7 +36,6 @@ public class MiniMaxAI {
     //Initiates the MiniMax algorithm
     public int getMove() throws InvalidMoveException {
         this.minimisingCounter = boardAnalyser.otherPlayer(maximisingCounter);
-
         Move maxMove = max(board, 0);
         return maxMove.getColumn();
     }
