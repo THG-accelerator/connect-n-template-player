@@ -21,8 +21,6 @@ public class MiniMax {
         this.oppositionCounter = getOpponent(counter);
     }
 
-<<<<<<< HEAD
-
    public int miniMaxMove(Board boardPlay, boolean isMax, int depth) throws InvalidMoveException {
         BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
         System.out.println("Depth " + depth);
@@ -91,7 +89,6 @@ public class MiniMax {
                 return switch (counter) {
                     case X -> Counter.O;
                     case O -> Counter.X;
-                    default -> null;
                 };
 
             }
@@ -99,6 +96,4 @@ public class MiniMax {
     public int getBestColumn() {
         return bestColumn;
     }
-=======
->>>>>>> 7fe2fca42d1e1478483b5c5a8c2ff8b9ad5bd864
 }
