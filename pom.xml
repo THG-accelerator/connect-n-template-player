@@ -6,7 +6,7 @@
     <groupId>com.thg.accelerator23.connectn.ai</groupId>
     <!-- do not change this -->
     <artifactId>${yourteam}</artifactId>
-    <version>1.0</version>
+    <version>dev</version>
 
     <repositories>
         <repository>
@@ -49,6 +49,7 @@
             <artifactId>connectn-player</artifactId>
             <version>1.4</version>
         </dependency>
+
     </dependencies>
 
     <build>
