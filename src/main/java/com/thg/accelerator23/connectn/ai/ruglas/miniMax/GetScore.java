@@ -22,8 +22,8 @@ public class GetScore {
 
     public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         for (int columnCheck=0; columnCheck<boardToCheck.getConfig().getWidth(); columnCheck++){
-            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter)){
-                return 100000;
+            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter.getOther())){
+                return 100;
             }
         }
         {return getScoreFromAgjPositions(positionToCheck, boardToCheck, counter);}
@@ -32,7 +32,7 @@ public class GetScore {
     public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
         totalScore = 0;
-        if(gameState.isDraw()){return 0;} else if (gameState.isWin()) { return 10000;
+        if(gameState.isDraw()){return 0;} else if (gameState.isWin()) { return 10000000;
 
         }
         else{
