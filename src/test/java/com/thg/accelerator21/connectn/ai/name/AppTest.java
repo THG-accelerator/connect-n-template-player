@@ -1,4 +1,4 @@
-package com.thg.accelerator21.connectn.ai.politicallyconnect;
+package com.thg.accelerator21.connectn.ai.name;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,8 +1,6 @@
 package com.thg.accelerator23.connectn.ai.politicallyconnect;
 
 import com.thehutgroup.accelerator.connectn.player.*;
-import com.thg.accelerator23.connectn.ai.politicallyconnect.analyser.BoardAnalyser;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
