@@ -11,10 +11,19 @@ import java.util.stream.Stream;
 
 public class BoardAnalyser {
     private Function<Position, Position> hMover = p -> new Position(p.getX() + 1, p.getY());
+
+    private Function<Position, Position> hMoverBackwards = p -> new Position (p.getX() - 1, p.getY());
     private Function<Position, Position> vMover = p -> new Position(p.getX(), p.getY() + 1);
+
+    private Function<Position, Position> vMoverBackwards = p -> new Position(p.getX(), p.getY() -1);
     private Function<Position, Position> diagUpRightMover = hMover.compose(vMover);
+
+    private Function<Position, Position> diagDownLeftMover = hMoverBackwards.compose(vMoverBackwards);
     private Function<Position, Position> diagUpLeftMover =
             p -> new Position(p.getX() - 1, p.getY() + 1);
+
+    private Function<Position, Position> diagDownRightMover =
+            p -> new Position(p.getX() + 1, p.getY() -1);
     private Map<Function<Position, Position>, List<Position>> positionsByFunction;
 
     private final int boardHeight;
@@ -38,16 +47,29 @@ public class BoardAnalyser {
         List<Position> rightEdge = leftEdge.stream()
                 .map(p -> new Position(config.getWidth() - 1, p.getY()))
                 .collect(Collectors.toList());
+        List<Position> topEdge = bottomEdge.stream()
+                .map(p -> new Position(p.getX(), config.getHeight() - 1))
+                .collect(Collectors.toList());
 
         List<Position> leftBottom = Stream.concat(leftEdge.stream(),
                 bottomEdge.stream()).distinct().collect(Collectors.toList());
         List<Position> rightBottom = Stream.concat(rightEdge.stream(),
                 bottomEdge.stream()).distinct().collect(Collectors.toList());
 
+        List<Position> rightTop = Stream.concat(rightEdge.stream(),
+                topEdge.stream()).distinct().collect(Collectors.toList());
+        List<Position> leftTop = Stream.concat(leftEdge.stream(),
+                topEdge.stream()).distinct().collect(Collectors.toList());
+
+
         positionsByFunction.put(hMover, leftEdge);
+        positionsByFunction.put(hMoverBackwards, rightEdge);
         positionsByFunction.put(vMover, bottomEdge);
+        positionsByFunction.put(vMoverBackwards, topEdge);
         positionsByFunction.put(diagUpRightMover, leftBottom);
+        positionsByFunction.put(diagDownLeftMover, rightTop);
         positionsByFunction.put(diagUpLeftMover, rightBottom);
+        positionsByFunction.put(diagDownRightMover, leftTop);
 
         Map<Integer, Integer> mapForDistancesFromCentreSpace = new HashMap<>();
         int maxDistanceFromCentre = Math.floorDiv(boardWidth, 2);
@@ -106,7 +128,7 @@ public class BoardAnalyser {
             List outcomeOfTheirMove = returnsTheSeverityOfTheirBestMoveBasedOnOurMove(boardAfterOurMove, counter.getOther());
             int mostTheyCouldGetInTheirNextMove = (int) outcomeOfTheirMove.get(0);
             int distanceFromCentreValue = distanceFromCentreSpaces.get(potentialSpaceWeCanTake);
-            theBinaryValueOfThisChaos = mostWeWouldHave - mostTheyCouldGetInTheirNextMove + distanceFromCentreValue;
+            theBinaryValueOfThisChaos = (3*mostWeWouldHave) - (2*mostTheyCouldGetInTheirNextMove)+ distanceFromCentreValue;
 
         }
         catch(InvalidMoveException e){
@@ -121,8 +143,9 @@ public class BoardAnalyser {
         for(int i=0; i<boardWidth; i++){
             xAndCorrespondingBinaryValue.put(i, returnsBinaryValueOfOurMoveForAGivenX(i, board, counter));
         }
+        System.out.println(xAndCorrespondingBinaryValue);
         List<Map.Entry<Integer, Integer>> valueToUse = xAndCorrespondingBinaryValue.entrySet().stream().toList();
-        int currentMaxInt = 0;
+        int currentMaxInt = Integer.MIN_VALUE;
         int xValueToUse = Math.floorDiv(boardWidth, 2);
         List<Integer> xValuesWhichCanBeUsed = new ArrayList<>();
         for(int i=0; i<valueToUse.size(); i++) {
@@ -143,31 +166,78 @@ public class BoardAnalyser {
 
 
     public GameState calculateGameState(Board board) {
-        List<Line> lines = getLines(board);
+        List<BoardLine> lines = getLines(board);
         Map<Counter, Integer> bestRunByColour = new HashMap<>();
-        for (Line line : lines) {
+        for (BoardLine line : lines) {
             Map<Counter, Integer> bestRunInLine = getBestRunByColour(line);
             bestRunByColour = maxMap(bestRunInLine, bestRunByColour);
+            line.returnToBeginning();
         }
         boolean boardFull = isBoardFull(board);
         return new GameState(bestRunByColour, board.getConfig(), boardFull);
     }
 
-    private boolean nMinus1InARow(Counter counter, Board board) {
-        return calculateGameState(board).getMaxInARowByCounter().get(counter) ==board.getConfig().getnInARowForWin()-1;
+    private boolean nMinusXInARow(Counter counter, Board board, int X) {
+        return calculateGameState(board).getMaxInARowByCounter().get(counter) >= X;
     }
 
-    public List<Line> nMinus1Lines(Counter counter, Board board) {
-        List<Line> linesWithNMinus1 = new ArrayList<>();
-        if (nMinus1InARow(counter, board)) {
-            List<Line> lines = getLines(board);
-            for (Line line : lines) {
-            if (getBestRunByColour(line).get(counter) == board.getConfig().getnInARowForWin()-1){
-                linesWithNMinus1.add(line);
+    public List<BoardLine> nMinusXLines(Counter counter, Board board, int X) {
+        List<BoardLine> linesWithNMinus1 = new ArrayList<>();
+        if (nMinusXInARow(counter, board, X)) {
+            List<BoardLine> lines = getLines(board);
+            for (BoardLine line : lines) {
+                if (getBestRunByColour(line).get(counter) >= X){
+                    line.returnToBeginning();
+                    linesWithNMinus1.add((BoardLine) line);
+                }
             }
         }
-        }
         return linesWithNMinus1;
+    }
+
+    public List<Position> returnListOfPositionsForAWinCase(Counter counterToTest, Board currentBoard){
+        List<BoardLine>  linesWithNMinus2 = nMinusXLines(counterToTest, currentBoard, currentBoard.getConfig().getnInARowForWin()-2);
+        List<Position> positionsOfWinningBoard = new ArrayList<>();
+        linesWithNMinus2.forEach(line -> {
+            while(line.hasNext() && !line.isCounterInCurrentPosition() || line.getCounterInCurrentPosition() != counterToTest) {
+                line.next();
+            }
+            Integer numberInARow = 1;
+
+            while(line.hasNext()){
+                line.next();
+                if(line.isCounterInCurrentPosition()){
+                    if(line.getCounterInCurrentPosition().equals(counterToTest)){
+                        numberInARow++;
+                    }
+                    else{
+                        numberInARow = 0;
+
+                    }
+
+                }
+                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-1) && currentBoard.hasCounterAtPosition(line.getCurrentPosition())){
+                    positionsOfWinningBoard.add(line.getCurrentPosition());
+                    numberInARow=0;
+
+                }
+                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-2) && currentBoard.hasCounterAtPosition(line.getCurrentPosition())){
+                    Position blankSpacePotentiallyWinning = line.getCurrentPosition();
+                    line.next();
+                    if(line.isCounterInCurrentPosition() && line.getCounterInCurrentPosition() == counterToTest){
+                        positionsOfWinningBoard.add(blankSpacePotentiallyWinning);
+                    }
+                }
+            }
+
+        });
+
+
+        System.out.println(positionsOfWinningBoard.size() + " winning spaces");
+        System.out.println(positionsOfWinningBoard);
+
+
+        return positionsOfWinningBoard;
     }
 
     public boolean winningPositionExists(Counter counter, Board board){
@@ -209,8 +279,8 @@ public class BoardAnalyser {
                         i -> board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight() - 1)));
     }
 
-    private List<Line> getLines(Board board) {
-        ArrayList<Line> lines = new ArrayList<>();
+    private List<BoardLine> getLines(Board board) {
+        ArrayList<BoardLine> lines = new ArrayList<>();
         for (Map.Entry<Function<Position, Position>, List<Position>> entry : positionsByFunction
                 .entrySet()) {
             Function<Position, Position> function = entry.getKey();
@@ -219,6 +289,36 @@ public class BoardAnalyser {
                     .collect(Collectors.toList()));
         }
         return lines;
+    }
+
+    private List<BoardLine> getColumnLines(Board board) {
+        ArrayList<BoardLine> lines = new ArrayList<>();
+        Function<Position, Position> function = vMover;
+        List<Position> startPositions = positionsByFunction.get(function);
+        lines.addAll(startPositions.stream().map(p -> new BoardLine(board, p, function))
+                .collect(Collectors.toList()));
+        return lines;
+    }
+
+    public List<Position> getNextPositions(Board board){
+        List<BoardLine> columns = getColumnLines(board);
+        List<Position> positionsForNextIndex = new ArrayList<>();
+        columns.forEach(column -> {
+            boolean notYetFound = true;
+            if(!column.isCounterInCurrentPosition()){
+                positionsForNextIndex.add(column.getCurrentPosition());
+                notYetFound = false;
+            }
+            while(column.hasNext() && notYetFound){
+                column.next();
+                if(!column.isCounterInCurrentPosition()){
+                    positionsForNextIndex.add(column.getCurrentPosition());
+                    notYetFound = false;
+                }
+            }
+        });
+
+        return positionsForNextIndex;
     }
 
     private Map<Counter, Integer> getBestRunByColour(Line line) {

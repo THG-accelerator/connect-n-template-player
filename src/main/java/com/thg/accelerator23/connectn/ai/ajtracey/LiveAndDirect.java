@@ -18,19 +18,27 @@ public class LiveAndDirect extends Player {
   public int makeMove(Board board) {
     BoardAnalyser BA = new BoardAnalyser(board.getConfig());
 
-      if(BA.winningPositionExists(this.getCounter(), board)){
-        return BA.winningPosition(this.getCounter(),board);
-      } else if (BA.winningPositionExists(this.getCounter().getOther(), board)){
-      return BA.winningPosition(this.getCounter().getOther(), board);
+    List<Position> currentPositions = BA.getNextPositions(board);
+    List<Position> winningPositions = BA.returnListOfPositionsForAWinCase(getCounter(), board);
+    List<Position> stopTheirWinPositions = BA.returnListOfPositionsForAWinCase(getCounter().getOther(), board);
 
-    } else {
-        List<Integer> theseAllHaveTheSameBinaryValue = BA.returnsXValueForOurBestMove(board, getCounter());
-        Random randomGen = new Random();
-          System.out.println(theseAllHaveTheSameBinaryValue);
-        int thisXToBeUsed = randomGen.nextInt(theseAllHaveTheSameBinaryValue.size());
-          System.out.println(thisXToBeUsed);
-        return theseAllHaveTheSameBinaryValue.get(thisXToBeUsed);
-      }
+    for(int i = 0; i<board.getConfig().getWidth(); i++) {
+        if (!winningPositions.isEmpty() && currentPositions.contains(winningPositions.get(i))){
+            return currentPositions.get(i).getX();
+        }
+    }
+    for(int i=0; i<board.getConfig().getWidth(); i++){
+        if (!stopTheirWinPositions.isEmpty() && currentPositions.contains(stopTheirWinPositions.get(i))){
+            return currentPositions.get(i).getX();
+        }
+    }
+
+    List<Integer> theseAllHaveTheSameBinaryValue = BA.returnsXValueForOurBestMove(board, getCounter());
+    Random randomGen = new Random();
+
+    int thisXToBeUsed = randomGen.nextInt(theseAllHaveTheSameBinaryValue.size());
+
+    return theseAllHaveTheSameBinaryValue.get(thisXToBeUsed);
 
 
     //TODO: some crazy analysis

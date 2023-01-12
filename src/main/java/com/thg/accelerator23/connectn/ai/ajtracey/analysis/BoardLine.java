@@ -11,17 +11,27 @@ import java.util.function.Function;
 public class BoardLine implements Line {
     private Board board;
     private Position currentPosition;
+    private final Position startPosition;
     private Function<Position, Position> movementFunction;
 
     public BoardLine(Board board, Position currentPosition,
                      Function<Position, Position> movementFunction) {
         this.board = board;
         this.currentPosition = currentPosition;
+        this.startPosition = currentPosition;
         this.movementFunction = movementFunction;
     }
 
     public Position getCurrentPosition() {
         return currentPosition;
+    }
+
+    public boolean isCounterInCurrentPosition(){
+        return board.hasCounterAtPosition(currentPosition);
+    }
+
+    public Counter getCounterInCurrentPosition(){
+        return board.getCounterAtPosition(currentPosition);
     }
 
     @Override
@@ -34,6 +44,10 @@ public class BoardLine implements Line {
         Counter counterAtPosition = board.getCounterAtPosition(currentPosition);
         currentPosition = movementFunction.apply(currentPosition);
         return counterAtPosition;
+    }
+
+    public void returnToBeginning(){
+        this.currentPosition = startPosition;
     }
 
 
