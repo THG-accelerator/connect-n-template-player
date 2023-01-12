@@ -4,6 +4,7 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.TestMove;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
@@ -19,10 +20,18 @@ public class GetScore {
         this.boardAnalyser = new BoardAnalyser(this.board.getConfig());
     }
 
+    public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
+        for (int columnCheck=0; columnCheck<boardToCheck.getConfig().getWidth(); columnCheck++){
+            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter)){
+                return 100000;
+            }
+        }
+        {return getScoreFromAgjPositions(positionToCheck, boardToCheck, counter);}
+    }
+
     public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
         totalScore = 0;
-        System.out.println("Zero depth Total score");
         if(gameState.isDraw()){return 0;} else if (gameState.isWin()) { return 10000;
 
         }
@@ -34,7 +43,6 @@ public class GetScore {
             else if (positionToCheck.getX() == 3 || positionToCheck.getX() == 6){
                 totalScore += 5;
             }
-            System.out.println("Total Score" + totalScore);
             return totalScore;
         }
 
@@ -97,7 +105,6 @@ public class GetScore {
 
             }
         }
-        System.out.println("Score " + score);
         return score;
     }
 

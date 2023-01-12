@@ -23,9 +23,8 @@ public class MiniMaxScoring {
         GetScore getScore = new GetScore(boardPlay);
        if (depth == 0) {
            Counter counterPlay = getCounter(isMax);
-           if (isMax){
-           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
-           else {score = - getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
+           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay) -
+                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay.getOther());
            return score;}
         else if (isMax) {
              bestScore = -1000;

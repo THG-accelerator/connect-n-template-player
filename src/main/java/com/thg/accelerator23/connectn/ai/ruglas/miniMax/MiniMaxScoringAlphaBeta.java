@@ -22,56 +22,62 @@ public class MiniMaxScoringAlphaBeta {
         this.oppositionCounter = counter.getOther();
     }
    public int miniMaxMoveAlphaBeta(Board boardPlay, boolean isMax, int depth, int column, int alpha, int beta) throws InvalidMoveException {
-        //NEED TO CALCULATE SCORE FOR BOTH OPPOSITION AND WINNER
-        GetScore getScore = new GetScore(boardPlay);
+       GetScore getScore = new GetScore(boardPlay);
        BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
-       if ((depth == 0) || (gameState.isEnd()))  {
-           System.out.println("Zero depth" + depth);
-           Counter counterPlay = getCounter(isMax);
-           if (isMax){
-           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
-           else {score = -getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay);}
-           System.out.println("isMax " + isMax + " Score " + score);
+
+       if (depth == 0 || gameState.isEnd()) {
+           if(!isMax){
+           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter) -
+                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter);}
+           else{score = -getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter) +
+                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter);}
+           System.out.println("depth " + depth + " ismax " + isMax + " score " +score);
            return score;}
-       if (isMax) {
-             bestScore = -10000;
-            for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++){
-//                Position checkPosition = new Position(xMax, getMinY(xMax, boardPlay));
-//                if (!boardPlay.isWithinBoard(checkPosition)){break;}
-                    Board tempBoard = makeMove(boardPlay,counter, xMax);
-//                alpha = Math.max(alpha, bestScore);
+       else if (isMax) {
+             bestScore = -1000000;
+            for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++) {
+                Position checkPosition = new Position(xMax, getMinY(xMax, boardPlay));
+                if (boardPlay.isWithinBoard(checkPosition)){
+                Board tempBoard = makeMove(boardPlay, counter, xMax);
+                alpha = Math.max(alpha, bestScore);
                 score = miniMaxMoveAlphaBeta(tempBoard, false, depth - 1, xMax, alpha, beta);
 
-                if (score>bestScore){this.bestColumn = xMax;}
-                bestScore = Math.max(score, bestScore);
-//
+                if (score > bestScore) {
+                    System.out.println("Max best" + xMax);
+                    bestScore = score;
+                    this.bestColumn = xMax;
+                }
 //                    if (beta <= alpha) {
-//                    continue;}
-
-           System.out.println("Best Score" + bestScore);}
-            return bestScore;}
+//                        System.out.println("break");
+//                        break;}
+            }}
+      return bestScore; }
 
         else{
-            bestScore = 10000;
+            bestScore = 1000000;
            for (int xMin=0; xMin<boardPlay.getConfig().getWidth(); xMin++){
-//               Position checkPosition = new Position(xMin, getMinY(xMin, boardPlay));
-//               if (boardPlay.isWithinBoard(checkPosition)){break;}
+               Position checkPosition = new Position(xMin, getMinY(xMin, boardPlay));
+               if (boardPlay.isWithinBoard(checkPosition)){
                 Board tempBoard = makeMove(boardPlay, oppositionCounter, xMin);
-//               beta = Math.min(beta, bestScore);
+               beta = Math.min(beta, bestScore);
 
                score = miniMaxMoveAlphaBeta(tempBoard, true, depth - 1, xMin, alpha, beta);
 
 
-               if (score<bestScore){this.bestColumn = xMin;}
-               bestScore = Math.min(score, bestScore);
+               if (score<bestScore){
+                   System.out.println("best min" + xMin
+                   );this.bestColumn = xMin;
+               bestScore = score;}
 
-//               if (beta <= alpha) {
+//                   if (beta <= alpha) {
+//                       System.out.println("break");
+//                       break;}
 //
-//                   continue;}
-               System.out.println("Best Score" + bestScore);
-          }}
-       return score;
+
+          }
+       }}
+       return bestScore;
    }
 
 
