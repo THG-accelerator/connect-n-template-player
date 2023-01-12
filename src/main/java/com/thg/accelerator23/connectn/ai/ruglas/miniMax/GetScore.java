@@ -15,18 +15,14 @@ import java.util.List;
 public class GetScore {
     Board board;
     BoardAnalyser boardAnalyser;
-    boolean firstPlayer;
     int parity;
 
-    public GetScore(Board board, Connecty connecty) {
+    public GetScore(Board board, Counter counter) {
         this.board = board;
         this.boardAnalyser = new BoardAnalyser(this.board.getConfig());
-        this.firstPlayer = connecty.firstPlayer;
-
-        if (firstPlayer) {
-            this.parity = 0;
-        } else  {
-            this.parity = 1;
+        switch(counter) {
+            case O -> this.parity = 0;
+            case X -> this.parity = 1;
         }
     }
 

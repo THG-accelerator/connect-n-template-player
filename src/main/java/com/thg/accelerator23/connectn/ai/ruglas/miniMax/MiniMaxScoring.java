@@ -4,7 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import com.thg.accelerator23.connectn.ai.ruglas.GetScore;
+import com.thg.accelerator23.connectn.ai.ruglas.Connecty;
+import com.thg.accelerator23.connectn.ai.ruglas.miniMax.GetScore;
 
 public class MiniMaxScoring {
     Counter counter;
@@ -69,7 +70,6 @@ public class MiniMaxScoring {
         if (isMax) return counter;
         else{return oppositionCounter;}
             }
-
 
     public int getBestColumn() {
         return bestColumn;
