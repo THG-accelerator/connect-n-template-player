@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Connecty extends Player {
   Counter opponentCounter;
-  boolean firstPlayer;
+  public boolean firstPlayer;
 
   public Connecty(Counter counter) {
     super(counter, Connecty.class.getName());

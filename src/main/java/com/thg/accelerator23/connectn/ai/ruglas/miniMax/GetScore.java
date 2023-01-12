@@ -4,6 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
+import com.thg.accelerator23.connectn.ai.ruglas.Connecty;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.TestMove;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
@@ -40,6 +42,14 @@ public class GetScore {
         else{
             return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);
         }
+    }
+    public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
+        for (int columnCheck=0; columnCheck<boardToCheck.getConfig().getWidth(); columnCheck++){
+            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter)){
+                return 100000;
+            }
+        }
+        {return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);}
     }
 
 
