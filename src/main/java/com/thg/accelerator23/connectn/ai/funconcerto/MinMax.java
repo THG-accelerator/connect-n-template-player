@@ -12,11 +12,6 @@ public class MinMax {
 
     GameConfig config = new GameConfig(10,8,4);
     BoardAnalyser analyzer = new BoardAnalyser(config);
-    Counter playerCounter;
-
-    public MinMax(Counter playerCounter) {
-        this.playerCounter = playerCounter;
-    }
 
     public boolean checkWin(Board board, BoardAnalyser analyser, Counter counter){
         GameState state = analyser.calculateGameState(board);
@@ -28,8 +23,8 @@ public class MinMax {
         return state.isDraw();
     }
 
-    public boolean isTerminalNode(Board board){
-        return checkWin(board, analyzer, playerCounter) || checkWin(board,analyzer, playerCounter.getOther()) || checkDraw(board,analyzer);
+    public boolean isTerminalNode(Board board, Counter counter){
+        return checkWin(board, analyzer, counter) || checkWin(board,analyzer, counter.getOther()) || checkDraw(board,analyzer);
     }
 
     public int[] miniMax(MoveTree tree, Boolean maximizingPlayer) {
@@ -37,13 +32,12 @@ public class MinMax {
         int value;
         int column = -1;
         Board board = tree.getState();
-        boolean isTerminal = isTerminalNode(board);
-        System.out.println(board.getCounterAtPosition(new Position(0,1)));
+        boolean isTerminal = isTerminalNode(board, tree.getCounter().getOther());
         if(isTerminal){
-            if(checkWin(board, analyzer, playerCounter)){
+            if(checkWin(board, analyzer, tree.getCounter().getOther())){
                 System.out.println("terminal node1!");
                 return new int[]{10000000, tree.getPosition()};
-            }else if(checkWin(board, analyzer, playerCounter.getOther())){
+            }else if(checkWin(board, analyzer, tree.getCounter())){
                 System.out.println("terminal node2!");
                 return new int[]{-100000000,tree.getPosition()};
             }else{ // Game is a draw as there are no more valid moves
@@ -53,7 +47,7 @@ public class MinMax {
 
         }else{
             if(tree.getChildren().size() == 0){
-                return new int[]{Score.ScoreCalculator(board, playerCounter), tree.getPosition()};
+                return new int[]{Score.ScoreCalculator(board, tree.getCounter().getOther()), tree.getPosition()};
             }
             if(maximizingPlayer) {
                 value = -Integer.MAX_VALUE;

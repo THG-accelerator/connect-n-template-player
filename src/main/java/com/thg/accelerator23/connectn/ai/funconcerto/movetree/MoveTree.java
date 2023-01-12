@@ -9,11 +9,11 @@ import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 
 public class MoveTree {
-    private final Counter counter;
+    private Counter counter;
     private final int depth;
     private final Board state;
     private int mostRecentPosition;
-    private final List<MoveTree> moveList = new ArrayList<MoveTree>();
+    private final LinkedList<MoveTree> moveList = new LinkedList<MoveTree>();
 
     public MoveTree() {
         this.counter = Counter.X;
@@ -27,6 +27,10 @@ public class MoveTree {
         this.depth = depth;
         this.state = state;
         this.mostRecentPosition = position;
+    }
+
+    public void setCounter(Counter counter) {
+        this.counter = counter;
     }
 
 
@@ -59,7 +63,7 @@ public class MoveTree {
         List<MoveTree> leafList = new ArrayList<>();
         return leafList;
     }
-    public List<MoveTree> getChildren(){
+    public LinkedList<MoveTree> getChildren(){
 
         if(moveList != null)return moveList;
         else{
@@ -69,6 +73,14 @@ public class MoveTree {
 
     public MoveTree getChildAtPosition(int index){
         return moveList.get(index);
+    }
+
+    public int getTotalNodesBelow(){
+        int count = 1;
+        for(int i = 0; i < moveList.size(); i++){
+            count += moveList.get(i).getTotalNodesBelow();
+        }
+        return count;
     }
 
 }
