@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
@@ -40,9 +40,9 @@ public class GetScore {
         else{
             return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);
         }
-
-
     }
+
+
     public ArrayList<ArrayList<Position>> getAdjacentNPositions(Position position, int n) {
 
         ArrayList<ArrayList<Position>> positions = new ArrayList<>();
