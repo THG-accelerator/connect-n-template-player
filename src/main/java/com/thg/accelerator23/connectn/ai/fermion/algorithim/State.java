@@ -13,6 +13,11 @@ public class State {
     public State(Counter counter){
         this.rootCounter = counter;
     }
+//    public State(Counter counter, Board board){
+//        this.rootCounter = counter;
+//        this.setBoard(board);
+//
+//    }
 
     public void setRootCounter(Counter rootCounter) {
         this.rootCounter = rootCounter;

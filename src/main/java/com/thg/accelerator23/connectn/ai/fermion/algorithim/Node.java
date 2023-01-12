@@ -94,6 +94,7 @@ public Node(){
         if(this.state.getNodeVisits()==0) {
             return Integer.MAX_VALUE;
         } else {
+            System.out.println (((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits())+" "+this.getMove());
             return ((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits());
         }
     }

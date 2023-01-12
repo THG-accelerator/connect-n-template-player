@@ -22,39 +22,76 @@ public class MCTS {
     }
 
 //    public Node selectHighestUTCNode(Node parentNode) {
-//        Node bestNode = new Node();
+//        Node bestNode = parentNode;
 //        if(parentNode.getChildren().size() != 0) {
 //            for(Node node : parentNode.getChildren()) {
 //                if(Integer.MIN_VALUE < node.getUTCValue(parentNode))
 //                   bestNode = node;
 //            }
 //        }
+//        System.out.println("This is the best node "+bestNode.getUTCValue(parentNode));
 //        return bestNode;
 //    }
-//
-    public Node selectHighestUTCNode(Node parentNode) {
-        Node node = parentNode;
-        while (node.getChildren().size() != 0) {
-            node = Collections.max(node.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
+////
+
+        public Node selectHighestUTCNode(Node parentNode) {
+        if(parentNode.getChildren().size() !=0){
+
+            Node bestNode = parentNode.getChildren().get(0);
+            for (Node child : parentNode.getChildren()) {
+                if (bestNode.getUTCValue(parentNode)< child.getUTCValue(parentNode)){
+                    bestNode = child;
+                }
+            }
+            System.out.println("This is the best node "+bestNode.getUTCValue(parentNode)+" move "+bestNode.getMove());
+            return bestNode;
         }
-        return node;
-    }
+            System.out.println("This is the best  parent node "+parentNode.getUTCValue(parentNode));
+        return parentNode;
+
+
+        }
+
+
+
+//    public Node selectHighestUTCNode(Node parentNode) {
+//        if(parentNode.getChildren().size() != 0){
+//            Node node = Collections.max(parentNode.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
+//            System.out.println("This is the best node "+node.getUTCValue(parentNode));
+//            return node;
+//        }
+//        return parentNode;
+//    }
+
+//    public Node selectHighestUTCNode(Node parentNode) {
+//        Node node = parentNode;
+//        while (node.getChildren().size() != 0) {
+//            node = Collections.max(node.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
+//        }
+//        return node;
+//    }
+
+
+
 
 
     public int actualPlay(Counter counter) {
-        Node rootNode = new Node(counter);
-        Tree tree = new Tree(rootNode);
+//        Tree tree = new Tree(rootNode);
+        Tree tree = new Tree(counter);
+        Node rootNode = tree.getRoot();
+
 
         rootNode.getState().setBoard(this.board);
         rootNode.getState().setRootCounter(counter);
 
-        BoardAnalyser analyser = new BoardAnalyser(rootNode.getState().getBoard().getConfig());
+
 
         long currentTime = System.currentTimeMillis();
 
         while (System.currentTimeMillis()-currentTime < 8500) {
+
             Node promisingNode = selectHighestUTCNode(rootNode);
-            
+            BoardAnalyser analyser = new BoardAnalyser(promisingNode.getState().getBoard().getConfig());
             if (!analyser.calculateGameState(promisingNode.getState().getBoard()).isEnd()) {
                 promisingNode.generateChildrenNodes();
             }
@@ -62,10 +99,11 @@ public class MCTS {
             Node nodeToExplore = randomChildNode(promisingNode);
 
             Counter results = simulateMoves(nodeToExplore,rootNode.getState().getCounter());
+//            Node winnerNode = simulateMoves(nodeToExplore,rootNode.getState().getCounter());
 
-            backpropagation(nodeToExplore,results);
-
+            backpropagation(nodeToExplore,results,counter);
         }
+
         System.out.println("_________________TOP___Total moves "+ moveCounter.size()+" Wins "+winCounter.size());
         System.out.println("0: Total-"+Collections.frequency(moveCounter,0)+" Wins-"+Collections.frequency(winCounter,0));
         System.out.println("1: Total-"+Collections.frequency(moveCounter,1)+" Wins-"+Collections.frequency(winCounter,1));
@@ -81,12 +119,29 @@ public class MCTS {
 
 
         System.out.println("_________________MIDDDLE");
-
-        for (Node child : rootNode.getChildren()) {
+        System.out.println(tree.getTrueRoot().getChildren().size());
+        for (Node child : tree.getTrueRoot().getChildren()) {
             System.out.println(child.getMove() +" "+ child.getState().getNodeVisits() +" "+ child.getState().getNodeWins());
         }
+        for (Node child : tree.getRoot().getChildren()) {
+            System.out.println("1: "+child.getMove()+" size of child= "+child.getChildren().size()
+            );
+            if(child.getChildren().size()!=0) {
+                for (Node childChild : child.getChildren()) {
+//                    System.out.println("2: parent=>"+child.getMove()+" " +childChild.getMove());
+                    if (childChild.getChildren().size() != 0) {
+                                            System.out.println("2: parent= "+child.getMove()+" Size of child= "+childChild.getChildren().size());
 
-        Node winnerNode = rootNode.childMostVisits();
+                        for (Node childChildChild : childChild.getChildren()) {
+
+//                            System.out.println("3: granparent=>"+child.getMove()+"parent=>"+childChild.getMove()+" " +childChildChild.getMove());
+                        }
+                    }
+                }
+            }
+        }
+
+        Node winnerNode = tree.getTrueRoot().childMostVisits();
 
         tree.setRoot(winnerNode);
         return winnerNode.getMove();
@@ -103,9 +158,20 @@ public class MCTS {
 
         while(gameState.isEnd() == false){
             try {
+//                interNode.getState().invertCounter();
+//
+//                int move = interNode.playRandomMove(interNode.getState().getBoard());
+//
+//                interNode.getState().setBoard(new Board(interState.getBoard(), move, interState.getCounter()));
+//
+//                interNode= new Node(interNode,move,interNode.getState().getCounter());
+//
+//                gameState = boardChecker.calculateGameState(interState.getBoard());
+
                 interState.invertCounter();
 
                 int move = interNode.playRandomMove(interState.getBoard());
+
 
                 interState.setBoard(new Board(interState.getBoard(), move, interState.getCounter()));
 
@@ -119,13 +185,10 @@ public class MCTS {
         moveCounter.add(nodeToExplore.getMove());
         if(gameState.getWinner().getStringRepresentation().equals(rootCounter.getStringRepresentation()) ){
             winCounter.add(nodeToExplore.getMove());
-        }else{
         }
 
-
-
+//        return interNode;
         return gameState.getWinner();
-
     }
 
 
@@ -139,21 +202,39 @@ public class MCTS {
         }
         return rootNode;
     }
-
-    public void backpropagation(Node endNode, Counter resultCounter) {
+    private int lastMove;
+    private int backtracked;
+    public void backpropagation(Node endNode, Counter simWinnerNode,Counter rootCounter) {
         Node upNode = endNode;
+//        System.out.println("Start of node------------------------------------------------") ;
+
+        backtracked++;
+
+        int tracker =0;
+
         while (upNode != null) {
+            tracker++;
+//            System.out.println("game sim finished "+ endNode.getMove());
             upNode.getState().addVisit();
-            if(upNode.getState().getCounter() == resultCounter){
+            if (rootCounter == simWinnerNode) {
+//                System.out.println("Winner++++++++");
                 upNode.getState().addWin();
-            }else {
+            } else {
+//                System.out.println("LOSER---------");
 
 //                upNode.getState().subWin();
             }
+//            System.out.println("Going up a node VVVVV");
             upNode = upNode.getParent();
-
         }
-    }
-}
+//
+//        if (lastMove != endNode.getMove()) {
+//            System.out.println(backtracked);
+//            System.out.println("nodecount:  " + tracker + " Move: " + endNode.getMove());
+//        }
+        lastMove = endNode.getMove();
+//        System.out.println("END of node ================================================");
+
+}}
 
 
