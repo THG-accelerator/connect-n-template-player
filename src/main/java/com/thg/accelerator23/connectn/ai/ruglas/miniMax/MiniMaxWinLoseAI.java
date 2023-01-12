@@ -4,6 +4,7 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI;
 
 public class MiniMaxWinLoseAI extends Player {
     public MiniMaxWinLoseAI(Counter counter) {
@@ -18,8 +19,8 @@ public class MiniMaxWinLoseAI extends Player {
             return miniMaxWinLose.getBestColumn();
         } catch (InvalidMoveException e) {
         }
-        System.out.println("No position found");
-        return 0;
+        RandomAI randomAI = new RandomAI(getCounter());
+        return randomAI.makeMove(board);
     }
 
 }

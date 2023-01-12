@@ -27,11 +27,15 @@ public class MiniMaxScoringAlphaBeta {
        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
 
        if (depth == 0 || gameState.isEnd()) {
-           if(isMax){
-           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter) -
-                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter);}
-           else{score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter) -
-                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter);}
+           if(!isMax){
+           score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter)
+                   -
+                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter);
+                   }
+           else{score = - getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter)
+                   +
+                   getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter);
+                   }
            return score;}
        else if (isMax) {
              bestScore = -1000000;
@@ -42,14 +46,15 @@ public class MiniMaxScoringAlphaBeta {
                 score = miniMaxMoveAlphaBeta(tempBoard, false, depth - 1, xMax, alpha, beta);
 
                 if (score > bestScore) {
+                    System.out.println("bestscore max " + score);
                     bestScore = score;
                     this.bestColumn = xMax;
                 }
 
                     alpha = Math.max(alpha, bestScore);
 
-                    if (beta <= alpha) {
-                        return bestScore;}
+//                    if (beta <= alpha) {
+//                        return bestScore;}
 
                 }}
       return bestScore; }
@@ -65,13 +70,14 @@ public class MiniMaxScoringAlphaBeta {
 
 
                if (score<bestScore){
+                   System.out.println("bestscore min " + score);
                    this.bestColumn = xMin;
                bestScore = score;}
                    beta = Math.min(beta, bestScore);
 
-//
-                   if (beta <= alpha) {
-                       return bestScore;}
+////
+//                   if (beta <= alpha) {
+//                       return bestScore;}
 
 
           }
