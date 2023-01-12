@@ -22,7 +22,7 @@ public class MiniMaxScoring {
         this.oppositionCounter = counter.getOther();
     }
    public int miniMaxMove(Board boardPlay, boolean isMax, int depth, int column) throws InvalidMoveException {
-        GetScore getScore = new GetScore(boardPlay);
+        GetScore getScore = new GetScore(boardPlay, this.counter);
        if (depth == 0) {
            Counter counterPlay = getCounter(isMax);
            score = getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counterPlay) -

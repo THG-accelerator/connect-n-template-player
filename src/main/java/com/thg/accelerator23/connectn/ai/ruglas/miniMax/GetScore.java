@@ -4,7 +4,6 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import com.thg.accelerator23.connectn.ai.ruglas.Connecty;
 import com.thg.accelerator23.connectn.ai.ruglas.Manual.TestMove;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;

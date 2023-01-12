@@ -22,7 +22,7 @@ public class MiniMaxScoringAlphaBeta {
         this.oppositionCounter = counter.getOther();
     }
    public int miniMaxMoveAlphaBeta(Board boardPlay, boolean isMax, int depth, int column, int alpha, int beta) throws InvalidMoveException {
-       GetScore getScore = new GetScore(boardPlay);
+       GetScore getScore = new GetScore(boardPlay, this.counter);
        BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
 

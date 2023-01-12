@@ -3,6 +3,7 @@ package com.thg.accelerator23.connectn.ai.ruglas;
 import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.ruglas.Connecty;
 import com.thg.accelerator23.connectn.ai.ruglas.TestMove;
+import com.thg.accelerator23.connectn.ai.ruglas.miniMax.GetScore;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ import java.util.ArrayList;
             positionList.add(new Position(2,2));
             positionList.add(new Position(3,3));
 
-            GetScore scorer = new GetScore(board8, AI);
+            GetScore scorer = new GetScore(board8, AI.getCounter());
 
             System.out.println(scorer.getHeightOfWinPositionFromLine(board8, positionList));
             System.out.println(scorer.getHeightScore(board8, positionList));
