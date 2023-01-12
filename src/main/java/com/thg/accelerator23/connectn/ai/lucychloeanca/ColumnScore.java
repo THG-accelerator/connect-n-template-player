@@ -24,4 +24,12 @@ public class ColumnScore {
     public void setScore(int score) {
         Score = score;
     }
+
+    @Override
+    public String toString() {
+        return "ColumnScore{" +
+                "Column=" + Column +
+                ", Score=" + Score +
+                '}';
+    }
 }

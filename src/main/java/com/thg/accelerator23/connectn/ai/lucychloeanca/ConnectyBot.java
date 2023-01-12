@@ -13,16 +13,20 @@ public class ConnectyBot extends Player {
 
   @Override
   public int makeMove(Board board) {
-    int position;
+
+    ColumnScore optimisedCol;
     try {
-      position = miniMax(3, true, board).getColumn();
+      int randint = randomMove(board);
+      System.out.println(randint);
+      optimisedCol = miniMax(3, true, board, randint);
       //position = getOptimalCol(board, this.getCounter());
+      System.out.println(optimisedCol);
     } catch (InvalidMoveException e) {
       throw new RuntimeException(e);
     }
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return position;
+    return optimisedCol.getColumn();
   }
 
 
@@ -64,26 +68,25 @@ public class ConnectyBot extends Player {
   }
 
   private int evaluateWindow(List<Counter> window, Counter counter){
-
     int score = 0;
     Counter opponentCounter = getOpponentCounter(counter);
     int count = Collections.frequency(window, counter);
     int empty = Collections.frequency(window, null);
     int opponentCount = Collections.frequency(window, opponentCounter);
     if (count == 4){
-      score = score + 1000000;
+      score = score + 100;
     } else if (count == 3 && empty == 1) {
-      score = score +1000;
+      score = score +5;
+    } else if (count ==2 && empty ==2) {
+      score = score + 2;
     }
-
     if (opponentCount == 3 && empty==1){
-      score = score - 8000;
+      score = score - 4;
     }
     return score;
   }
 
   private int scoreCenterArray(Board board, Counter counter){
-
     List<Integer> availableCol = getAvailableCol(board);
     int score =0;
     int middleCol = Math.floorDiv(board.getConfig().getWidth(), 2);
@@ -94,8 +97,11 @@ public class ConnectyBot extends Player {
         centerList.add(currentCounter);
       }
       int centerCount = Collections.frequency(centerList, counter);
-      score = score + (centerCount * 100);
+
+
+      score = score + (centerCount * 3);
     }
+
     return score;
 
   }
@@ -178,27 +184,25 @@ public class ConnectyBot extends Player {
             +verticalScoreCalculator(board, counter)
             +positiveDiagonalScoreCalculator(board, counter)
             +negativeDiagonalScoreCalculator(board, counter)
-            +scoreCenterArray(board,counter));
+            +scoreCenterArray(board, counter));
   }
 
-  private ColumnScore miniMax (int depth, boolean maximisingPlayer, Board board) throws InvalidMoveException {
-    Counter counter = this.getCounter();
-    if (!maximisingPlayer) {
-      counter = getOpponentCounter(counter);
-    }
+  private ColumnScore miniMax (int depth, boolean maximisingPlayer, Board board, int bestCol) throws InvalidMoveException {
     LCABoardAnalyser boardAnalyser = new LCABoardAnalyser(board.getConfig());
     if (depth == 0 || boardAnalyser.calculateGameState(board).isEnd()) {
       if (depth == 0) {
-        int finalScore = scoreCalculator(board, counter);
-        return new ColumnScore(randomMove(board) ,finalScore);
+        int finalScore = scoreCalculator(board, this.getCounter());
+
+        System.out.println(finalScore + " " + bestCol);
+        return new ColumnScore(bestCol ,finalScore);
       }
       else {
         if (boardAnalyser.calculateGameState(board).getWinner().equals(this.getCounter())) {
-          return new ColumnScore(randomMove(board) ,1000000000);
+          return new ColumnScore(bestCol ,1000000000);
         } else if (boardAnalyser.calculateGameState(board).getWinner().equals(getOpponentCounter(this.getCounter()))) {
-          return new ColumnScore(randomMove(board) ,-1000000000);
+          return new ColumnScore(bestCol ,-1000000000);
         } else {
-          return new ColumnScore(randomMove(board) ,0);
+          return new ColumnScore(bestCol ,0);
         }
       }
 
@@ -206,12 +210,12 @@ public class ConnectyBot extends Player {
     List<Integer> availableCol = getAvailableCol(board);
     if (maximisingPlayer){
       int maxEval = -1000000000;
-      int bestCol = randomMove(board);
       for (int col: availableCol){
         Board newPossibleBoard = new Board(board, col, this.getCounter());
-        int eval = miniMax( depth - 1, false, newPossibleBoard).getScore();
-        maxEval = Math.max(maxEval, eval);
+        int eval = miniMax( depth - 1, false, newPossibleBoard, col).getScore();
+        System.out.println("EVAL = " + eval);
         if (eval> maxEval){
+          System.out.println("Change");
           maxEval = eval;
           bestCol = col;
 
@@ -220,10 +224,9 @@ public class ConnectyBot extends Player {
       return new ColumnScore(bestCol, maxEval);
     } else {
       int minEval = 1000000000;
-      int bestCol = randomMove(board);
       for (int col: availableCol){
         Board newPossibleBoard = new Board(board, col, getOpponentCounter(this.getCounter()));
-        int eval = miniMax( depth -1, true, newPossibleBoard).getScore();
+        int eval = miniMax( depth -1, true, newPossibleBoard, col).getScore();
         if (eval<minEval){
           minEval = eval;
           bestCol = col;
