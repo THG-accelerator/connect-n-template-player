@@ -20,6 +20,33 @@ public class AlanisFourconnect extends Player {
     return randomMove;
   }
 
+  public int mostCentralValidMove(Board board, List<Integer> columnsToPickFrom){
+    int middleColumnOnBoard = board.getConfig().getWidth()/2;
+    int closest = 0;
+    int distance = Math.abs(columnsToPickFrom.get(0)-middleColumnOnBoard);
+    for (int number=1; number<columnsToPickFrom.size(); number++){
+      int currentDistance = Math.abs(columnsToPickFrom.get(number)-middleColumnOnBoard);
+      if (currentDistance <  distance){
+        closest = number;
+        distance = currentDistance;
+      }
+    }
+    return columnsToPickFrom.get(closest);
+  }
+
+//  public int getLowestPlayable(Board board){
+//    int highestCol = 0;
+//    for (int column=0; column<board.getConfig().getWidth(); column++){
+//      for (int ypos=0; ypos<board.getConfig().getHeight(); ypos++){
+//        highestCol = ypos;
+//        if (board.getCounterAtPosition(new Position(column, ypos)) == null){
+//          highestCol = ypos;
+//          break;
+//        }
+//      }
+//    }
+//  }
+
 
   @Override
   public int makeMove(Board board) {
