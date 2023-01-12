@@ -18,12 +18,14 @@ public class TestMove {
 
     public static boolean isGameOverAfterMove(Board board, int column, Counter counter) throws InvalidMoveException {
         Board tryBoard = tryMove(board, column, counter);
+        if (tryBoard != null) {
         BoardAnalyser boardAnalyser = new BoardAnalyser(tryBoard.getConfig());
         GameState gameState = boardAnalyser.calculateGameState(tryBoard);
 
         if (gameState.isWin()) {
             return true;
         }
+        return false;}
         return false;
     }
 
