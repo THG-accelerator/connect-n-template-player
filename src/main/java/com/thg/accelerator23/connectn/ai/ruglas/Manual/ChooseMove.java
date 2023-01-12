@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.ruglas;
+package com.thg.accelerator23.connectn.ai.ruglas.Manual;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
@@ -24,7 +24,6 @@ public class ChooseMove {
 
     public void findWinPosition() throws InvalidMoveException {
         for (int column = 0; column < this.boardWidth; column++) {
-            System.out.println(column);
             if (TestMove.isGameOverAfterMove(this.board, column, this.counter)) {
                 this.playLocation = column;
             }
@@ -38,7 +37,8 @@ public class ChooseMove {
             }
         }
     }
-    public Integer selectBestMove() throws InvalidMoveException {
+
+    public void selectBestMove() throws InvalidMoveException {
         findWinPosition();
         if (this.playLocation == null ) {
             findBlockPosition();
@@ -46,7 +46,6 @@ public class ChooseMove {
 //        if (this.playLocation == null){
 ////            other stuff so that this.playLocation isn't null.
 //        }
-        return this.playLocation;
     }
 
     public Integer getPlayLocation() {

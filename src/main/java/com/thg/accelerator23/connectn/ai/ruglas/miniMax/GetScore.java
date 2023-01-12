@@ -7,9 +7,9 @@ import com.thehutgroup.accelerator.connectn.player.Position;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
+
 public class GetScore {
     Board board;
     BoardAnalyser boardAnalyser;
@@ -40,10 +40,13 @@ public class GetScore {
         else{
             return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);
         }
+
+
     }
     public ArrayList<ArrayList<Position>> getAdjacentNPositions(Position position, int n) {
 
         ArrayList<ArrayList<Position>> positions = new ArrayList<>();
+
         ArrayList<Position> horizontal = new ArrayList<>();
         ArrayList<Position> vertical = new ArrayList<>();
         ArrayList<Position> upwardsDiagonal = new ArrayList<>();

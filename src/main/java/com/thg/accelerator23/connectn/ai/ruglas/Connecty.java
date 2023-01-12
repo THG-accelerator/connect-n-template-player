@@ -24,19 +24,27 @@ public class Connecty extends Player {
       case X -> firstPlayer = false;
     }
   }
+
   @Override
   public int makeMove(Board board) {
 
     MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this);
+    MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this.getCounter());
     try {
       miniMaxScoring.miniMaxMove(board, true, 1, 0);
       System.out.println("MinMaxScoring");
       return miniMaxScoring.getBestColumn();
     } catch (InvalidMoveException e) {
+      miniMaxScoring.miniMaxMove(board, true, 3, 0);
+      System.out.println("MinMaxScoring");
+      return miniMaxScoring.getBestColumn();
+    } catch (InvalidMoveException e) {
+      System.out.println("Invalid move connecty");
     }
     System.out.println("No Position Found");
     RandomAI randomAI = new RandomAI(this.getCounter());
     return randomAI.makeMove(board);
+    RandomAI randomAI = new RandomAI(this.getCounter());
+    return randomAI.makeMove(board);
   }
 }
-
