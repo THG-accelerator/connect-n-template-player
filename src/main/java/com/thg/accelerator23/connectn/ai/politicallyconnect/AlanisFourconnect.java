@@ -1,6 +1,7 @@
 package com.thg.accelerator23.connectn.ai.politicallyconnect;
 
 import com.thehutgroup.accelerator.connectn.player.*;
+import com.thg.accelerator23.connectn.ai.politicallyconnect.analyser.BoardAnalyser;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -64,12 +65,18 @@ public class AlanisFourconnect extends Player {
       return validRandomMove(board, propaGoodMoves);
     } catch(Exception exception){
       return validRandomMove(board, propaGoodMoves);
-    }
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
+  }
+
+//    public int winOnNext(Board board) {
+//      if ()
+//      return ThreadLocalRandom.current().nextInt(0, 9);
+//      //TODO: some crazy analysis
+//      //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
+//    }
   }
 }
 
 //   if (!board.hasCounterAtPosition(new Position((board.getConfig().getWidth() / 2), 0))){
 //           return (int) Math.floor((board.getConfig().getWidth() / 2));
 //           }
+
