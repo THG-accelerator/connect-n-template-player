@@ -2,7 +2,10 @@ package com.thg.accelerator23.connectn.ai.ruglas.Manual;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
+import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
+
+import java.util.ArrayList;
 
 public class ChooseMove {
 
@@ -50,5 +53,18 @@ public class ChooseMove {
 
     public Integer getPlayLocation() {
         return this.playLocation;
+    }
+
+    public static Board placeSeveralCounters(Counter counter, int[] columnList) throws InvalidMoveException {
+
+        GameConfig config = new GameConfig(10,8,4);
+        ArrayList<Board> boards = new ArrayList<>();
+        Board returnBoard = new Board(config);
+        boards.add(returnBoard);
+
+        for (int i=1; i< columnList.length; i++) {
+            returnBoard = new Board(boards.get(i-1), columnList[i],  counter);
+        }
+        return returnBoard;
     }
 }
