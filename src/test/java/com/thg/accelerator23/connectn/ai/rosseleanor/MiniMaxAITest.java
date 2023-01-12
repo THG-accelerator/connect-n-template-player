@@ -2,7 +2,10 @@ package com.thg.accelerator23.connectn.ai.rosseleanor;
 
 import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -23,7 +26,6 @@ class MiniMaxAITest {
     void tearDown() {
     }
 
-    @Disabled
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void getMoveWin(int depth) throws InvalidMoveException {
@@ -51,7 +53,6 @@ class MiniMaxAITest {
 
     }
 
-    @Disabled
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void getMoveBlocking(int depth) throws InvalidMoveException {
@@ -65,6 +66,33 @@ class MiniMaxAITest {
         counters[2] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
         counters[0] = new Counter[]{O, X, X, X, null, null, null, null, null, null};
+        counters = rotateBoard(counters);
+
+        Board board = new Board(counters, new GameConfig(width, height, numInARow));
+
+        miniMaxAI = new MiniMaxAI(depth, O);
+        miniMaxAI.setBoard(board);
+        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+
+        int move = miniMaxAI.getMove();
+
+        Assertions.assertEquals(4, move);
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    void getMoveWinTwo(int depth) throws InvalidMoveException {
+        int numInARow = 4;
+        int width = 10;
+        int height = 5;
+
+        Counter[][] counters = new Counter[height][width];
+        counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[2] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[1] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[0] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters = rotateBoard(counters);
 
         Board board = new Board(counters, new GameConfig(width, height, numInARow));

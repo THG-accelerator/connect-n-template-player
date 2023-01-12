@@ -26,7 +26,7 @@ public class BoardAnalyser {
     public BoardAnalyser(GameConfig config) {
         positionsByFunction = new HashMap<>();
         List<Position> leftEdge = IntStream.range(0, config.getHeight())
-                . mapToObj(Integer::new)
+                .mapToObj(Integer::new)
                 .map(i -> new Position(0, i))
                 .collect(Collectors.toList());
         List<Position> bottomEdge = IntStream.range(0, config.getWidth())
@@ -144,6 +144,12 @@ public class BoardAnalyser {
 
             Map<Counter, Integer> result = getBestRunByColour(line);
 
+            if (result.get(myCounter) == 4) {
+                return 100;
+            }
+            if (result.get(oppositionCounter) == 4) {
+                return -100;
+            }
             if (result.get(myCounter) == 2) {
                 myScore += 1;
             }
@@ -151,18 +157,12 @@ public class BoardAnalyser {
                 myScore -= 1;
             }
             if (result.get(myCounter) == 3) {
-                myScore += 100;
+                myScore += 10;
             }
             if (result.get(oppositionCounter) == 3) {
-                myScore -= 100;
+                myScore -= 10;
             }
-            if (result.get(myCounter) == 4) {
-                myScore += 1E6;
-            }
-            if (result.get(oppositionCounter) == 4) {
-                myScore -= 1E6;
 
-            }
         }
 
         return myScore;
