@@ -3,6 +3,7 @@ package com.thg.accelerator23.connectn.ai.fermion.algorithim;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
+import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thg.accelerator23.connectn.ai.fermion.board.LocalBoardAnalyser;
 
 import java.util.*;
@@ -10,27 +11,33 @@ import java.util.*;
 public class Node {
 
     private State state;
-    Node parent;
+    private Node parent;
     private int move;
     private final List<Node> children = new ArrayList<>();
 
     public Node(Counter counter){
         this.state = new State(counter);
     }
-public Node(){
-        this.state= new State(Counter.O);
-        this.state.setBoard(new Board(new GameConfig(10,8,4)));
-        this.state.setBoard(new Board(new GameConfig(10,8,4)));
-}
-    public Node(Node tempNode){
+
+    public Node(State state){
+        this.state = state;
+    }
+//
+//    public Node() {
+//        this.state= new State(Counter.O);
+//        this.state.setBoard(new Board(new GameConfig(10,8,4)));
+//    }
+
+    public Node(Node tempNode) {
         this.state = tempNode.getState();
         this.parent = tempNode.getParent();
         this.move = tempNode.getMove();
     }
 
-    public Node(Node parent, int move,Counter counter){
+    public Node(Node parent, int move, Counter counter) {
         this.state = new State(counter);
-        this.state.setBoard(parent.state.getBoard());
+        Board b = parent.state.getBoard();
+        this.state.setBoard(b);
         this.parent = parent;
         this.move = move;
     }
@@ -47,54 +54,81 @@ public Node(){
         return children;
     }
 
+    public boolean hasChildren() {
+        if(this.children.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
     public Node getParent() { return this.parent; };
 
-    public Node childMostVisits() {
-        Node mostNode = new Node();
-        //Node mostNode = this.getChildren().get(0);
-        for(Node node : this.getChildren()) {
-            if(node.getState().getNodeVisits() > mostNode.getState().getNodeVisits()) {
-                mostNode = node;
-            }
+    public int getNumberOfParents() {
+        Node node = this;
+        int counter = 0;
+        while(node.getParent() !=null){
+            counter++;
+            node = node.getParent();
         }
-        return mostNode;
+        return counter;
     }
-//
-//    public Node childMostVisits() {
-//        return Collections.max(this.getChildren(), Comparator.comparing(c-> c.getState().getNodeVisits()));
-//    }
+
+    public int getNumberOfChildrenLevels(){
+        Node node = this;
+        int counter = 0;
+        while(!node.hasChildren()) {
+            counter++;
+            node = node.getChildren().get(0);
+        }
+        return counter;
+    }
+
+    public Node childMostVisits() {
+        if (this.hasChildren()) {
+            Node mostNode = this.getChildren().get(0);
+            for (Node node : this.getChildren()) {
+                if (node.getState().getNodeVisits() > mostNode.getState().getNodeVisits()) {
+                    mostNode = node;
+                }
+            }
+            return mostNode;
+        }
+        return this;
+    }
 
     public Node averageChildWins() {
         return Collections.max(this.getChildren(), Comparator.comparing(c-> c.getState().getNodeWins()/c.getState().getNodeVisits()));
     }
 
-//    public void addChild(List<Node> children){
-//     for (Node child : children) {
-//            children.add(child.getMove(),child);
-//        }
-//    }
-//    public void addChild(Node child){
-//        children.add(child.getMove(),child);
-//    }
-
-    public void addChild(Node node){
-        Node interNode = node;
-        children.add(interNode);
+    public void addChild(Node node) {
+        children.add(node);
     }
 
-
-    public void generateChildrenNodes(){
+    public void generateChildrenNodes() {
         for (int i = 0; i < 10; i++) {
-            addChild(new Node(this, i, this.getState().getCounterOpposite()));
+            LocalBoardAnalyser lba = new LocalBoardAnalyser(this.state.getBoard());
+            boolean fullColumns[] = lba.fullColumns();
+
+            try {
+                if(fullColumns[i] ==false) {
+                    Board board = new Board(this.getState().getBoard(), i, this.getState().getCounter());
+//                Node node = new Node(this.getState());
+                    Node node = new Node(this, i, this.getState().getCounterOpposite());
+                    node.getState().setBoard(board);
+                    addChild(node);
+                }
+            } catch (InvalidMoveException e) {
+                throw new RuntimeException(e);
+            }
+
         }
     }
-
 
     public double getUTCValue(Node rootNode) {
         if(this.state.getNodeVisits()==0) {
             return Integer.MAX_VALUE;
         } else {
-            System.out.println (((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits())+" "+this.getMove());
+//            System.out.println (((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits())+" "+this.getMove());
             return ((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits());
         }
     }
@@ -105,8 +139,6 @@ public Node(){
         boolean fullColumns[] = lba.fullColumns();
         Random r = new Random();
         int random = -1;
-        // infinite loop if no available moves
-        // might be a bad idea using while true
         ArrayList<Integer> possible = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
         boolean hasFound = false;
         while(!hasFound) {

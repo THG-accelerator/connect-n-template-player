@@ -6,6 +6,7 @@ import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thg.accelerator23.connectn.ai.fermion.board.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.fermion.board.GameState;
+import com.thg.accelerator23.connectn.ai.fermion.renderer.ConsoleRenderer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,88 +22,117 @@ public class MCTS {
         this.board = board;
     }
 
-//    public Node selectHighestUTCNode(Node parentNode) {
-//        Node bestNode = parentNode;
+//        public Node selectHighestUTCNode(Node parentNode) {
 //        if(parentNode.getChildren().size() != 0) {
-//            for(Node node : parentNode.getChildren()) {
-//                if(Integer.MIN_VALUE < node.getUTCValue(parentNode))
-//                   bestNode = node;
+//
+//            Node bestNode = parentNode.getChildren().get(0);
+//            for (Node child : parentNode.getChildren()) {
+//                if (bestNode.getUTCValue(parentNode) < child.getUTCValue(parentNode)){
+//                    bestNode = child;
+//                }
 //            }
+////            System.out.println("This is the best node "+bestNode.getUTCValue(parentNode)+" move "+bestNode.getMove());
+//            return bestNode;
 //        }
-//        System.out.println("This is the best node "+bestNode.getUTCValue(parentNode));
-//        return bestNode;
-//    }
-////
+////            System.out.println("This is the best  parent node "+parentNode.getUTCValue(parentNode));
+//        return parentNode;
+//
+//        }
+
+//        public Node selectHighestUTCNode(Node parentNode) {
+//            if(parentNode.getChildren().size() != 0) {
+//                Random r = new Random();
+//                Node bestNode = parentNode.getChildren().get(r.nextInt(parentNode.getChildren().size()));
+//                for (Node child : parentNode.getChildren()) {
+//                    if (bestNode.getUTCValue(parentNode) < child.getUTCValue(parentNode)){
+//                        bestNode = child;
+//                    }
+//                }
+////            System.out.println("This is the best node "+bestNode.getUTCValue(parentNode)+" move "+bestNode.getMove());
+//            return bestNode;
+//        }
+////            System.out.println("This is the best  parent node "+parentNode.getUTCValue(parentNode));
+//        return parentNode;
+//
+//        }
 
         public Node selectHighestUTCNode(Node parentNode) {
-        if(parentNode.getChildren().size() !=0){
-
-            Node bestNode = parentNode.getChildren().get(0);
-            for (Node child : parentNode.getChildren()) {
-                if (bestNode.getUTCValue(parentNode)< child.getUTCValue(parentNode)){
-                    bestNode = child;
-                }
-            }
-            System.out.println("This is the best node "+bestNode.getUTCValue(parentNode)+" move "+bestNode.getMove());
-            return bestNode;
+            Node node = parentNode;
+//            System.out.println("START OF NODE OPTIOSN UCT[[[[[[[[[[[[[[[[[[");
+            while (node.getChildren().size() != 0) {
+                node = Collections.max(node.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
         }
-            System.out.println("This is the best  parent node "+parentNode.getUTCValue(parentNode));
-        return parentNode;
+//            System.out.println("FINI-----------------------");
+        return node;
+    }
 
-
-        }
-
-
-
-//    public Node selectHighestUTCNode(Node parentNode) {
-//        if(parentNode.getChildren().size() != 0){
-//            Node node = Collections.max(parentNode.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
-//            System.out.println("This is the best node "+node.getUTCValue(parentNode));
-//            return node;
-//        }
-//        return parentNode;
-//    }
-
-//    public Node selectHighestUTCNode(Node parentNode) {
-//        Node node = parentNode;
-//        while (node.getChildren().size() != 0) {
-//            node = Collections.max(node.getChildren(), Comparator.comparing(c -> c.getUTCValue(parentNode)));
-//        }
-//        return node;
-//    }
-
-
-
+    public Node expand(Node promisingNode, ArrayList<Integer> movesMade) {
+//        Node promisingNode = selectHighestUTCNode(n);
+        promisingNode.generateChildrenNodes();
+        Node newNode = randomChildNode(promisingNode);
+        movesMade.add(newNode.getMove());
+        return newNode;
+    }
 
 
     public int actualPlay(Counter counter) {
+//        System.out.println(counter.getStringRepresentation());
 //        Tree tree = new Tree(rootNode);
         Tree tree = new Tree(counter);
         Node rootNode = tree.getRoot();
 
-
         rootNode.getState().setBoard(this.board);
         rootNode.getState().setRootCounter(counter);
-
-
 
         long currentTime = System.currentTimeMillis();
 
         while (System.currentTimeMillis()-currentTime < 8500) {
-
+            ArrayList<Integer> movesMade = new ArrayList<>();
+//        for (int i = 0; i < 10; i++){
             Node promisingNode = selectHighestUTCNode(rootNode);
-            BoardAnalyser analyser = new BoardAnalyser(promisingNode.getState().getBoard().getConfig());
-            if (!analyser.calculateGameState(promisingNode.getState().getBoard()).isEnd()) {
-                promisingNode.generateChildrenNodes();
+//
+////
+////        if (!analyser.calculateGameState(promisingNode.getState().getBoard()).isEnd() && promisingNode.getChildren().size() == 0) {
+////            promisingNode.generateChildrenNodes();
+////        }
+//
+//            promisingNode.generateChildrenNodes();
+//
+//            ArrayList<Integer> movesMade = new ArrayList<>();
+//
+//            Node nodeToExplore = randomChildNode(promisingNode);
+//
+//            movesMade.add(nodeToExplore.getMove());
+
+            Node nodeToExplore = expand(promisingNode,movesMade);
+
+
+            BoardAnalyser analyser = new BoardAnalyser(nodeToExplore.getState().getBoard().getConfig());
+//            System.out.println(analyser.calculateGameState(nodeToExplore.getState().getBoard()).isEnd())
+//            ;
+            ConsoleRenderer obj = new ConsoleRenderer();
+
+
+//            while (analyser.calculateGameState(nodeToExplore.getState().getBoard()).isEnd()) {
+//                nodeToExplore = randomChildNode(promisingNode, movesMade);
+//                movesMade.add(nodeToExplore.getMove());
+//                System.out.println("a "+ nodeToExplore.getMove());
+//                if (movesMade.size() == 10) {
+////                    backpropagation(nodeToExplore, nodeToExplore.getState().getCounterOpposite());
+//                    promisingNode.getState().setNodeWins(Integer.MAX_VALUE);
+//                    nodeToExplore = expand(promisingNode.getParent(), movesMade);
+//                    break;
+//                }
+//            }
+
+//            System.out.println(analyser.calculateGameState(nodeToExplore.getState().getBoard()).isEnd());
+
+                Counter results = simulateMoves(nodeToExplore, rootNode.getState().getCounter());
+
+                backpropagation(nodeToExplore, results, rootNode.getState().getCounter());
             }
+//        }
 
-            Node nodeToExplore = randomChildNode(promisingNode);
-
-            Counter results = simulateMoves(nodeToExplore,rootNode.getState().getCounter());
-//            Node winnerNode = simulateMoves(nodeToExplore,rootNode.getState().getCounter());
-
-            backpropagation(nodeToExplore,results,counter);
-        }
 
         System.out.println("_________________TOP___Total moves "+ moveCounter.size()+" Wins "+winCounter.size());
         System.out.println("0: Total-"+Collections.frequency(moveCounter,0)+" Wins-"+Collections.frequency(winCounter,0));
@@ -122,15 +152,18 @@ public class MCTS {
         System.out.println(tree.getTrueRoot().getChildren().size());
         for (Node child : tree.getTrueRoot().getChildren()) {
             System.out.println(child.getMove() +" "+ child.getState().getNodeVisits() +" "+ child.getState().getNodeWins());
+            System.out.println("UCT Score: "+ child.getUTCValue(tree.getTrueRoot()));
         }
+
+
+
         for (Node child : tree.getRoot().getChildren()) {
-            System.out.println("1: "+child.getMove()+" size of child= "+child.getChildren().size()
-            );
+            System.out.println("1: "+child.getMove()+" size of child= "+child.getChildren().size()  +" UCT "+ child.getUTCValue(tree.getTrueRoot())  );
             if(child.getChildren().size()!=0) {
                 for (Node childChild : child.getChildren()) {
-//                    System.out.println("2: parent=>"+child.getMove()+" " +childChild.getMove());
+                    System.out.println("2: parent=>"+child.getMove()+" " +childChild.getMove()+"UCT "+ childChild.getUTCValue(tree.getTrueRoot()));
                     if (childChild.getChildren().size() != 0) {
-                                            System.out.println("2: parent= "+child.getMove()+" Size of child= "+childChild.getChildren().size());
+//                                            System.out.println("2: parent= "+child.getMove()+" Size of child= "+childChild.getChildren().size());
 
                         for (Node childChildChild : childChild.getChildren()) {
 
@@ -152,12 +185,26 @@ public class MCTS {
         BoardAnalyser boardChecker =  new BoardAnalyser(new GameConfig(10,8,4));
         GameState gameState = boardChecker.calculateGameState(nodeToExplore.getState().getBoard());
 
+        ConsoleRenderer obj = new ConsoleRenderer();
         Node interNode = new Node(nodeToExplore);
         State interState = interNode.getState();
+        int movesMade = 0;
 
+        if (rootCounter.getOther() == gameState.getWinner()) {
+            nodeToExplore.getState().setNodeWins(Integer.MIN_VALUE);
+            return gameState.getWinner();
+        }
+
+
+//        System.out.println("START+===============START+=======================START+===============================");
+//        System.out.println("Cointer  ="+nodeToExplore.getState().getCounter());
+//        System.out.println("Move made " + nodeToExplore.getMove() +"  Parents amount: " +nodeToExplore.getNumberOfParents());
 
         while(gameState.isEnd() == false){
             try {
+
+//                movesMade++;
+//
 //                interNode.getState().invertCounter();
 //
 //                int move = interNode.playRandomMove(interNode.getState().getBoard());
@@ -168,20 +215,24 @@ public class MCTS {
 //
 //                gameState = boardChecker.calculateGameState(interState.getBoard());
 
-                interState.invertCounter();
+
 
                 int move = interNode.playRandomMove(interState.getBoard());
-
 
                 interState.setBoard(new Board(interState.getBoard(), move, interState.getCounter()));
 
                 gameState = boardChecker.calculateGameState(interState.getBoard());
 
+//                obj.render(null,interState.getBoard());
+                interState.invertCounter();
             } catch(InvalidMoveException e) {
                 System.out.println("Sim fail");
                 throw new RuntimeException(e);
             }
         }
+//        System.out.println(gameState.getWinner());
+//        System.out.println("FINISHED----------FINISHED-------------------------FINISHED----------------------------------------");
+
         moveCounter.add(nodeToExplore.getMove());
         if(gameState.getWinner().getStringRepresentation().equals(rootCounter.getStringRepresentation()) ){
             winCounter.add(nodeToExplore.getMove());
@@ -197,34 +248,48 @@ public class MCTS {
             Random r = new Random();
             int nextNode = r.nextInt(rootNode.getChildren().size());
             Node n = rootNode.getChildren().get(nextNode);
-            n.getState().addVisit();
+//            n.getState().addVisit();
             return n;
         }
         return rootNode;
     }
+    public Node randomChildNode(Node rootNode, ArrayList<Integer> movesMode) {
+        int childrenSize = rootNode.getChildren().size();
+        Random r = new Random();
+        int move = r.nextInt(childrenSize);
+        if(childrenSize != 0) {
+            while( movesMode.contains(move)) {
+                move = r.nextInt(childrenSize);
+            }
+            return rootNode.getChildren().get(move);
+        }
+        return rootNode;
+    }
+
+
+
+
     private int lastMove;
     private int backtracked;
-    public void backpropagation(Node endNode, Counter simWinnerNode,Counter rootCounter) {
+
+    public void backpropagation(Node endNode, Counter simWinnerNode, Counter rootCounter) {
         Node upNode = endNode;
-//        System.out.println("Start of node------------------------------------------------") ;
-
         backtracked++;
-
         int tracker =0;
+
+//        if (rootCounter.getOther() == simWinnerNode) {
+//            upNode.getState().setNodeWins(Integer.MIN_VALUE);
+//        }
 
         while (upNode != null) {
             tracker++;
 //            System.out.println("game sim finished "+ endNode.getMove());
             upNode.getState().addVisit();
-            if (rootCounter == simWinnerNode) {
-//                System.out.println("Winner++++++++");
+            if (upNode.getState().getCounterOpposite() == simWinnerNode) {
                 upNode.getState().addWin();
             } else {
-//                System.out.println("LOSER---------");
-
 //                upNode.getState().subWin();
             }
-//            System.out.println("Going up a node VVVVV");
             upNode = upNode.getParent();
         }
 //
@@ -235,6 +300,8 @@ public class MCTS {
         lastMove = endNode.getMove();
 //        System.out.println("END of node ================================================");
 
-}}
+    }
+}
+
 
 
