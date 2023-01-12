@@ -59,11 +59,13 @@ public class ChooseMove {
 
         GameConfig config = new GameConfig(10,8,4);
         ArrayList<Board> boards = new ArrayList<>();
+
         Board returnBoard = new Board(config);
         boards.add(returnBoard);
 
-        for (int i=1; i< columnList.length; i++) {
-            returnBoard = new Board(boards.get(i-1), columnList[i],  counter);
+        for (int i=0; i < columnList.length; i++) {
+            returnBoard = new Board(boards.get(i), columnList[i],  counter);
+            boards.add(returnBoard);
         }
         return returnBoard;
     }

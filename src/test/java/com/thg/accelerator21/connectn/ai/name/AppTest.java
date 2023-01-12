@@ -4,6 +4,7 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.ChooseMove;
 import com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxScoringAlphaBetaAI;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ public class AppTest {
   Board emptyBoard = new Board(config);
   MiniMaxScoringAlphaBetaAI AI = new MiniMaxScoringAlphaBetaAI(Counter.O);
 
-
   public Board placeSeveralCounters(Counter counter, int[] columnList) throws InvalidMoveException {
 
     ArrayList<Board> boards = new ArrayList<>();
@@ -33,13 +33,6 @@ public class AppTest {
       returnBoard = new Board(boards.get(i - 1), columnList[i],  counter);
     }
     return returnBoard;
-  }
-  /**
-   * Rigorous Test :-)
-   */
-  @Test
-  public void shouldAnswerWithTrue() {
-    assertTrue(true);
   }
 
   @Test
@@ -59,12 +52,11 @@ public class AppTest {
 
 
   @Test
-  @DisplayName("AI does not place a couter ina full collumn")
-  public void AIDoesNotDoInvalidMove(){
-    Board board1 = new Board(emptyBoard, 4, Counter.O);
-    Board board2 = new Board(board1, 4, Counter.O);
-    Board board3 = new Board(board2, 4, Counter.O);
-
+  @DisplayName("AI does not place a counter in a full column")
+  public void AIDoesNotDoInvalidMove() throws InvalidMoveException {
+    int[] columnZero = {0,0,0,0,0,0,0,0};
+    Board testBoard = ChooseMove.placeSeveralCounters(Counter.O, columnZero);
+    AI.makeMove(testBoard);
   }
 
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
         public static void main(String[] args) throws InvalidMoveException {
 
             Board dougieBoard = new Board(config);
-            int[] firstColumn = {1,1,1,1,1,1,1,1};
+            int[] firstColumn = {0,0,0,0,0,0,0,0};
             Board fullBoard = ChooseMove.placeSeveralCounters(Counter.X, firstColumn);
 
             for (int i=0; i<8; i++) {
