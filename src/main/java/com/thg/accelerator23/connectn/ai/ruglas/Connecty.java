@@ -6,6 +6,7 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
+import com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxScoring;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -28,7 +29,6 @@ public class Connecty extends Player {
   @Override
   public int makeMove(Board board) {
 
-    MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this);
     MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this.getCounter());
     try {
       miniMaxScoring.miniMaxMove(board, true, 1, 0);
