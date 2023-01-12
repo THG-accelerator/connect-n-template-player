@@ -39,101 +39,56 @@ public class FunConcertoAi extends Player {
     ArrayList<Integer> validMoves = getValidLocations(board);
 
     if(isBlankBoard(board) && tree.getChildren().size() == 0){ // Runs on the first move of the game
-        System.out.println("Running");
-      for (int i = 0; i < validMoves.size(); i++) {
-          try {
-            tree.addNode(validMoves.get(i));
-          } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen1");
-          }
-        }
-      for(int i = 0; i < tree.getChildren().size(); i++){
-        Board secondMoveBoard = tree.getChildren().get(i).getState();
-        ArrayList<Integer> validMovesForSecondMove = getValidLocations(secondMoveBoard);
-        for (int j = 0; j < validMovesForSecondMove.size(); j++) {
-          try {
-            tree.getChildren().get(i).addNode(validMovesForSecondMove.get(j));
-          } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen2");
-          }
-        }
-      }
+      addNodesToTree(board, 80);
     }
     else if(!isBlankBoard(board) && tree.getChildren().size() == 0) { // Checks if the player is going second
-      //tree.setCounter(Counter.O);
       try {
         tree.addNode(getPreviousMove(board));
       } catch (InvalidMoveException e) {
         System.out.println("This shouldn't happen'");
       }
       tree = tree.getChildren().get(0);
-      for (int i = 0; i < validMoves.size(); i++) {
-        try {
-          tree.addNode(validMoves.get(i));
-        } catch (InvalidMoveException e) {
-          System.out.println("This shouldn't happen1");
-        }
-      }
-      for(int i = 0; i < tree.getChildren().size(); i++){
-        Board secondMoveBoard = tree.getChildren().get(i).getState();
-        ArrayList<Integer> validMovesForSecondMove = getValidLocations(secondMoveBoard);
-        for (int j = 0; j < validMovesForSecondMove.size(); j++) {
-          try {
-            tree.getChildren().get(i).addNode(validMovesForSecondMove.get(j));
-          } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen2");
-          }
-        }
-      }
+      addNodesToTree(board,80);
     } else {
-      System.out.println("Counter1");
-      System.out.println(tree.getCounter());
       int previousMove = getPreviousMove(board);
       ArrayList<Integer> validMovesForPreviousBoard = getValidLocations(previousBoard);
       tree = tree.getChildAtPosition(indexOf(validMovesForPreviousBoard, previousMove));
-      System.out.println("Counter after ");
-      System.out.println(tree.getCounter());
-      System.out.println(validMoves.size());
-      System.out.println(validMovesForPreviousBoard);
-      System.out.println(tree.getState().getCounterAtPosition(new Position(0,0)));
-      System.out.println(tree.getState().getCounterAtPosition(new Position(1,0)));
-      System.out.println(tree.getState().getCounterAtPosition(new Position(2,0)));
-      for (int i = 0; i < validMoves.size(); i++) {
-        try {
-          tree.addNode(validMoves.get(i));
-        } catch (InvalidMoveException e) {
-          System.out.println("This shouldn't happen1");
-        }
+      addNodesToTree(board,80);
+    }
+
+    int[] newMove = mM.miniMax(tree,System.currentTimeMillis(),true);
+
+    try {
+      previousBoard = new Board(board, newMove[1],getCounter());
+    } catch (InvalidMoveException e) {
+      System.out.println("This shouldn't happen");
+    }
+    tree = tree.getChildAtPosition(indexOf(validMoves, newMove[1]));
+    return newMove[1];
+  }
+
+  public void addNodesToTree(Board board, int depth){
+    ArrayList<Integer> validMoves = getValidLocations(board);
+    for (int i = 0; i < validMoves.size(); i++) {
+      try {
+        tree.addNode(validMoves.get(i));
+      } catch (InvalidMoveException e) {
+        System.out.println("This shouldn't happen");
       }
-      for(int i = 0; i < tree.getChildren().size(); i++){
-        Board secondMoveBoard = tree.getChildren().get(i).getState();
+    }
+    for(int i = 0; i < depth-1; i++) {
+      for (int j = 0; j < tree.getChildren().size(); j++) {
+        Board secondMoveBoard = tree.getChildren().get(j).getState();
         ArrayList<Integer> validMovesForSecondMove = getValidLocations(secondMoveBoard);
-        System.out.println("these");
-        System.out.println(validMovesForSecondMove);
-        for (int j = 0; j < validMovesForSecondMove.size(); j++) {
+        for (int k = 0; k < validMovesForSecondMove.size(); k++) {
           try {
-            tree.getChildren().get(i).addNode(validMovesForSecondMove.get(j));
+            tree.getChildren().get(j).addNode(validMovesForSecondMove.get(k));
           } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen2");
+            System.out.println("This shouldn't happen");
           }
         }
       }
     }
-
-    System.out.println(tree.getTotalNodesBelow());
-    System.out.println(tree.getCounter());
-    int[] newMove = mM.miniMax(tree,true);
-    System.out.println("Returned from minimax");
-    System.out.println(newMove[1]);
-    try {
-      previousBoard = new Board(board, newMove[1],getCounter());
-    } catch (InvalidMoveException e) {
-      System.out.println("This shouldn't happen4");
-    }
-    tree = tree.getChildAtPosition(indexOf(validMoves, newMove[1]));
-    System.out.println("counter at end");
-    System.out.println(tree.getCounter());
-    return newMove[1];
   }
 
   public ArrayList<Integer> getValidLocations(Board board){
