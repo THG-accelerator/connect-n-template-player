@@ -10,7 +10,6 @@ public class TestMove {
         try {
             return new Board(board, column, counter);
         } catch (InvalidMoveException e) {
-            System.out.println("Invalid move");
         }
         return board;
     }
