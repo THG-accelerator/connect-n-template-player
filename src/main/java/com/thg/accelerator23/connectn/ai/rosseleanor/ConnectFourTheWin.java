@@ -14,7 +14,7 @@ public class ConnectFourTheWin extends Player {
     public ConnectFourTheWin(Counter myCounter) {
         super(myCounter, ConnectFourTheWin.class.getName());
         this.myCounter = myCounter;
-        miniMaxAI = new MiniMaxAI(10, myCounter);
+        miniMaxAI = new MiniMaxAI(5, myCounter);
     }
 
     @Override

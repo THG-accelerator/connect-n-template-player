@@ -164,7 +164,6 @@ public class BoardAnalyser {
 
             }
         }
-
         return myScore;
     }
 }

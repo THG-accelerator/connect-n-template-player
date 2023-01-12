@@ -23,20 +23,20 @@ class MiniMaxAITest {
     void tearDown() {
     }
 
-    @Disabled
+    //@Disabled
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void getMoveWin(int depth) throws InvalidMoveException {
         int numInARow = 4;
         int width = 10;
-        int height = 5;
+        int height = 8;
 
         Counter[][] counters = new Counter[height][width];
         counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters[2] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
         counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
-        counters[0] = new Counter[]{O, X, X, null, null, null, null, null, null, null};
+        counters[0] = new Counter[]{O, X, X, X, null, null, null, null, null, null};
         counters = rotateBoard(counters);
 
         Board board = new Board(counters, new GameConfig(width, height, numInARow));
@@ -51,7 +51,7 @@ class MiniMaxAITest {
 
     }
 
-    @Disabled
+    //@Disabled
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void getMoveBlocking(int depth) throws InvalidMoveException {
@@ -63,8 +63,8 @@ class MiniMaxAITest {
         counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
         counters[2] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
-        counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
-        counters[0] = new Counter[]{O, X, X, X, null, null, null, null, null, null};
+        counters[1] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[0] = new Counter[]{O, X, X, X, null, null, null, null, O, O};
         counters = rotateBoard(counters);
 
         Board board = new Board(counters, new GameConfig(width, height, numInARow));
