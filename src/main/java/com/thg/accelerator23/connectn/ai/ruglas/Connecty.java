@@ -13,48 +13,30 @@ import java.util.Random;
 
 public class Connecty extends Player {
   Counter opponentCounter;
+  boolean firstPlayer;
 
   public Connecty(Counter counter) {
     super(counter, Connecty.class.getName());
-    this.opponentCounter = getOpponent();
-  }
+    this.opponentCounter = counter.getOther();
 
-  private Counter getOpponent() {
-    return switch (this.getCounter()) {
-      case X -> Counter.O;
-      case O -> Counter.X;
-      default -> null;
-    };
+    switch (this.getCounter()) {
+      case O -> firstPlayer = true;
+      case X -> firstPlayer = false;
+    }
   }
-
   @Override
   public int makeMove(Board board) {
 
-    ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
-
+    MiniMaxScoring miniMaxScoring = new MiniMaxScoring(this);
     try {
-      moveChooser.findWinPosition();
+      miniMaxScoring.miniMaxMove(board, true, 1, 0);
+      System.out.println("MinMaxScoring");
+      return miniMaxScoring.getBestColumn();
     } catch (InvalidMoveException e) {
-      throw new RuntimeException(e);
     }
-    if (moveChooser.getPlayLocation() != null) {
-      return moveChooser.getPlayLocation();
-    } else {
-      try {
-        moveChooser.findBlockPosition();
-      } catch (InvalidMoveException e) {
-        throw new RuntimeException(e);
-      }
-      if (moveChooser.getPlayLocation() != null) {
-        return moveChooser.getPlayLocation();
-      } else {
-        int randomNumber;
-        do {
-          Random rand = new Random();
-          randomNumber = rand.nextInt(board.getConfig().getWidth());
-        } while (TestMove.doesMoveGiveOpponentWin(board, randomNumber, this.getCounter()));
-        return randomNumber;
-      }
-    }
+    System.out.println("No Position Found");
+    RandomAI randomAI = new RandomAI(this.getCounter());
+    return randomAI.makeMove(board);
   }
 }
+
