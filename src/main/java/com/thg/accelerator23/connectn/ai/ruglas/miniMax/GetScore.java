@@ -14,6 +14,7 @@ import java.util.List;
 public class GetScore {
     Board board;
     BoardAnalyser boardAnalyser;
+    int totalScore;
     int parity;
 
     public GetScore(Board board, Counter counter) {
@@ -25,31 +26,35 @@ public class GetScore {
         }
     }
 
-    public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
-        GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
-        if(gameState.isDraw()){
-            System.out.println("This move draws the game");
-            return 0;
-        } else if (gameState.isWin()) {
-            System.out.println("this move wins the game");
-            return 10000;
-        }
-        else{
-            return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);
-        }
-    }
     public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
         for (int columnCheck=0; columnCheck<boardToCheck.getConfig().getWidth(); columnCheck++){
-            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter)){
+            if(TestMove.isGameOverAfterMove(boardToCheck, columnCheck, counter.getOther())){
                 return 100000;
             }
         }
         {return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);}
     }
 
+    public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
+        GameState gameState = boardAnalyser.calculateGameState(boardToCheck);
+        totalScore = 0;
+        if(gameState.isDraw()){return -10;} else if (gameState.isWin()) { return 1000000;
 
+        }
+        else{
+            totalScore += getScoreFromAdjPositions(positionToCheck, boardToCheck, counter);
+            if (positionToCheck.getX() == 4 || positionToCheck.getX() == 5){
+                totalScore += 10;
+            }
+            else if (positionToCheck.getX() == 3 || positionToCheck.getX() == 6){
+                totalScore += 5;
+            }
+            return totalScore;
+        }
+
+
+    }
     public ArrayList<ArrayList<Position>> getAdjacentNPositions(Position position, int n) {
-
         ArrayList<ArrayList<Position>> positions = new ArrayList<>();
 
         ArrayList<Position> horizontal = new ArrayList<>();
@@ -94,43 +99,28 @@ public class GetScore {
         ArrayList<ArrayList<Position>> positionsArray = getAdjacentNPositions(positionToPlay, 4);
         int score = 0;
         for (ArrayList<Position> positions : positionsArray) {
-
-            for (int positionIndex = 0; positionIndex < positions.size()-4; positionIndex++) {
-
+            for (int positionIndex = 0; positionIndex<positions.size()-4; positionIndex++) {
                 List<Counter> counterList = new ArrayList<>();
-                List<Position> positionList = new ArrayList<>();
-
-                if( board.getCounterAtPosition(positions.get(positionIndex)) != counter.getOther()){
-
+                if(board.getCounterAtPosition(positions.get(positionIndex)) == counter.getOther()){}
+                else {
                     for (int counterIndex = 0; counterIndex < 4; counterIndex++) {
-
                         counterList.add(board.getCounterAtPosition(positions.get(positionIndex + counterIndex)));
-                        positionList.add(positions.get(positionIndex));
                     }
-                    score += getLineScore(board, positionList, counterList, counter);
+                    score += findScore(counterList, counter);
                 }
+
             }
         }
         return score;
     }
-    private int getLineScore(Board board, List<Position> positionList, List<Counter> counterList, Counter playerCounter) {
-        System.out.println("getLineScore method call");
+
+    private int findScore(List<Counter> counterList, Counter playerCounter) {
         if(counterList.stream().filter(counter -> counter== playerCounter.getOther()).count() > 0) {return 0;}
         else{
-
-            long counterCount = counterList.stream().filter(counter -> counter == playerCounter).count();
-
-            if(counterCount == 2){
-                System.out.println("This move creates a line of 2.");
-                return 10;
-            }
-
-            else if(counterCount == 3) {
-                System.out.println("This move creates a line of three");
-                System.out.println(positionList.get(0).toString() + "," + positionList.get(0).toString());
-                return 20;
-            }
-            else return 0;
+            long counterCount = counterList.stream().filter(counter -> counter== playerCounter).count();
+            if(counterCount == 2){return 10;}
+            else if(counterCount == 3) {return 40;}
+            else return 5;
         }
     }
    public int getHeightOfWinPositionFromLine(Board board, List<Position> positionList) {

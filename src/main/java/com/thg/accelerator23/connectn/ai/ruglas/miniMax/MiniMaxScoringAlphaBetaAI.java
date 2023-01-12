@@ -15,7 +15,7 @@ public class MiniMaxScoringAlphaBetaAI extends Player {
         int column;
         MiniMaxScoringAlphaBeta miniMaxScoringAlphaBeta = new MiniMaxScoringAlphaBeta(this.getCounter());
         try {
-            miniMaxScoringAlphaBeta.miniMaxMoveAlphaBeta(board, true, 3, 0, -1000000, 1000000);
+            miniMaxScoringAlphaBeta.miniMaxMoveAlphaBeta(board, true, 6, 0, -1000000, 1000000);
         } catch (InvalidMoveException e) {
         }
         System.out.println("MiniMaxAlphaBeta");

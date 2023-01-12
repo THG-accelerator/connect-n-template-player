@@ -10,9 +10,8 @@ public class TestMove {
         try {
             return new Board(board, column, counter);
         } catch (InvalidMoveException e) {
-            System.out.println("Invalid move");
         }
-        return null;
+        return board;
     }
     // (The Board constructor automatically finds valid move within a column if there is one)
 

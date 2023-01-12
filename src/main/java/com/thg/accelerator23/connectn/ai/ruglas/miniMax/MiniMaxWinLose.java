@@ -24,18 +24,19 @@ public class MiniMaxWinLose {
     }
     public int miniMaxWinLoseMove(Board boardPlay, boolean isMax, int depth) throws InvalidMoveException {
         BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
-        if (depth == 0) {return bestScore;}
+        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
+        if (depth == 0 || gameState.isEnd()) {return score;}
         else if (isMax) {
             bestScore = -1000;
             for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++){
                 Position checkPosition = new Position(xMax, getMinY(xMax, boardPlay));
                 if (boardPlay.isWithinBoard(checkPosition)){
                     Board tempBoard = makeMove(boardPlay,counter, xMax);
-                    GameState gameState = boardAnalyser.calculateGameState(tempBoard);
-                    if (gameState.isWin()) {
-                        score = 1;
-                    } else if (gameState.isDraw()) {
-                        score = 0;
+                    GameState gameStateTemp = boardAnalyser.calculateGameState(tempBoard);
+                    if (gameStateTemp.isWin()) {
+                        return 1;
+                    } else if (gameStateTemp.isDraw()) {
+                        return 0;
                     } else {
                         score = miniMaxWinLoseMove(tempBoard, false, depth - 1);
                     }
@@ -48,11 +49,11 @@ public class MiniMaxWinLose {
                 Position checkPosition = new Position(xMin, getMinY(xMin, boardPlay));
                 if (boardPlay.isWithinBoard(checkPosition)){
                     Board tempBoard = makeMove(boardPlay, oppositionCounter, xMin);
-                    GameState gameState = boardAnalyser.calculateGameState(tempBoard);
-                    if (gameState.isWin()) {
-                        score = -1;
-                    } else if (gameState.isDraw()) {
-                        score = 0;
+                    GameState gameStateTemp = boardAnalyser.calculateGameState(tempBoard);
+                    if (gameStateTemp.isWin()) {
+                        return -1;
+                    } else if (gameStateTemp.isDraw()) {
+                        return 0;
                     } else {
                         score = miniMaxWinLoseMove(tempBoard, false, depth - 1);
                     }
