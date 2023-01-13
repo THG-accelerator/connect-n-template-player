@@ -24,8 +24,7 @@ public class MiniMaxWinLose {
     }
     public int miniMaxWinLoseMove(Board boardPlay, boolean isMax, int depth) throws InvalidMoveException {
         BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
-        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
-        if (depth == 0 || gameState.isEnd()) {return score;}
+        if (depth == 0) {return score;}
         else if (isMax) {
             bestScore = -1000;
             for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++){
@@ -55,7 +54,7 @@ public class MiniMaxWinLose {
                     } else if (gameStateTemp.isDraw()) {
                         return 0;
                     } else {
-                        score = miniMaxWinLoseMove(tempBoard, false, depth - 1);
+                        score = miniMaxWinLoseMove(tempBoard, true, depth - 1);
                     }
                     if (score<bestScore){this.bestColumn = xMin;
                         bestScore = score;}

@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-
+private int visitCount;
     Board board;
     int score;
+
+    int column;
     List<Node> children = new ArrayList<>();
     Node parent;
 
-    public Node(Board board) {
+    public Node(Board board, int column) {
         this.board = board;
     }
 
@@ -32,4 +34,20 @@ public class Node {
     }
 
     private int getScore(){return this.score;}
+
+    public int getVisitCount() {
+        return visitCount;
+    }
+
+    public List<Node> getChildren() {
+        return children;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setParent(Node node) {
+        this.parent = node;
+    }
 }
