@@ -9,21 +9,21 @@ import com.thg.accelerator23.connectn.ai.rosseleanor.analysis.BoardAnalyser;
 
 public class ConnectFourTheWin extends Player {
     Counter myCounter;
-    MiniMaxAI miniMaxAI;
+    MiniMaxAI2 miniMaxAI2;
 
     public ConnectFourTheWin(Counter myCounter) {
         super(myCounter, ConnectFourTheWin.class.getName());
         this.myCounter = myCounter;
-        miniMaxAI = new MiniMaxAI(5, myCounter);
+        miniMaxAI2 = new MiniMaxAI2(1, myCounter);
     }
 
     @Override
     public int makeMove(Board board) {
-        miniMaxAI.setBoard(board);
-        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+        miniMaxAI2.setBoard(board);
+        miniMaxAI2.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
 
         try {
-            return miniMaxAI.getMove();
+            return miniMaxAI2.getMove();
         } catch (InvalidMoveException e) {
             throw new RuntimeException(e);
         }

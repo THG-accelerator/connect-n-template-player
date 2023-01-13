@@ -82,23 +82,31 @@ public class MiniMaxAI implements AI {
 
     public int max(Board board, int depth) throws InvalidMoveException {
         gameState = boardAnalyser.calculateGameState(board);
-        int score = Integer.MIN_VALUE;
-
-        if (gameState.isEnd() || (depth == maxDepth)) {
+        if (gameState.getWinner() == maximisingCounter) {
             return boardAnalyser.analyse(board, maximisingCounter);
+        } else if (gameState.getWinner() == minimisingCounter) {
+            return boardAnalyser.analyse(board, maximisingCounter);
+        } else if (depth == maxDepth) {
+            return 0;
         }
+
+        int score = Integer.MIN_VALUE;
 
         List<Board> children = new ArrayList<>(getChildren(maximisingCounter));
 
-
         int childCol = 0;
-
         for (Board child : children) {
             int minScore = min(child, depth + 1);
-
             if (minScore >= score) {
-                column = childCol;
-                score = minScore;
+                if (minScore == score) {
+                    if (r.nextInt(2) == 0 || minScore == Integer.MIN_VALUE) {
+                        column = childCol;
+                        score = minScore;
+                    }
+                } else {
+                    column = childCol;
+                    score = minScore;
+                }
             }
             childCol++;
         }
@@ -106,11 +114,14 @@ public class MiniMaxAI implements AI {
     }
 
     public int min(Board board, int depth) throws InvalidMoveException {
-        gameState = boardAnalyser.calculateGameState(board);
         int score = Integer.MAX_VALUE;
-
-        if (gameState.isEnd() || (depth == maxDepth)) {
+        gameState = boardAnalyser.calculateGameState(board);
+        if (gameState.getWinner() == maximisingCounter) {
             return boardAnalyser.analyse(board, maximisingCounter);
+        } else if (gameState.getWinner() == minimisingCounter) {
+            return boardAnalyser.analyse(board, maximisingCounter);
+        } else if (depth == maxDepth) {
+            return 0;
         }
 
         List<Board> children = new ArrayList<>(getChildren(minimisingCounter));
@@ -120,8 +131,15 @@ public class MiniMaxAI implements AI {
         for (Board child : children) {
             int maxScore = max(child, depth + 1);
             if (maxScore <= score) {
-                column = childCol;
-                score = maxScore;
+                if (maxScore == score) {
+                    if (r.nextInt(2) == 0 || maxScore == Integer.MAX_VALUE) {
+                        column = childCol;
+                        score = maxScore;
+                    }
+                } else {
+                    column = childCol;
+                    score = maxScore;
+                }
             }
             childCol++;
         }

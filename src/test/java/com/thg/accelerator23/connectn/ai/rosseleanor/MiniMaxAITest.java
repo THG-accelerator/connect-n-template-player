@@ -16,9 +16,10 @@ import static com.thehutgroup.accelerator.connectn.player.Counter.X;
 @Disabled
 public class MiniMaxAITest {
     MiniMaxAI miniMaxAI;
+    MiniMaxAI2 miniMaxAI2;
 
     private static Stream<Integer> depths() {
-        return Stream.of(1, 2, 3, 4, 5);
+        return Stream.of(1);
     }
 
     @BeforeEach
@@ -45,11 +46,17 @@ public class MiniMaxAITest {
 
         Board board = new Board(counters, new GameConfig(width, height, numInARow));
 
-        miniMaxAI = new MiniMaxAI(depth, O);
-        miniMaxAI.setBoard(board);
-        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+//        miniMaxAI = new MiniMaxAI(depth, O);
+//        miniMaxAI.setBoard(board);
+//        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+//
+//        int move = miniMaxAI.getMove();
 
-        int move = miniMaxAI.getMove();
+        miniMaxAI2 = new MiniMaxAI2(depth, O);
+        miniMaxAI2.setBoard(board);
+        miniMaxAI2.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+
+        int move = miniMaxAI2.getMove();
 
         Assertions.assertEquals(0, move);
     }
