@@ -2,7 +2,6 @@ package com.thg.accelerator23.connectn.ai.fermion.algorithim;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
-import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thg.accelerator23.connectn.ai.fermion.board.LocalBoardAnalyser;
 
@@ -76,9 +75,9 @@ public class Node {
     public int getNumberOfChildrenLevels(){
         Node node = this;
         int counter = 0;
-        while(!node.hasChildren()) {
+        while(node.hasChildren()) {
             counter++;
-            node = node.getChildren().get(0);
+            node = node.getChildren().get(2);
         }
         return counter;
     }
@@ -124,12 +123,13 @@ public class Node {
         }
     }
 
-    public double getUTCValue(Node rootNode) {
+    public double getUCTValue(Node rootNode) {
         if(this.state.getNodeVisits()==0) {
+//            System.out.println("node hasn't been visited");
             return Integer.MAX_VALUE;
         } else {
 //            System.out.println (((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits())+" "+this.getMove());
-            return ((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits());
+            return (((double) this.state.getNodeWins()/(double) this.state.getNodeVisits())+1.41*Math.sqrt(Math.log(rootNode.state.getNodeVisits())/(double) this.state.getNodeVisits()));
         }
     }
 

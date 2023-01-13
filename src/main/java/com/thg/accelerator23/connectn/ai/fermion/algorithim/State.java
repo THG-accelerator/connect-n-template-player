@@ -3,7 +3,9 @@ package com.thg.accelerator23.connectn.ai.fermion.algorithim;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 
-public class State {
+import java.util.Arrays;
+
+public class State implements Cloneable{
     private Counter rootCounter;
     private int nodeWins = 0;
     private int nodeVisits = 0;
@@ -18,6 +20,30 @@ public class State {
 //        this.setBoard(board);
 //
 //    }
+
+
+    public State(Counter rootCounter, int nodeWins, int nodeVisits, Board board) {
+        this.rootCounter = rootCounter;
+        this.nodeWins = nodeWins;
+        this.nodeVisits = nodeVisits;
+        this.board = board;
+    }
+
+
+    @Override
+    public State clone(){
+        State s = null;
+
+        try{
+            s = (State)super.clone();
+        }catch (CloneNotSupportedException e){
+            s = new State(this.getCounter(),this.getNodeWins(),this.getNodeVisits(),this.getBoard());
+        }
+        return s;
+
+    }
+
+
 
     public void setRootCounter(Counter rootCounter) {
         this.rootCounter = rootCounter;
@@ -43,15 +69,7 @@ public class State {
         this.nodeVisits += 1;
     }
 
-    public void addWin(int addBy) {
-        this.nodeWins += addBy;
-    }
-
     public void addWin() { this.nodeWins += 1; }
-
-    public void subWin(int subBy) { this.nodeWins -= subBy; }
-
-    public void subWin() { this.nodeWins -= 1; }
 
     public Counter getCounter() {
         return rootCounter;

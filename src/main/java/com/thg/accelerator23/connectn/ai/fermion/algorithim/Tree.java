@@ -12,11 +12,9 @@ public class Tree {
     }
 
     public Tree(Counter counter){
-
         Node first = new Node(counter);
-     this.root = first;
-     this.trueRoot = first;
-
+        this.root = first;
+        this.trueRoot = first;
     }
     public Tree(Node root) {
         this.root = root;
