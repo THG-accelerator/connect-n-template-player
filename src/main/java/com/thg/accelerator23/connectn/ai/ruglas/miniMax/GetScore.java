@@ -128,7 +128,6 @@ public class GetScore {
                 else return 0;
             }
         }
-    }
    public int getHeightOfWinPositionFromLine(Board board, List<Position> positionList) {
        System.out.println("getHeightOfWinPosition method call");
 
