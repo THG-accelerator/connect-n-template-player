@@ -2,6 +2,7 @@ package com.thg.accelerator23.connectn.ai.ruglas.Manual;
 
 import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.ruglas.miniMax.GetScore;
+import com.thg.accelerator23.connectn.ai.ruglas.miniMax.GetScoreTwo;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -53,14 +54,14 @@ public class ChooseMove {
             for (int i=0; i<this.boardWidth; i++) {
                 Position positionToPlay = new Position(i,getMinY(i, this.board));
                 if (this.board.isWithinBoard(positionToPlay)) {
-                    GetScore getScore = new GetScore(this.board, this.counter);
-                    int positionScore = getScore.getTotalScore(positionToPlay, this.counter);
+                    int positionScore = GetScoreTwo.getTotalScore(board, positionToPlay, this.counter);
                     if (positionScore > bestScore) {
                         bestScore = positionScore;
                         bestColumn = i;
-                        System.out.println("The best move is in column " + i + " which scores " + bestScore + " points");
+                        System.out.println("\n The best move is in column " + i + " which scores " + bestScore + " points");
                     }
                 }
+                else {continue;}
             }
             this.playLocation = bestColumn;
         }
@@ -84,6 +85,5 @@ public class ChooseMove {
         }
         throw new RuntimeException("no y is vacant");
     }
-
 
 }

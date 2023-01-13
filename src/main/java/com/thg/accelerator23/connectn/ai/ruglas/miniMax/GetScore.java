@@ -4,7 +4,6 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Position;
-import com.thg.accelerator23.connectn.ai.ruglas.Manual.TestMove;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
@@ -38,13 +37,14 @@ public class GetScore {
 //        }
 //        else{
             totalScore += getScoreFromAdjPositions(positionToCheck, counter, false);
+
             if (positionToCheck.getX() == 4 || positionToCheck.getX() == 5){
                 totalScore += 15;
-                System.out.println("Central column");
+                System.out.println("Central column bonus points + 15");
             }
             else if (positionToCheck.getX() == 3 || positionToCheck.getX() == 6){
-                totalScore += 10;
-                System.out.println("near-central column");
+                totalScore += 5;
+                System.out.println("near-central column bonus points + 5 ");
             }
             return totalScore;
 //        }
@@ -116,8 +116,13 @@ public class GetScore {
         if(counterList.stream().filter(counter -> counter== playerCounter.getOther()).count() > 0) {return 0;}
         else{
             long counterCount = counterList.stream().filter(counter -> counter== playerCounter).count();
-            if(counterCount == 2){return 20;}
-            else if(counterCount == 3) {return 40;}
+
+            if(counterCount == 2){
+                System.out.println("Two in a row bonus points + 20 ");
+                return 20;}
+            else if(counterCount == 3) {
+                System.out.println("Three in a row bonus points + 40");
+                return 40;}
             else return 5;
         }}
 
