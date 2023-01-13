@@ -7,7 +7,6 @@ import java.util.*;
 
 public class ConnectyBot extends Player {
   public ConnectyBot(Counter counter) {
-    //TODO: fill in your name here
     super(counter, ConnectyBot.class.getName());
   }
 
@@ -16,26 +15,11 @@ public class ConnectyBot extends Player {
 
     ColumnScore optimisedCol;
     try {
-      int randint = randomMove(board);
-      System.out.println(randint);
-      optimisedCol = miniMax(3, true, board, randint);
-      //position = getOptimalCol(board, this.getCounter());
-      System.out.println(optimisedCol);
+      optimisedCol = miniMax(3, true, board, 0);
     } catch (InvalidMoveException e) {
       throw new RuntimeException(e);
     }
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
     return optimisedCol.getColumn();
-  }
-
-
-  private int randomMove(Board board) {
-    int position = new Random().nextInt(0, 10);
-    if (!isSpaceAvailable(board, position)){
-      position = randomMove(board);
-    }
-    return position;
   }
 
   private boolean isSpaceAvailable(Board board, int position){
@@ -58,7 +42,6 @@ public class ConnectyBot extends Player {
   }
 
   private Counter getOpponentCounter(Counter counter){
-
     Counter opponentCounter = null;
     switch (counter) {
       case X -> opponentCounter = Counter.O;
@@ -97,8 +80,6 @@ public class ConnectyBot extends Player {
         centerList.add(currentCounter);
       }
       int centerCount = Collections.frequency(centerList, counter);
-
-
       score = score + (centerCount * 3);
     }
 
@@ -192,8 +173,6 @@ public class ConnectyBot extends Player {
     if (depth == 0 || boardAnalyser.calculateGameState(board).isEnd()) {
       if (depth == 0) {
         int finalScore = scoreCalculator(board, this.getCounter());
-
-        System.out.println(finalScore + " " + bestCol);
         return new ColumnScore(bestCol ,finalScore);
       }
       else {
@@ -213,9 +192,7 @@ public class ConnectyBot extends Player {
       for (int col: availableCol){
         Board newPossibleBoard = new Board(board, col, this.getCounter());
         int eval = miniMax( depth - 1, false, newPossibleBoard, col).getScore();
-        System.out.println("EVAL = " + eval);
         if (eval> maxEval){
-          System.out.println("Change");
           maxEval = eval;
           bestCol = col;
 
@@ -235,21 +212,6 @@ public class ConnectyBot extends Player {
       return new ColumnScore(bestCol, minEval);
     }
   }
-
-  private int getOptimalCol(Board board, Counter counter) throws InvalidMoveException {
-    int bestScore = 0;
-    int bestCol = randomMove(board);
-    List<Integer> availableCol = getAvailableCol(board);
-    for (int col =0; col<availableCol.size(); col++) {
-      Board newPossibleBoard = new Board(board, col, counter);
-      int score = scoreCalculator(newPossibleBoard, counter);
-      if (score>bestScore){
-        bestScore = score;
-        bestCol = col;
-      }
-
-    }
-    return bestCol;}
 
 
 }
