@@ -14,25 +14,23 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Unit test for simple App.
- */
 public class AppTest {
 
-  GameConfig config = new GameConfig(10,8,4);
-  Board emptyBoard = new Board(config);
+  static GameConfig config = new GameConfig(10,8,4);
+  static Board emptyBoard = new Board(config);
   MiniMaxScoringAlphaBetaAI AI = new MiniMaxScoringAlphaBetaAI(Counter.O);
 
-  public Board placeSeveralCounters(Counter counter, int[] columnList) throws InvalidMoveException {
+  public static Board placeSeveralCounters(Board board, Counter counter, int[] columnList) throws InvalidMoveException {
 
     ArrayList<Board> boards = new ArrayList<>();
-    Board returnBoard = new Board(config);
-    boards.add(emptyBoard);
 
-    for (int i=1; i< columnList.length; i++) {
-      returnBoard = new Board(boards.get(i - 1), columnList[i],  counter);
+    boards.add(board);
+
+    for (int i=0; i < columnList.length; i++) {
+      board = new Board(boards.get(i), columnList[i],  counter);
+      boards.add(board);
     }
-    return returnBoard;
+    return board;
   }
 
   @Test
@@ -50,7 +48,6 @@ public class AppTest {
     assertEquals(AI.makeMove(board3), 4);
   }
 
-
   @Test
   @DisplayName("AI does not place a counter in a full column")
   public void AIDoesNotDoInvalidMove() throws InvalidMoveException {
@@ -58,5 +55,19 @@ public class AppTest {
     Board testBoard = ChooseMove.placeSeveralCounters(Counter.O, columnZero);
     AI.makeMove(testBoard);
   }
+
+  @Test
+  @DisplayName("AI Sets up two wins for itself")
+  public void AISetsUpTwoWins() throws InvalidMoveException {
+    int[] setUpO = {4,5};
+    int[] setUpX = {4};
+    Board setUpBoard1 = placeSeveralCounters(emptyBoard, Counter.O, setUpO);
+    Board setUpBoard2 = placeSeveralCounters(setUpBoard1, Counter.X, setUpX);
+
+//    int[] correctMoves = {3,6};
+
+    assertTrue(AI.makeMove(setUpBoard2) == 3 || AI.makeMove(setUpBoard2) == 6 );
+  }
+
 
 }

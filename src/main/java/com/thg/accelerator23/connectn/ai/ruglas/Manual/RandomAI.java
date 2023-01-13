@@ -43,5 +43,4 @@ public class RandomAI extends Player {
             TrashTalk.talkTrash();
             return randomNumber;
         }
-
 }}

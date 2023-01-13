@@ -118,7 +118,7 @@ public class GetScore {
         if(counterList.stream().filter(counter -> counter== playerCounter.getOther()).count() > 0) {return 0;}
         else{
             long counterCount = counterList.stream().filter(counter -> counter== playerCounter).count();
-            if(counterCount == 2){return 10;}
+            if(counterCount == 2){return 20;}
             else if(counterCount == 3) {return 40;}
             else return 5;
         }
