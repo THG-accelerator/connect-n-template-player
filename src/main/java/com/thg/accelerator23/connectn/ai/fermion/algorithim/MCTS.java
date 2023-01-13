@@ -222,7 +222,7 @@ public class MCTS {
                 interState.setBoard(new Board(interState.getBoard(), move, interState.getCounter()));
 
                 gameState = boardChecker.calculateGameState(interState.getBoard());
-
+//before
 //                obj.render(null,interState.getBoard());
                 interState.invertCounter();
             } catch(InvalidMoveException e) {
