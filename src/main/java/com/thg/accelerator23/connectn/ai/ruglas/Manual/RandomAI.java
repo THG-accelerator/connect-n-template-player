@@ -39,6 +39,7 @@ public class RandomAI extends Player {
 
 //      neaten the code above maybe into a while loop
             System.out.println("Random");
+            TrashTalk.talkTrash();
             return randomNumber;
         }
 

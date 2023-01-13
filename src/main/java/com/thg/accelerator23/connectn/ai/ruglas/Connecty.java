@@ -1,27 +1,30 @@
 package com.thg.accelerator23.connectn.ai.ruglas;
 
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI;
+import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
-import com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI;
+import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 import com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxScoring;
+
+import java.util.Arrays;
+import java.util.Random;
 
 
 public class Connecty extends Player {
   Counter opponentCounter;
+  public boolean firstPlayer;
 
   public Connecty(Counter counter) {
     super(counter, Connecty.class.getName());
-    this.opponentCounter = getOpponent();
-  }
+    this.opponentCounter = counter.getOther();
 
-  private Counter getOpponent() {
-    return switch (this.getCounter()) {
-      case X -> Counter.O;
-      case O -> Counter.X;
-      default -> null;
-    };
+    switch (this.getCounter()) {
+      case O -> firstPlayer = true;
+      case X -> firstPlayer = false;
+    }
   }
 
   @Override
@@ -33,7 +36,7 @@ public class Connecty extends Player {
       System.out.println("MinMaxScoring");
       return miniMaxScoring.getBestColumn();
     } catch (InvalidMoveException e) {
-      System.out.println("Invalid move connecty");
+      System.out.println("Invalid move,  connecty!");
     }
     RandomAI randomAI = new RandomAI(this.getCounter());
     return randomAI.makeMove(board);

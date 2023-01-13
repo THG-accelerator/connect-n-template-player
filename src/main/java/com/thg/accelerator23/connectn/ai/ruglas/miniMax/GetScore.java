@@ -15,9 +15,15 @@ public class GetScore {
     Board board;
     BoardAnalyser boardAnalyser;
     int totalScore;
-    public GetScore(Board board) {
+    int parity;
+
+    public GetScore(Board board, Counter counter) {
         this.board = board;
         this.boardAnalyser = new BoardAnalyser(this.board.getConfig());
+        switch(counter) {
+            case O -> this.parity = 0;
+            case X -> this.parity = 1;
+        }
     }
 
     public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
@@ -40,7 +46,6 @@ public class GetScore {
             }
             return totalScore;
 //        }
-
 
     }
     public ArrayList<ArrayList<Position>> getAdjacentNPositions(Position position, int n) {
@@ -122,6 +127,38 @@ public class GetScore {
                 else if(counterCount == 3) {return 50;}
                 else return 0;
             }
-
+        }
     }
+   public int getHeightOfWinPositionFromLine(Board board, List<Position> positionList) {
+       System.out.println("getHeightOfWinPosition method call");
+
+       int height = 100;
+
+       for (Position position : positionList) {
+           System.out.println(board.getCounterAtPosition(position));
+
+           if (board.getCounterAtPosition(position) == null) {
+               height = position.getY();
+           }
+       }
+       return height;
+   }
+
+   public int getHeightScore(Board board, List<Position> positionList) {
+
+       int score = 0;
+       System.out.println("getHeightScore method call");
+
+           int winPositionHeight = getHeightOfWinPositionFromLine(board, positionList);
+
+           score = score + 40 - winPositionHeight * 5;
+
+           if (winPositionHeight % 2 == this.parity) {
+               score = score + 10;
+               System.out.println("This Line of three is at a height matching the parity of the player :).");
+           }
+        return score;
+   }
+
+
 }
