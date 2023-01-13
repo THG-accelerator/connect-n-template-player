@@ -9,9 +9,8 @@ import java.util.Random;
 
 public class RandomAI extends Player {
     Counter opponentCounter;
-
     public RandomAI(Counter counter) {
-        super(counter, com.thg.accelerator23.connectn.ai.ruglas.Connecty.class.getName());
+        super(counter, com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI.class.getName());
     }
 
     @Override
@@ -19,28 +18,28 @@ public class RandomAI extends Player {
         Random rand = new Random();
         int randomNumber = rand.nextInt(board.getConfig().getWidth());
 
-        ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
-
-        try {
-            moveChooser.findWinPosition();
-        } catch (InvalidMoveException e) {
-            throw new RuntimeException(e);
-        }
-        if (moveChooser.getPlayLocation() != null) {
-            return moveChooser.getPlayLocation();
-        } else {
-            try {
-                moveChooser.findBlockPosition();
-            } catch (InvalidMoveException e) {
-                throw new RuntimeException(e);
-            }
-            if (moveChooser.getPlayLocation() != null) {
-                return moveChooser.getPlayLocation();
-            }
+//        ChooseMove moveChooser = new ChooseMove(board, this.getCounter());
+//
+//        try {
+//            moveChooser.findWinPosition();
+//        } catch (InvalidMoveException e) {
+//            throw new RuntimeException(e);
+//        }
+//        if (moveChooser.getPlayLocation() != null) {
+//            return moveChooser.getPlayLocation();
+//        } else {
+//            try {
+//                moveChooser.findBlockPosition();
+//            } catch (InvalidMoveException e) {
+//                throw new RuntimeException(e);
+//            }
+//            if (moveChooser.getPlayLocation() != null) {
+//                return moveChooser.getPlayLocation();
+//            }
 
 //      neaten the code above maybe into a while loop
             System.out.println("Random");
             return randomNumber;
         }
 
-}}
+}
