@@ -32,8 +32,8 @@ public class MiniMaxScoring {
             else if (gameState.isDraw()){
                 return 0;
             }
-            else return (getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), boardPlay, counter)
-                        -(getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), boardPlay, oppositionCounter)));}
+            else return (getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), counter)
+                        -(getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), oppositionCounter)));}
         else if (isMax) {
             bestScore = -1000000;
             for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++) {

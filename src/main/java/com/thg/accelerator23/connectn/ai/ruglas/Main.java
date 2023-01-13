@@ -12,19 +12,10 @@ import java.util.ArrayList;
 
         static Connecty AI = new Connecty(Counter.O);
         static GameConfig config = new GameConfig(10, 8, 4);
+
         public static void main(String[] args) throws InvalidMoveException {
 
-            Board dougieBoard = new Board(config);
-            int[] firstColumn = {0,0,0,0,0,0,0,0};
-            Board fullBoard = ChooseMove.placeSeveralCounters(Counter.X, firstColumn);
-
-            for (int i=0; i<8; i++) {
-                Position posn = new Position(0,i);
-                System.out.println(fullBoard.getCounterAtPosition(posn));
-            }
-
-            }
-
         }
+    }
 
 

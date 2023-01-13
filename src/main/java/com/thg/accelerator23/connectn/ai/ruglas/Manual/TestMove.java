@@ -4,9 +4,11 @@ import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
+import java.util.ArrayList;
+
 public class TestMove {
 
-    private static Board tryMove(Board board, int column, Counter counter) throws InvalidMoveException {
+    public static Board tryMove(Board board, int column, Counter counter) throws InvalidMoveException {
         try {
             return new Board(board, column, counter);
         } catch (InvalidMoveException e) {
@@ -35,4 +37,18 @@ public class TestMove {
             return true;
         }
         return false;
-    }}
+    }
+    public static Board placeSeveralCounters(Counter counter, int[] columnList) throws InvalidMoveException {
+
+        GameConfig config = new GameConfig(10,8,4);
+        ArrayList<Board> boards = new ArrayList<>();
+        Board returnBoard = new Board(config);
+        boards.add(returnBoard);
+
+        for (int i=0; i < columnList.length; i++) {
+            returnBoard = new Board(boards.get(i), columnList[i],  counter);
+            boards.add(returnBoard);
+        }
+        return returnBoard;
+    }
+}
