@@ -82,14 +82,11 @@ public class MiniMaxAI implements AI {
 
         //TODO: remove counter from analyse
         if (gameState.getWinner() == maximisingCounter) {
-            return 1;
-//            return boardAnalyser.analyse(board, maximisingCounter);
+            return boardAnalyser.analyse(board, maximisingCounter);
         } else if (gameState.getWinner() == minimisingCounter) {
-            return -1;
-//            return boardAnalyser.analyse(board, maximisingCounter);
+            return boardAnalyser.analyse(board, maximisingCounter);
         } else if (gameState.isDraw() || depth == maxDepth) {
-            return 0;
-//            return boardAnalyser.analyse(board, maximisingCounter);
+            return boardAnalyser.analyse(board, maximisingCounter);
         }
         List<Board> children;
         if (counter == maximisingCounter) {
