@@ -28,10 +28,12 @@ public class GetScoreTwo {
 
         if (positionToCheck.getX() == 4 || positionToCheck.getX() == 5){
             centralScore += Scores.centralScore;
+            System.out.println(positionToCheck.getX() + "," + positionToCheck.getY());
             System.out.println("Central column bonus points + " + Scores.centralScore);
         }
         else if (positionToCheck.getX() == 3 || positionToCheck.getX() == 6){
             centralScore += Scores.nearCentralScore;
+            System.out.println(positionToCheck.getX() + "," + positionToCheck.getY());
             System.out.println("near-central column bonus points + " + Scores.nearCentralScore);
         }
         return centralScore;
@@ -75,7 +77,7 @@ public class GetScoreTwo {
                 return Scores.lineOfThreeScore;}
 
             else {
-                System.out.println("bonus points for no surrounding enemy counters + 5");
+//                System.out.println("bonus points for no surrounding enemy counters + "  + Scores.noSurroundingCountersScore);
                 return Scores.noSurroundingCountersScore;
             }
         }

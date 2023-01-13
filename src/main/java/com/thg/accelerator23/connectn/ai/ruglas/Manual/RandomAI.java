@@ -18,7 +18,7 @@ public class RandomAI extends Player {
                 return y;
             }
         }
-        throw new RuntimeException("no y is vacant");
+        return 100;
     }
 
     @Override

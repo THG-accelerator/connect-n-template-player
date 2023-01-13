@@ -52,6 +52,7 @@ public class ChooseMove {
             int bestScore = 0;
             int bestColumn = 0;
             for (int i=0; i<this.boardWidth; i++) {
+                System.out.println("\n Scoring for column" + i);
                 Position positionToPlay = new Position(i,getMinY(i, this.board));
                 if (this.board.isWithinBoard(positionToPlay)) {
                     int positionScore = GetScoreTwo.getTotalScore(board, positionToPlay, this.counter);
@@ -61,7 +62,9 @@ public class ChooseMove {
                         System.out.println("\n The best move is in column " + i + " which scores " + bestScore + " points");
                     }
                 }
-                else {continue;}
+                else {
+                    System.out.println("Can't move here");
+                    }
             }
             this.playLocation = bestColumn;
         }
@@ -83,7 +86,7 @@ public class ChooseMove {
                 return y;
             }
         }
-        throw new RuntimeException("no y is vacant");
+        return 1000;
     }
 
 }
