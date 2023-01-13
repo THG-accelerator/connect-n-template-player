@@ -52,8 +52,7 @@ public class MiniMaxAI implements AI {
         children = getChildren(maximisingCounter);
 
         for (int i = 0; i < children.size(); i++) {
-            int score = minimax(0, minimisingCounter, children.get(i));
-            System.out.println(score);
+            int score = minimax(maxDepth, minimisingCounter, children.get(i));
             if (score >= bestScore) {
                 bestMove = emptyCols.get(i);
                 bestScore = score;
@@ -111,7 +110,7 @@ public class MiniMaxAI implements AI {
             children = getChildrenMiniMax(counter);
 
             for (Board child : children) {
-                int score = minimax(depth + 1, minimisingCounter, child);
+                int score = minimax(depth - 1, minimisingCounter, child);
                 if (maxScore < score) {
                     maxScore = score;
                 }
@@ -124,7 +123,7 @@ public class MiniMaxAI implements AI {
             children = getChildrenMiniMax(counter);
 
             for (Board child : children) {
-                int score = minimax(depth + 1, maximisingCounter, child);
+                int score = minimax(depth - 1, maximisingCounter, child);
                 if (minScore > score) {
                     minScore = score;
                 }
