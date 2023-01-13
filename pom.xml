@@ -5,7 +5,7 @@
     <!-- do not change this -->
     <groupId>com.thg.accelerator23.connectn.ai</groupId>
     <!-- do not change this -->
-    <artifactId>${yourteam}</artifactId>
+    <artifactId>politicallyconnect</artifactId>
     <version>1.0</version>
 
     <repositories>
@@ -15,11 +15,11 @@
         </repository>
     </repositories>
 
-    <name>${yourteam}'s Connect N AI</name>
+    <name>Politically Connect's Connect N AI</name>
 
     <properties>
         <!-- FIXME Fill in these properties - they need to be lowercase -->
-        <yourteam>shaun</yourteam>
+        <yourteam>politicallyconnect</yourteam>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
