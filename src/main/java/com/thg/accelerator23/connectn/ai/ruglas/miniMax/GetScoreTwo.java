@@ -1,6 +1,7 @@
 package com.thg.accelerator23.connectn.ai.ruglas.miniMax;
 
 import com.thehutgroup.accelerator.connectn.player.*;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.ChooseMove;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.GameState;
 
@@ -22,6 +23,26 @@ public class GetScoreTwo {
         return totalScore;
     }
 
+    public static int getBestOpponentScore(Board board, Counter opponentCounter) throws InvalidMoveException {
+
+        int bestOpponentScore = 0;
+//        int bestColumn = 0;
+
+        for (int column = 0; column < board.getConfig().getWidth(); column++) {
+            Position positionToPlay = new Position(column, ChooseMove.getMinY(column, board));
+
+            if (board.isWithinBoard(positionToPlay)) {
+
+                int opponentPositionScore = GetScoreTwo.getTotalScore(board, positionToPlay, opponentCounter);
+
+                if (opponentPositionScore > bestOpponentScore) {
+                    bestOpponentScore = opponentPositionScore;
+//                    bestColumn = column;
+                }
+            }
+        }
+        return bestOpponentScore;
+    }
 
     private static int getScoreFromCenter(Position positionToCheck, Counter counter) {
 

@@ -52,13 +52,18 @@ public class ChooseMove {
             int bestScore = -1000;
             int bestColumn = 0;
             for (int i=0; i<this.boardWidth; i++) {
-                System.out.println("\n Scoring for column" + i);
+
                 Position positionToPlay = new Position(i,getMinY(i, this.board));
+
                 if (this.board.isWithinBoard(positionToPlay)) {
 
-                    int positionScore = GetScoreTwo.getTotalScore(board, positionToPlay, this.counter);
-                    Board boardAfterMove = new Board(board, i, this.counter );
-                    int opponentBestScore = GetScoreTwo.getTotalScore(boardAfterMove, positionToPlay, this.opponentCounter);
+                    System.out.println("\n Scoring for column" + i);
+
+                    int positionScore = GetScoreTwo.getTotalScore(this.board, positionToPlay, this.counter);
+
+                    Board boardAfterMove = new Board(this.board, i, this.counter );
+
+                    int opponentBestScore = GetScoreTwo.getBestOpponentScore(boardAfterMove, this.opponentCounter);
 
                     System.out.println("opponent's best score on next move would be " + opponentBestScore);
 
@@ -87,7 +92,7 @@ public class ChooseMove {
         return this.playLocation;
     }
 
-    public int getMinY(int x, Board board) {
+    public static int getMinY(int x, Board board) {
         for (int y = 0; y < board.getConfig().getHeight(); y++) {
             Position minYPosition = new Position(x, y);
             if (!board.hasCounterAtPosition(minYPosition)) {
