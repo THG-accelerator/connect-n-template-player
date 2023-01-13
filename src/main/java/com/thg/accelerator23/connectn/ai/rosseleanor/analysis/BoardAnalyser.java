@@ -69,10 +69,21 @@ public class BoardAnalyser {
     }
 
 
-    private boolean isBoardFull(Board board) {
+    public boolean isBoardFull(Board board) {
         return IntStream.range(0, board.getConfig().getWidth())
                 .allMatch(
                         i -> board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight() - 1)));
+    }
+
+    public boolean isBoardEmpty(Board board) {
+        for (int row = 0; row < board.getConfig().getHeight(); row++) {
+            for (int col = 0; col < board.getConfig().getWidth(); col++) {
+                if (board.hasCounterAtPosition(new Position(col, row))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     protected List<Line> getLines(Board board) {
@@ -88,7 +99,6 @@ public class BoardAnalyser {
         }
         return lines;
     }
-
 
     protected Map<Counter, Integer> getBestRunByColour(Line line) {
         HashMap<Counter, Integer> bestRunByColour = new HashMap<>();
@@ -125,19 +135,10 @@ public class BoardAnalyser {
                 );
     }
 
-    public Counter otherPlayer(Counter myCounter) {
-        if (myCounter == Counter.X) {
-            return Counter.O;
-        } else if (myCounter == Counter.O) {
-            return Counter.X;
-        }
-        return null;
-    }
-
     public int analyse(Board board, Counter myCounter) {
 
         List<Line> lines = getLines(board);
-        Counter oppositionCounter = otherPlayer(myCounter);
+        Counter oppositionCounter = myCounter.getOther();
 
         int myScore = 0;
 
