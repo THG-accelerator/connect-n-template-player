@@ -8,7 +8,7 @@ import com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI;
 
 public class MiniMaxWinLoseAI extends Player {
     public MiniMaxWinLoseAI(Counter counter) {
-        super(counter, com.thg.accelerator23.connectn.ai.ruglas.Connecty.class.getName());
+        super(counter, com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxWinLoseAI.class.getName());
     }
 
     @Override
@@ -19,6 +19,7 @@ public class MiniMaxWinLoseAI extends Player {
             return miniMaxWinLose.getBestColumn();
         } catch (InvalidMoveException e) {
         }
+        System.out.println("Random AI");
         RandomAI randomAI = new RandomAI(getCounter());
         return randomAI.makeMove(board);
     }

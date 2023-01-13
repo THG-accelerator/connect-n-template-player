@@ -7,7 +7,7 @@ import com.thehutgroup.accelerator.connectn.player.Player;
 
 public class MiniMaxScoringAlphaBetaAI extends Player {
     public MiniMaxScoringAlphaBetaAI(Counter counter) {
-        super(counter, com.thg.accelerator23.connectn.ai.ruglas.Connecty.class.getName());
+        super(counter, com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxScoringAlphaBetaAI.class.getName());
     }
 
     @Override
@@ -19,6 +19,7 @@ public class MiniMaxScoringAlphaBetaAI extends Player {
         } catch (InvalidMoveException e) {
         }
         System.out.println("MiniMaxAlphaBeta");
+        System.out.println(miniMaxScoringAlphaBeta.getBestColumn());
         return miniMaxScoringAlphaBeta.getBestColumn();
     }
 
