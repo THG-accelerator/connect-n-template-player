@@ -154,16 +154,16 @@ public class BoardAnalyser {
                 myScore -= 1;
             }
             if (result.get(myCounter) == 3) {
-                myScore += 100;
+                myScore += 10;
             }
             if (result.get(oppositionCounter) == 3) {
-                myScore -= 100;
+                myScore -= 10;
             }
             if (result.get(myCounter) == 4) {
-                myScore += 1000000;
+                myScore += 100;
             }
             if (result.get(oppositionCounter) == 4) {
-                myScore -= 1000000;
+                myScore -= 100;
             }
 
         }
