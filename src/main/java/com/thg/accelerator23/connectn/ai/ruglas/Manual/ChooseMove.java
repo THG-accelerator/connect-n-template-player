@@ -49,15 +49,23 @@ public class ChooseMove {
         }
 
         if (this.playLocation == null) {
-            int bestScore = 0;
+            int bestScore = -1000;
             int bestColumn = 0;
             for (int i=0; i<this.boardWidth; i++) {
                 System.out.println("\n Scoring for column" + i);
                 Position positionToPlay = new Position(i,getMinY(i, this.board));
                 if (this.board.isWithinBoard(positionToPlay)) {
+
                     int positionScore = GetScoreTwo.getTotalScore(board, positionToPlay, this.counter);
-                    if (positionScore > bestScore) {
-                        bestScore = positionScore;
+                    Board boardAfterMove = new Board(board, i, this.counter );
+                    int opponentBestScore = GetScoreTwo.getTotalScore(boardAfterMove, positionToPlay, this.opponentCounter);
+
+                    System.out.println("opponent's best score on next move would be " + opponentBestScore);
+
+                    int totalScore = positionScore - opponentBestScore;
+
+                    if (totalScore > bestScore) {
+                        bestScore = totalScore;
                         bestColumn = i;
                         System.out.println("\n The best move is in column " + i + " which scores " + bestScore + " points");
                     }

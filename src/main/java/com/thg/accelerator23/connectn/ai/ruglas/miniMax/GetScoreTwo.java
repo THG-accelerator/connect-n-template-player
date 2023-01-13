@@ -22,6 +22,7 @@ public class GetScoreTwo {
         return totalScore;
     }
 
+
     private static int getScoreFromCenter(Position positionToCheck, Counter counter) {
 
         int centralScore = 0;
