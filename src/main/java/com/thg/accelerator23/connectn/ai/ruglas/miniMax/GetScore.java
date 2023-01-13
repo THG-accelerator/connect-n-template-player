@@ -27,7 +27,7 @@ public class GetScore {
     }
 
     public int getOpponentScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
-        return getScoreFromAgjPositions(positionToCheck, boardToCheck, counter, true);
+        return getScoreFromAdjPositions(positionToCheck, boardToCheck, counter, true);
     }
 
     public int getTotalScore(Position positionToCheck, Board boardToCheck, Counter counter) throws InvalidMoveException {
@@ -37,7 +37,7 @@ public class GetScore {
 //
 //        }
 //        else{
-            totalScore += getScoreFromAgjPositions(positionToCheck, boardToCheck, counter, false);
+            totalScore += getScoreFromAdjPositions(positionToCheck, boardToCheck, counter, false);
             if (positionToCheck.getX() == 4 || positionToCheck.getX() == 5){
                 totalScore += 15;
             }
@@ -89,7 +89,7 @@ public class GetScore {
         return positions;
     }
 
-    public int getScoreFromAgjPositions(Position positionToPlay, Board board, Counter counter, boolean isOpponent) throws InvalidMoveException {
+    public int getScoreFromAdjPositions(Position positionToPlay, Board board, Counter counter, boolean isOpponent) throws InvalidMoveException {
         ArrayList<ArrayList<Position>> positionsArray = getAdjacentNPositions(positionToPlay, 4);
         int score = 0;
         for (ArrayList<Position> positions : positionsArray) {
