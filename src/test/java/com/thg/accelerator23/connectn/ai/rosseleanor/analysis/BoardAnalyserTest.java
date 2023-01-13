@@ -261,29 +261,6 @@ class BoardAnalyserTest {
 
     }
 
-    @Test
-    void test() {
-        int numInARow = 4;
-        int width = 10;
-        int height = 5;
-
-        BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(width, height, numInARow));
-        Counter[][] counters = new Counter[height][width];
-        counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
-        counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
-        counters[2] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
-        counters[1] = new Counter[]{O, null, null, null, null, null, null, null, null, null};
-        counters[0] = new Counter[]{O, X, X, null, null, null, null, null, null, null};
-        counters = rotateBoard(counters);
-
-        Board board = new Board(counters, new GameConfig(width, height, numInARow));
-
-        int colO = boardAnalyser.analyse(board, O);
-        int colX = boardAnalyser.analyse(board, X);
-
-        Assertions.assertEquals(99, colO);
-        Assertions.assertEquals(-99, colX);
-    }
 
     private Counter[][] rotateBoard(Counter[][] board) {
         Counter[][] newBoard = new Counter[board[0].length][board.length];

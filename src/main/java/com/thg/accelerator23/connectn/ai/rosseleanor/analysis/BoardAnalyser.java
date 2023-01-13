@@ -75,7 +75,7 @@ public class BoardAnalyser {
                         i -> board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight() - 1)));
     }
 
-    private List<Line> getLines(Board board) {
+    protected List<Line> getLines(Board board) {
         ArrayList<Line> lines = new ArrayList<>();
         for (Map.Entry<Function<Position, Position>, List<Position>> entry : positionsByFunction
                 .entrySet()) {
@@ -90,7 +90,7 @@ public class BoardAnalyser {
     }
 
 
-    private Map<Counter, Integer> getBestRunByColour(Line line) {
+    protected Map<Counter, Integer> getBestRunByColour(Line line) {
         HashMap<Counter, Integer> bestRunByColour = new HashMap<>();
         for (Counter c : Counter.values()) {
             bestRunByColour.put(c, 0);
@@ -116,6 +116,7 @@ public class BoardAnalyser {
         }
         return bestRunByColour;
     }
+
 
     public boolean isColumnFull(Board board, int position) {
         return IntStream.range(0, board.getConfig().getHeight())
@@ -144,12 +145,7 @@ public class BoardAnalyser {
 
             Map<Counter, Integer> result = getBestRunByColour(line);
 
-            if (result.get(myCounter) == 4) {
-                return 100;
-            }
-            if (result.get(oppositionCounter) == 4) {
-                return -100;
-            }
+
             if (result.get(myCounter) == 2) {
                 myScore += 1;
             }
@@ -157,14 +153,19 @@ public class BoardAnalyser {
                 myScore -= 1;
             }
             if (result.get(myCounter) == 3) {
-                myScore += 10;
+                myScore += 100;
             }
             if (result.get(oppositionCounter) == 3) {
-                myScore -= 10;
+                myScore -= 100;
+            }
+            if (result.get(myCounter) == 4) {
+                myScore += 1000000;
+            }
+            if (result.get(oppositionCounter) == 4) {
+                myScore -= 1000000;
             }
 
         }
-
         return myScore;
     }
 }
