@@ -216,15 +216,15 @@ public class BoardAnalyser {
                     }
 
                 }
-                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-1) && currentBoard.hasCounterAtPosition(line.getCurrentPosition())){
+                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-1) && !currentBoard.hasCounterAtPosition(line.getCurrentPosition()) && currentBoard.isWithinBoard(line.getCurrentPosition())){
                     positionsOfWinningBoard.add(line.getCurrentPosition());
                     numberInARow=0;
 
                 }
-                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-2) && currentBoard.hasCounterAtPosition(line.getCurrentPosition())){
+                else if(numberInARow.equals(currentBoard.getConfig().getnInARowForWin()-2) && !currentBoard.hasCounterAtPosition(line.getCurrentPosition())){
                     Position blankSpacePotentiallyWinning = line.getCurrentPosition();
                     line.next();
-                    if(line.isCounterInCurrentPosition() && line.getCounterInCurrentPosition() == counterToTest){
+                    if(line.isCounterInCurrentPosition() && line.getCounterInCurrentPosition() == counterToTest && currentBoard.hasCounterAtPosition(line.getCurrentPosition()) && currentBoard.isWithinBoard(line.getCurrentPosition())){
                         positionsOfWinningBoard.add(blankSpacePotentiallyWinning);
                     }
                 }
@@ -238,6 +238,15 @@ public class BoardAnalyser {
 
 
         return positionsOfWinningBoard;
+    }
+
+    public List<Position> returnBlackListOfPositions(Counter theirCounter, Board board){
+        List<Position> theirWinningPositions = returnListOfPositionsForAWinCase(theirCounter, board);
+        List<Position> blackList = new ArrayList<>();
+        for (Position position: theirWinningPositions) {
+            blackList.add(new Position(position.getX(), position.getY() -1));
+        }
+        return blackList;
     }
 
     public boolean winningPositionExists(Counter counter, Board board){
