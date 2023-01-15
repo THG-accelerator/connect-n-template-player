@@ -5,7 +5,7 @@ public class TrashTalk {
     static String[] trash = {"You do realise we're trying to connect FOUR right ???",
             "Oooo... not sure about that move mate.",
             "You'd struggle to pour water out of a boot with instructions on the heel",
-            ""
+            "Did you set your minimax depth to 0 or something ?"
     };
 
     public static void talkTrash() {

@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
   static GameConfig config = new GameConfig(10,8,4);
@@ -62,7 +61,7 @@ public class AppTest {
   public void AIDoesNotDoInvalidMove() throws InvalidMoveException {
     int[] columnZero = {0,0,0,0,0,0,0,0};
     Board testBoard = placeSeveralCounters(emptyBoard, Counter.O, columnZero);
-    randyO.makeMove(testBoard);
+    assertNotEquals(0, randyO.makeMove(testBoard));
   }
 
   @Test
@@ -71,7 +70,7 @@ public class AppTest {
     int[] columnZero = {0,0,0,0,0,0,0,0};
     Board testBoard = placeSeveralCounters(emptyBoard, Counter.X, columnZero);
 //    System.out.println(testBoard.getCounterAtPosition(new Position(0,7)));
-    randyO.makeMove(testBoard);
+    assertNotEquals(0, randyO.makeMove(testBoard));
   }
 
 //  @Disabled
