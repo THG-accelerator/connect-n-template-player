@@ -37,7 +37,7 @@ public class GetScoreTwo {
         return centralScore;
     }
 
-    private static int getScoreFromTwoOrThreeInALine(Board board, Position positionToCheck, Counter counter) {
+    static int getScoreFromTwoOrThreeInALine(Board board, Position positionToCheck, Counter counter) {
         int lineScore = 0;
 
         ArrayList<ArrayList<Position>> positionsArray = getAdjacentNPositions(board, positionToCheck, 4);
