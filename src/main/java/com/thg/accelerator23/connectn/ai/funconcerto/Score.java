@@ -27,24 +27,72 @@ public class Score {
         score+=numberOfCentreCountersForPlayer*5;
         score-=numberOfCentreCountersForOtherPlayer*5;
 
-        ArrayList<Counter> row2Counters = new ArrayList<Counter>();
-        row2Counters.add(board.getCounterAtPosition(new Position(0,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(1,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(2,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(3,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(4,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(5,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(6,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(7,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(8,1)));
-        row2Counters.add(board.getCounterAtPosition(new Position(9,1)));
+        ArrayList<Counter> row1Counters = getRowOfBoard(board, 0);
+        score = getScoreForXPlayer(counter, score, row1Counters);
 
-        int numberOfRow2CountersForPlayer = Collections.frequency(row2Counters, counter);
-        int numberOfRow2CountersForOtherPlayer = Collections.frequency(row2Counters, counter.getOther());
-        score+=numberOfRow2CountersForPlayer;
-        score-=numberOfRow2CountersForOtherPlayer;
+        ArrayList<Counter> row2Counters = getRowOfBoard(board, 1);
+        score = getScoreForOPlayer(counter, score, row2Counters);
+
+        ArrayList<Counter> row3Counters = getRowOfBoard(board, 2);
+        score = getScoreForXPlayer(counter, score, row3Counters);
+
+        ArrayList<Counter> row4Counters = getRowOfBoard(board, 3);
+        score = getScoreForOPlayer(counter, score, row4Counters);
+
+        ArrayList<Counter> row5Counters = getRowOfBoard(board, 4);
+        score = getScoreForXPlayer(counter, score, row5Counters);
+
+        ArrayList<Counter> row6Counters = getRowOfBoard(board, 5);
+        score = getScoreForOPlayer(counter, score, row6Counters);
+
+        ArrayList<Counter> row7Counters = getRowOfBoard(board, 6);
+        score = getScoreForXPlayer(counter, score, row7Counters);
+
+        ArrayList<Counter> row8Counters = getRowOfBoard(board, 7);
+        score = getScoreForOPlayer(counter, score, row8Counters);
 
         return score;
+    }
+
+    private static int getScoreForXPlayer(Counter counter, int score, ArrayList<Counter> row1Counters) {
+        int numberOfRow1CountersForPlayer = Collections.frequency(row1Counters, counter);
+        int numberOfRow1CountersForOtherPlayer = Collections.frequency(row1Counters, counter.getOther());
+        if(counter == Counter.X) {
+            score += numberOfRow1CountersForPlayer;
+            score -= numberOfRow1CountersForOtherPlayer;
+        }else{
+            score -= numberOfRow1CountersForPlayer;
+            score += numberOfRow1CountersForOtherPlayer;
+        }
+        return score;
+    }
+
+    private static int getScoreForOPlayer(Counter counter, int score, ArrayList<Counter> rowCounters) {
+        int numberOfRowCountersForPlayer = Collections.frequency(rowCounters, counter);
+        int numberOfRowCountersForOtherPlayer = Collections.frequency(rowCounters, counter.getOther());
+        if(counter == Counter.O) {
+            score += numberOfRowCountersForPlayer;
+            score -= numberOfRowCountersForOtherPlayer;
+        }else{
+            score -= numberOfRowCountersForPlayer;
+            score += numberOfRowCountersForOtherPlayer;
+        }
+        return score;
+    }
+
+    public static ArrayList<Counter> getRowOfBoard(Board board, int rowIndex){
+        ArrayList<Counter> row6Counters = new ArrayList<Counter>();
+        row6Counters.add(board.getCounterAtPosition(new Position(0,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(1,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(2,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(3,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(4,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(5,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(6,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(7,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(8,rowIndex)));
+        row6Counters.add(board.getCounterAtPosition(new Position(9,rowIndex)));
+        return row6Counters;
     }
 
 }

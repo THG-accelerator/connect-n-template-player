@@ -18,7 +18,6 @@ import java.util.stream.IntStream;
 
 public class FunConcertoAi extends Player {
 
-  //MoveTree tree = readInitialTreeFromFile("src/main/java/com/thg/accelerator23/connectn/ai/funconcerto/movetree/initialMoveTree.txt");
   MoveTree tree = new MoveTree();
   MinMax mM;
   Board previousBoard = new Board(new GameConfig(10,8,4));
@@ -45,7 +44,6 @@ public class FunConcertoAi extends Player {
       try {
         tree.addNode(getPreviousMove(board));
       } catch (InvalidMoveException e) {
-        System.out.println("This shouldn't happen'");
       }
       tree = tree.getChildren().get(0);
       addNodesToTree(board,80);
@@ -61,7 +59,6 @@ public class FunConcertoAi extends Player {
     try {
       previousBoard = new Board(board, newMove[1],getCounter());
     } catch (InvalidMoveException e) {
-      System.out.println("This shouldn't happen");
     }
     tree = tree.getChildAtPosition(indexOf(validMoves, newMove[1]));
     return newMove[1];
@@ -73,7 +70,6 @@ public class FunConcertoAi extends Player {
       try {
         tree.addNode(validMoves.get(i));
       } catch (InvalidMoveException e) {
-        System.out.println("This shouldn't happen");
       }
     }
     for(int i = 0; i < depth-1; i++) {
@@ -84,7 +80,6 @@ public class FunConcertoAi extends Player {
           try {
             tree.getChildren().get(j).addNode(validMovesForSecondMove.get(k));
           } catch (InvalidMoveException e) {
-            System.out.println("This shouldn't happen");
           }
         }
       }
@@ -100,15 +95,6 @@ public class FunConcertoAi extends Player {
     }
     return list;
   }
-
-//  public MoveTree readInitialTreeFromFile(String filename){
-//    try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
-//
-//    }catch(IOException e){
-//      System.out.println("An error occurred while reading");
-//    };
-//    return ;
-//  }
 
     public int getPreviousMove(Board newBoard) {
       for(int i = 0; i < 10; i++){

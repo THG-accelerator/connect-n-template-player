@@ -43,13 +43,10 @@ public class MinMax {
         boolean isTerminal = isTerminalNode(board, tree.getCounter().getOther());
         if(isTerminal){
             if(checkWin(board, analyzer, tree.getCounter().getOther())){
-                System.out.println("terminal node1!");
                 return new int[]{10000000, tree.getPosition()};
             }else if(checkWin(board, analyzer, tree.getCounter())){
-                System.out.println("terminal node2!");
                 return new int[]{-100000000,tree.getPosition()};
             }else{ // Game is a draw as there are no more valid moves
-                System.out.println("terminal node3!");
                 return new int[]{0, tree.getPosition()};
             }
 
@@ -66,7 +63,6 @@ public class MinMax {
                         column = tree.getChildren().get(i).getPosition();
                     }
                 }
-                System.out.println(value);
             }else{
                 value = Integer.MAX_VALUE;
                 for (int i = 0; i < tree.getChildren().size(); i++) {
