@@ -24,7 +24,7 @@ public class MiniMaxScoringAlphaBeta {
    public int miniMaxMoveAlphaBeta(Board boardPlay, boolean isMax, int depth, int column, int alpha, int beta) throws InvalidMoveException {
 //       System.out.println("depth " + depth + " column " + column + " score "  + score);
 
-       GetScore getScore = new GetScore(boardPlay, this.counter);
+       GetScoreTwo getScore = new GetScoreTwo();
        BoardAnalyser boardAnalyser = new BoardAnalyser(boardPlay.getConfig());
        GameState gameState = boardAnalyser.calculateGameState(boardPlay);
 
@@ -35,8 +35,8 @@ public class MiniMaxScoringAlphaBeta {
            else if (gameState.isDraw()){
            return 0;
            }
-           else return (getScore.getTotalScore(new Position(column, getMinY(column, boardPlay)), counter)
-                       -(getScore.getOpponentScore(new Position(column, getMinY(column, boardPlay)), oppositionCounter)));}
+           else return (getScore.getTotalScore(boardPlay, new Position(column, getMinY(column, boardPlay)), counter)
+                       -(getScore.getScoreFromTwoOrThreeInALine(boardPlay, new Position(column, getMinY(column, boardPlay)), oppositionCounter)));}
        else if (isMax) {
              bestScore = -1000000;
             for (int xMax=0; xMax<boardPlay.getConfig().getWidth(); xMax++) {
