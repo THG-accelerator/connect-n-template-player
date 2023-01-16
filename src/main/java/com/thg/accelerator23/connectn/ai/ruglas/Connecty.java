@@ -1,7 +1,6 @@
 package com.thg.accelerator23.connectn.ai.ruglas;
 
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-import com.thg.accelerator23.connectn.ai.ruglas.Manual.RandomAI;
 import com.thg.accelerator23.connectn.ai.ruglas.analysis.BoardAnalyser;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
@@ -38,7 +37,6 @@ public class Connecty extends Player {
     } catch (InvalidMoveException e) {
       System.out.println("Invalid move,  connecty!");
     }
-    RandomAI randomAI = new RandomAI(this.getCounter());
-    return randomAI.makeMove(board);
+    return 6;
   }
 }

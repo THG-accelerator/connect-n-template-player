@@ -29,6 +29,7 @@ public class GetScore {
         return getScoreFromAdjPositions(positionToCheck, counter, true);
     }
 
+
     public int getTotalScore(Position positionToCheck, Counter counter) throws InvalidMoveException {
         GameState gameState = boardAnalyser.calculateGameState(this.board);
         totalScore = 0;
