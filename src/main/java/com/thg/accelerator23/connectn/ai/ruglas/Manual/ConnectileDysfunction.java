@@ -2,12 +2,10 @@ package com.thg.accelerator23.connectn.ai.ruglas.Manual;
 
 import com.thehutgroup.accelerator.connectn.player.*;
 
-import java.util.Random;
-
-public class RandomAI extends Player {
+public class ConnectileDysfunction extends Player {
     Counter opponentCounter;
 
-    public RandomAI(Counter counter) {
+    public ConnectileDysfunction(Counter counter) {
         super(counter, com.thg.accelerator23.connectn.ai.ruglas.Connecty.class.getName());
     }
 
