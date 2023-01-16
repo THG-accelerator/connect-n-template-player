@@ -1,12 +1,14 @@
-package com.thg.accelerator23.connectn.ai.ruglas.Manual;
+package com.thg.accelerator23.connectn.ai.ruglas;
 
 import com.thehutgroup.accelerator.connectn.player.*;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.ChooseMove;
+import com.thg.accelerator23.connectn.ai.ruglas.Manual.TrashTalk;
 
 public class ConnectileDysfunction extends Player {
     Counter opponentCounter;
 
     public ConnectileDysfunction(Counter counter) {
-        super(counter, com.thg.accelerator23.connectn.ai.ruglas.Connecty.class.getName());
+        super(counter, com.thg.accelerator23.connectn.ai.ruglas.ConnectileDysfunction.class.getName());
     }
 
     public int getMinY(int x, Board board) {

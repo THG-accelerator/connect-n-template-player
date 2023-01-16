@@ -1,9 +1,7 @@
 package com.thg.accelerator21.connectn.ai.name;
 
 import com.thehutgroup.accelerator.connectn.player.*;
-import com.thg.accelerator23.connectn.ai.ruglas.Manual.ConnectileDysfunction;
-import com.thg.accelerator23.connectn.ai.ruglas.miniMax.MiniMaxScoringAlphaBetaAI;
-import org.junit.jupiter.api.Disabled;
+import com.thg.accelerator23.connectn.ai.ruglas.ConnectileDysfunction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

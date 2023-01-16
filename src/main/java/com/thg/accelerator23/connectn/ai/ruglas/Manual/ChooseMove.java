@@ -15,7 +15,7 @@ public class ChooseMove {
     Counter opponentCounter;
     Integer playLocation;
 
-    ChooseMove(Board board, Counter counter) {
+    public ChooseMove(Board board, Counter counter) {
         this.board = board;
         this.counter = counter;
         this.opponentCounter = counter.getOther();
@@ -28,7 +28,7 @@ public class ChooseMove {
         for (int column = 0; column < this.boardWidth; column++) {
             if (TestMove.isGameOverAfterMove(this.board, column, this.counter)) {
                 this.playLocation = column;
-                System.out.println("Win found");
+//                System.out.println("Win found");
             }
         }
     }
@@ -37,7 +37,7 @@ public class ChooseMove {
         for (int column = 0; column < this.boardWidth; column++) {
             if (TestMove.isGameOverAfterMove(this.board, column, this.opponentCounter)) {
                 this.playLocation = column;
-                System.out.println("blocking win");
+//                System.out.println("blocking win");
             }
         }
     }
@@ -57,7 +57,7 @@ public class ChooseMove {
 
                 if (this.board.isWithinBoard(positionToPlay)) {
 
-                    System.out.println("\n Scoring for column" + i);
+//                    System.out.println("\n Scoring for column" + i);
 
                     int positionScore = GetScoreTwo.getTotalScore(this.board, positionToPlay, this.counter);
 
@@ -65,18 +65,18 @@ public class ChooseMove {
 
                     int opponentBestScore = GetScoreTwo.getBestOpponentScore(boardAfterMove, this.opponentCounter);
 
-                    System.out.println("opponent's best score on next move would be " + opponentBestScore);
+//                    System.out.println("opponent's best score on next move would be " + opponentBestScore);
 
                     int totalScore = positionScore - opponentBestScore;
 
                     if (totalScore > bestScore) {
                         bestScore = totalScore;
                         bestColumn = i;
-                        System.out.println("\n The best move is in column " + i + " which scores " + bestScore + " points");
+//                        System.out.println("\n The best move is in column " + i + " which scores " + bestScore + " points");
                     }
                 }
                 else {
-                    System.out.println("Can't move here");
+//                    System.out.println("Can't move here");
                     }
             }
             this.playLocation = bestColumn;
