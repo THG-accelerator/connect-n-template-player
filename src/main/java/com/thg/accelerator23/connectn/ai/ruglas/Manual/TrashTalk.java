@@ -7,7 +7,7 @@ public class TrashTalk {
             "You'd struggle to pour water out of a boot with instructions on the heel.",
             "Did you set your minimax depth to 0 or something ?",
             "Did you get your AI from Wish ? ",
-            "When mum says 'we've got an AI at home' she means yours."
+            "When mum says 'we've got an AI at home' she means yours.",
             ""
     };
 

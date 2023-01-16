@@ -91,7 +91,6 @@ public class ChooseMove {
     public Integer getPlayLocation() {
         return this.playLocation;
     }
-
     public static int getMinY(int x, Board board) {
         for (int y = 0; y < board.getConfig().getHeight(); y++) {
             Position minYPosition = new Position(x, y);
@@ -101,5 +100,4 @@ public class ChooseMove {
         }
         return 1000;
     }
-
 }
