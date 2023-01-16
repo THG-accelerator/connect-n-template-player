@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 public class BoardAnalyser {
     private Function<Position, Position> hMover = p -> new Position(p.getX() + 1, p.getY());
 
