@@ -19,6 +19,7 @@ public class TrashTalk {
             "Shall I compare thee to a rainy day in Manchester ?",
             "Get to the bottom of the stack, and there remain.",
             "Go home algorithm, you're drunk.",
+            "Yer a goon pal"
 
     };
 
