@@ -20,8 +20,6 @@ public class TrashTalk {
             "Get to the bottom of the stack, and there remain.",
             "Go home algorithm, you're drunk.",
 
-
-
     };
 
     public static void talkTrash() {
