@@ -2,13 +2,12 @@ package com.thg.accelerator23.connectn.ai.ultimatewinner;
 
 import com.thehutgroup.accelerator.connectn.player.*;
 
-import static java.lang.Math.random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.random;
+import static java.lang.Math.*;
 import static java.util.Collections.list;
 //import static sun.nio.ch.DatagramChannelImpl.AbstractSelectableChannels.forEach;
 
@@ -27,7 +26,6 @@ public class UltimateWinner extends Player {
 //    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
 //    return randomNum;
 //  }
-  boolean maximizingPlayer = true;
   @Override
   public int makeMove(Board board) {
 //    int chosenMove = minimaxChoice(board, 4, maximizingPlayer);
@@ -46,19 +44,22 @@ public class UltimateWinner extends Player {
 //    System.out.println(test);
 //    int test2 = scorePosition(board, this.getCounter());
 //    System.out.println(test2);
-    int column = minimax(board, 1, true).getColumn();
+    int count = 0;
+    int column = minimax(board, 6, -1000000000, 1000000000, true).getColumn();
 
     return column;
   }
-  public MinimaxReturn minimax(Board board, int depth, boolean maximizingPlayer) {
+
+
+  public MinimaxReturn minimax(Board board, int depth, int alpha, int beta, boolean maximizingPlayer) {
     BoardAnalyser boardAnalyser = new BoardAnalyser(board.getConfig());
     GameState gameState = boardAnalyser.calculateGameState(board);
     if (depth == 0 || gameState.isEnd()) {
-      if (gameState.isEnd()){
+      if (gameState.isEnd()) {
         if (winningMove(board, this.getCounter())) {
-          return new MinimaxReturn( -1,1000000000);
+          return new MinimaxReturn(-1, 1000000000);
         } else if (winningMove(board, this.getCounter().getOther())) {
-          return new MinimaxReturn( -1,-1000000000);
+          return new MinimaxReturn(-1, -1000000000);
         } else {
           return new MinimaxReturn(-1, 0);
         }
@@ -73,11 +74,16 @@ public class UltimateWinner extends Player {
         if (!board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight()-1))){
           try {
             Board boardCopy = new Board(board, i, this.getCounter());
-            int newScore = minimax(boardCopy, depth-1, true).getValue();
+            int newScore = minimax(boardCopy, depth-1, alpha, beta,  false).getValue();
 
             if (newScore > value) {
+
               value = newScore;
               column = i;
+            }
+            alpha = max(alpha, value);
+            if (alpha >= beta) {
+              break;
             }
           } catch (InvalidMoveException e) {
             System.out.println("Error occurred");
@@ -91,11 +97,15 @@ public class UltimateWinner extends Player {
         if (!board.hasCounterAtPosition(new Position(i, board.getConfig().getHeight()-1))){
           try {
             Board boardCopy = new Board(board, i, this.getCounter().getOther());
-            int newScore = minimax(boardCopy, depth - 1, false).getValue();
+            int newScore = minimax(boardCopy, depth - 1, alpha, beta, true).getValue();
 
             if (newScore < value) {
               value = newScore;
               column = i;
+            }
+            beta = min(beta, value);
+            if (alpha >= beta) {
+              break;
             }
           } catch (InvalidMoveException e) {
             System.out.println("Error occurred");
@@ -142,13 +152,6 @@ public class UltimateWinner extends Player {
     return false;
   }
 
-  private int minimaxChoice(Board board, int depth, boolean maximizingPlayer) {
-    winningMove(board, Counter.O);
-    winningMove(board, Counter.X);
-    scorePosition(board, Counter.O);
-    scorePosition(board, Counter.X);
-    return 5;
-  }
 
   public int evaluateWindow (Counter[] window, Counter counter) {
     int score = 0;
@@ -168,20 +171,19 @@ public class UltimateWinner extends Player {
       }
     }
     if (playerCount == 4) {
-      score += 1500;
-    } else if (playerCount == 3 && emptyCount == 1) {
-      score += 300;
-    } else if (playerCount == 2 && emptyCount == 2) {
       score += 100;
+    } else if (playerCount == 3 && emptyCount == 1) {
+      score += 8;
+    } else if (playerCount == 2 && emptyCount == 2) {
+      score += 1;
     }if (otherCount == 3 && emptyCount == 1) {
-      score -= 1000;
+      score -= 8;
     } else if (otherCount == 2 && emptyCount == 2) {
-      score -= 500;
+      score -= 2;
     }
     return score;
   }
 
-  //minute 15
   public int scorePosition (Board board, Counter counter) {
     int score = 0;
     int centerPosition = board.getConfig().getWidth()/2 - 1;
