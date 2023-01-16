@@ -13,7 +13,7 @@ public class MonteCarloTSofWins extends Player {
 
   @Override
   public int makeMove(Board board) {
-    MonteCarloTS ai = new MonteCarloTS(board, 8000);
+    MonteCarloTS ai = new MonteCarloTS(board, 5000);
 
     return ai.getOptimalMove();
   }
