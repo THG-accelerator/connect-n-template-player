@@ -12,7 +12,6 @@ public class NodeState {
     Counter player;
     int visitCount;
     int winCount;
-    int winVisitCount = visitCount * winCount;
     Position position;
 
     public NodeState(Board board, Counter player) {
@@ -47,10 +46,6 @@ public class NodeState {
 
     public void setWinCount(int winCount) {
         this.winCount = winCount;
-    }
-
-    public int getWinVisitCount() {
-        return winVisitCount;
     }
 
     public void addWinCount(int winCount){
@@ -88,8 +83,7 @@ public class NodeState {
 
     public Position getPossibleMove(Board board) {
         Random rand = new Random();
-        Position randomMove = getPossibleMovesList(board).get(rand.nextInt(getPossibleMovesList(board).size()));
-        return randomMove;
+        return getPossibleMovesList(board).get(rand.nextInt(getPossibleMovesList(board).size()));
     }
 
 

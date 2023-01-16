@@ -11,7 +11,6 @@ import com.thg.accelerator23.connectn.ai.TwinningAI.Tree.Node;
 public class MCTS_Simulator {
 
     public GameState simulateRandomGame(Node node) throws InvalidMoveException {
-//        System.out.println("In Simulating Random Game");
 
         BoardAnalyser boardAnalyser = new BoardAnalyser(new GameConfig(10,8,4 ));
         GameState boardStatus = boardAnalyser.calculateGameState(node.getState().getBoard());
@@ -26,5 +25,7 @@ public class MCTS_Simulator {
         return boardStatus;
 
     }
+
+
 
 }

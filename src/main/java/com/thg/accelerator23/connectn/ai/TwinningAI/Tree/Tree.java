@@ -5,7 +5,6 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 
 public class Tree {
     Node root;
-
     public Tree(Board board, Counter player){
         root = new Node(board, player);
     }
@@ -18,11 +17,4 @@ public class Tree {
         return root;
     }
 
-    public void setRoot(Node root) {
-        this.root = root;
-    }
-
-//    public void addChild(Node parent, Node child){
-//        parent.getChildList().add(child);
-//    }
 }
