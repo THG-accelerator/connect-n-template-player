@@ -6,10 +6,7 @@ import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Position;
 import com.thg.accelerator23.connectn.ai.rosseleanor.model.Line;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -135,37 +132,64 @@ public class BoardAnalyser {
                 );
     }
 
+    public int lineScore(Line line, Counter myCounter){
+        List<Counter> lineList = new ArrayList<>();
+        Counter current;
+        int lineScore = 0;
+        while (line.hasNext()){
+            Counter next = line.next();
+            current = next;
+            lineList.add(current);
+        }
+        for (int i = 0; i < lineList.size()-3; i++){
+            List<Counter> subsection = lineList.subList(i, i+4);
+            int subScore = getScore(subsection, myCounter);
+            lineScore = lineScore + subScore;
+        }
+        return lineScore;
+    }
+
+    public int getScore(List<Counter> subsection, Counter myCounter){
+        int score = 0;
+        Counter oppositionCounter = myCounter.getOther();
+        int myCounterRun = Collections.frequency(subsection, myCounter);
+        int empty = Collections.frequency(subsection, null);
+        int otherPlayerRun = Collections.frequency(subsection, oppositionCounter);
+        if (myCounterRun == 4){
+            score = score + 1000000;
+        } else if (otherPlayerRun == 4) {
+            score = score - 1000000;
+        } else if (myCounterRun == 3 && empty == 1) {
+            score = score + 5;
+        }
+        else if (myCounterRun == 3 && otherPlayerRun == 1) {
+            score = score - 10;
+        }
+        else if (myCounterRun ==2 && empty ==2) {
+            score = score + 1;
+        }
+        else if (otherPlayerRun == 3 && empty==1){
+            score = score - 5;
+        } else if (otherPlayerRun == 3 && myCounterRun == 1) {
+            score = score + 10;
+        } else if
+        (otherPlayerRun == 2 && empty==2){
+            score = score - 1;
+        }
+        return score;
+
+    }
+
+
     public int analyse(Board board, Counter myCounter) {
 
         List<Line> lines = getLines(board);
-        Counter oppositionCounter = myCounter.getOther();
 
         int myScore = 0;
 
         for (Line line : lines) {
-
-            Map<Counter, Integer> result = getBestRunByColour(line);
-
-
-            if (result.get(myCounter) == 2) {
-                myScore += 1;
-            }
-            if (result.get(oppositionCounter) == 2) {
-                myScore -= 1;
-            }
-            if (result.get(myCounter) == 3) {
-                myScore += 10;
-            }
-            if (result.get(oppositionCounter) == 3) {
-                myScore -= 10;
-            }
-            if (result.get(myCounter) == 4) {
-                myScore += 100;
-            }
-            if (result.get(oppositionCounter) == 4) {
-                myScore -= 100;
-            }
-
+            int lineValue = lineScore(line, myCounter);
+            myScore = myScore + lineValue;
         }
         return myScore;
     }
