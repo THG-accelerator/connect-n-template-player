@@ -28,12 +28,13 @@ public class MiniMaxAITest {
     @AfterEach
     void tearDown() {
     }
+
     @ParameterizedTest
     @MethodSource("depths")
     void getMoveWin(int depth) throws InvalidMoveException {
         int numInARow = 4;
         int width = 10;
-        int height = 8;
+        int height = 5;
 
         Counter[][] counters = new Counter[height][width];
         counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
@@ -54,6 +55,34 @@ public class MiniMaxAITest {
         int move = miniMaxAI.getMove();
 
         Assertions.assertEquals(0, move);
+    }
+
+    @ParameterizedTest
+    @MethodSource("depths")
+    void getMoveWin2(int depth) throws InvalidMoveException {
+        int numInARow = 4;
+        int width = 10;
+        int height = 5;
+
+        Counter[][] counters = new Counter[height][width];
+        counters[4] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[3] = new Counter[]{null, null, null, null, null, null, null, null, null, null};
+        counters[2] = new Counter[]{null, null, null, O, null, null, null, null, null, null};
+        counters[1] = new Counter[]{null, null, null, O, null, null, null, null, null, null};
+        counters[0] = new Counter[]{null, X, X, null, O, X, null, null, null, null};
+
+        counters = rotateBoard(counters);
+
+        Board board = new Board(counters, new GameConfig(width, height, numInARow));
+
+
+        miniMaxAI = new MiniMaxAI(depth, O);
+        miniMaxAI.setBoard(board);
+        miniMaxAI.setBoardAnalyser(new BoardAnalyser(board.getConfig()));
+
+        int move = miniMaxAI.getMove();
+
+        Assertions.assertEquals(3, move);
     }
 
 
