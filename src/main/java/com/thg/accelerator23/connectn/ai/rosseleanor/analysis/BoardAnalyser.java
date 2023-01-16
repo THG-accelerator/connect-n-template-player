@@ -184,7 +184,6 @@ public class BoardAnalyser {
     public int analyse(Board board, Counter myCounter) {
 
         List<Line> lines = getLines(board);
-
         int myScore = 0;
 
         for (Line line : lines) {
