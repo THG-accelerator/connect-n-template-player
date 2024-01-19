@@ -7,10 +7,10 @@
 * Produce a champion connect N AI.
 
 ## Steps
-* Decide if you're working on your own or in a group of up to three.
+* Decide if you're working on your own or in a group of up to two.
 * Fork this repo into your personal space in github (ensure that it is publicly available)
 * Change the name on line 22 of pom.xml (this will set your artifact id)
-* Move the class NameAI from the com.thg.accelerator23.connectn.ai.yourteam package to replace yourteam with the name of your team (lowercase). 
+* Move the class NameAI from the com.thg.accelerator.connectn.ai.yourteam package to replace yourteam with the name of your team (lowercase). 
 * Rename the NameAI class to whatever you would like to call your AI. Bonus credit for a funny name.
 * Implement your Connect N AI logic inside makeMove
 
@@ -26,8 +26,8 @@ Once you're ready to submit your entry:
 * Perform a release in github (we will go through how to do this)
 * Enter your repo url into https://jitpack.io/, click "get it", then check the status of the job
 * Make a note of the groupId and artifactId -- you will need to specify these in the next step
-* Add a json file representing your team into this [repo](https://github.com/THG-accelerator/member_info/tree/main/connect-n)
+* Add a json file representing your team into this [repo](https://github.com/THG-accelerator/23-member-info/tree/main/connect-n). See [example.json](https://github.com/THG-accelerator/23-member-info/blob/main/connect-n/example.json) for an example of the format required.
 * Update the version in this file when you are happy with this version
 
 ## Timelines
-If your solution is published in jitpack and in member_info by Monday 16th Jan 12pm GMT, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.
+If your solution is published in jitpack and in member_info by Friday 26th Jan 6pm GMT, your solution will be entered in the contest. Later submissions may also be included, but this will be on a best-effort basis.

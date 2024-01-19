@@ -3,17 +3,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- do not change this -->
-    <groupId>com.thg.accelerator23.connectn.ai</groupId>
+    <groupId>com.thg.accelerator.connectn.ai</groupId>
     <!-- do not change this -->
     <artifactId>${yourteam}</artifactId>
     <version>1.0</version>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <name>${yourteam}'s Connect N AI</name>
 
