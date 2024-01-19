@@ -8,6 +8,12 @@
     <artifactId>${yourteam}</artifactId>
     <version>1.0</version>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <name>${yourteam}'s Connect N AI</name>
 
@@ -41,7 +47,7 @@
         <dependency>
             <groupId>com.github.THG-accelerator</groupId>
             <artifactId>connectn-player</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
         </dependency>
     </dependencies>
 
