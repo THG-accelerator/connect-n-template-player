@@ -8,8 +8,9 @@
 
 ## Steps
 * Decide if you're working on your own or in a group of up to two.
-* Fork this repo into your personal space in github (ensure that it is publicly available)
+* Fork this repo into your personal space in github (ensure that it is publicly available). Enable "workflows" on your project after clicking the "actions" tab.
 * Change the name on line 22 of pom.xml (this will set your artifact id)
+* Change line 33 of your pom.xml to fill in your github username and project name. This will tell maven where to publish your package.
 * Move the class NameAI from the com.thg.accelerator.connectn.ai.yourteam package to replace yourteam with the name of your team (lowercase). 
 * Rename the NameAI class to whatever you would like to call your AI. Bonus credit for a funny name.
 * Implement your Connect N AI logic inside makeMove
