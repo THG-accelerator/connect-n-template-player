@@ -13,8 +13,8 @@ public class ConnectFourDotJason extends Player {
 
   @Override
   public int makeMove(Board board) {
-    final int FIRST_COL = 1, LAST_COL = board.getConfig().getWidth();
-    int random_col = (int) Math.floor(Math.random() * (LAST_COL - FIRST_COL + 1) + FIRST_COL);
+    final int LAST_COL = board.getConfig().getWidth();
+    int random_col = (int) (Math.floor(Math.random() * LAST_COL) + 1);
     return random_col;
   }
 }
