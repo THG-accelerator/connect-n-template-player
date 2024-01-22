@@ -2,7 +2,12 @@ package com.thg.accelerator23.connectn.ai.connectfourdotjason;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
+import com.thehutgroup.accelerator.connectn.player.GameConfig;
 import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.BoardAnalyser;
+import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.GameState;
+
+import java.util.Map;
 
 
 public class ConnectFourDotJason extends Player {
@@ -13,8 +18,10 @@ public class ConnectFourDotJason extends Player {
 
   @Override
   public int makeMove(Board board) {
-    final int LAST_COL = board.getConfig().getWidth();
-    int random_col = (int) (Math.random() * LAST_COL);
-    return random_col;
+    return minimax((new BoardAnalyser(board.getConfig())).calculateGameState(board));
+  }
+
+  public int minimax(GameState gameState) {
+    if ()
   }
 }
