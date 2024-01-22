@@ -13,8 +13,8 @@ public class ConnectFourDotJason extends Player {
 
   @Override
   public int makeMove(Board board) {
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 4;
+    final int FIRST_COL = 1, LAST_COL = board.getConfig().getWidth();
+    int random_col = (int) Math.floor(Math.random() * (LAST_COL - FIRST_COL + 1) + FIRST_COL);
+    return random_col;
   }
 }
