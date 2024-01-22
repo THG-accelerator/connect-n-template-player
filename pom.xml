@@ -56,7 +56,12 @@
         <dependency>
             <groupId>com.github.THG-accelerator</groupId>
             <artifactId>connectn-player</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.JasonG2001</groupId>
+            <artifactId>connect4-4-now</artifactId>
+            <version>0.1</version>
         </dependency>
     </dependencies>
 
