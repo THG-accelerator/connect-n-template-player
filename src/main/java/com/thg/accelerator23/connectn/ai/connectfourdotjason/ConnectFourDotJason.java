@@ -24,7 +24,7 @@ public class ConnectFourDotJason extends Player {
       return evaluateFinalGameState(gameState);
     }
     return thisTurn ? evaluateIntermediateGameState(board, true) :
-              evaluateIntermediateGameState(board, false);
+            evaluateIntermediateGameState(board, false);
   }
 
   private int evaluateFinalGameState(GameState gameState) {
@@ -46,7 +46,7 @@ public class ConnectFourDotJason extends Player {
         int eval = minimax(newBoard, !thisTurn);
         minMaxEval = thisTurn ? Math.max(minMaxEval, eval) : Math.min(minMaxEval, eval);
       } catch (InvalidMoveException ime) {
-        ime.printStackTrace();
+        System.out.println(i);
       }
     }
     return minMaxEval;
