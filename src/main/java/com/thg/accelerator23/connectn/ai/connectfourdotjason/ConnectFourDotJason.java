@@ -23,7 +23,6 @@ public class ConnectFourDotJason extends Player {
     if (gameState.isEnd()) {
       return evaluateFinalGameState(gameState);
     }
-
     return thisTurn ? evaluateIntermediateGameState(board, true) :
               evaluateIntermediateGameState(board, false);
   }
@@ -31,7 +30,8 @@ public class ConnectFourDotJason extends Player {
   private int evaluateFinalGameState(GameState gameState) {
     if (gameState.isDraw()) {
       return 0;
-    } else if (gameState.getWinner().equals(this.getCounter())) {
+    } else if (gameState.getWinner().getStringRepresentation()
+            .equals(this.getCounter().getStringRepresentation())) {
       return 1;
     } else {
       return -1;
