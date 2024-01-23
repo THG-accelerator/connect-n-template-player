@@ -42,7 +42,7 @@ public class ConnectFourDotJason extends Player {
     int minMaxEval = thisTurn ? (int) Double.NEGATIVE_INFINITY : (int) Double.POSITIVE_INFINITY;
     for (int i = 0; i < board.getConfig().getWidth(); i++) {
       try {
-        Board newBoard = new Board(board, i, this.getCounter());
+        Board newBoard = new Board(board, i, thisTurn ? this.getCounter() : this.getCounter().getOther());
         int eval = minimax(newBoard, !thisTurn);
         minMaxEval = thisTurn ? Math.max(minMaxEval, eval) : Math.min(minMaxEval, eval);
       } catch (InvalidMoveException ime) {
