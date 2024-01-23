@@ -23,31 +23,9 @@ public class ConnectFourDotJason extends Player {
     if (gameState.isEnd()) {
       return evaluateFinalGameState(gameState);
     }
-    if (thisTurn) {
-      int maxEval = (int) Double.NEGATIVE_INFINITY;
-      for (int i = 0; i < board.getConfig().getWidth(); i++) {
-        try {
-          Board newBoard = new Board(board, i, this.getCounter());
-          int eval = minimax(newBoard, false);
-          maxEval = (int) Math.max(eval, maxEval);
-        } catch (InvalidMoveException ime) {
-          ime.printStackTrace();
-        }
-      }
-      return maxEval;
-    } else {
-      int minEval = (int) Double.POSITIVE_INFINITY;
-      for (int i = 0; i < board.getConfig().getWidth(); i++) {
-        try {
-          Board newBoard = new Board(board, i, this.getCounter());
-          int eval = minimax(newBoard, true);
-          minEval = (int) Math.max(eval, minEval);
-        } catch (InvalidMoveException ime) {
-          ime.printStackTrace();
-        }
-      }
-      return minEval;
-    }
+
+    return thisTurn ? evaluateIntermediateGameState(board, true) :
+              evaluateIntermediateGameState(board, false);
   }
 
   private int evaluateFinalGameState(GameState gameState) {
@@ -58,5 +36,19 @@ public class ConnectFourDotJason extends Player {
     } else {
       return -1;
     }
+  }
+
+  private int evaluateIntermediateGameState(Board board, boolean thisTurn) {
+    int minMaxEval = thisTurn ? (int) Double.NEGATIVE_INFINITY : (int) Double.POSITIVE_INFINITY;
+    for (int i = 0; i < board.getConfig().getWidth(); i++) {
+      try {
+        Board newBoard = new Board(board, i, this.getCounter());
+        int eval = minimax(newBoard, !thisTurn);
+        minMaxEval = thisTurn ? Math.max(minMaxEval, eval) : Math.min(minMaxEval, eval);
+      } catch (InvalidMoveException ime) {
+        ime.printStackTrace();
+      }
+    }
+    return minMaxEval;
   }
 }
