@@ -21,13 +21,7 @@ public class ConnectFourDotJason extends Player {
   public int minimax(Board board, boolean thisTurn) {
     GameState gameState = new BoardAnalyser(board.getConfig()).calculateGameState(board);
     if (gameState.isEnd()) {
-      if (gameState.isDraw()) {
-        return 0;
-      } else if (gameState.getWinner().equals(this.getCounter())) {
-        return 1;
-      } else {
-        return -1;
-      }
+      return evaluateFinalGameState(gameState);
     }
     if (thisTurn) {
       int maxEval = (int) Double.NEGATIVE_INFINITY;
@@ -53,6 +47,16 @@ public class ConnectFourDotJason extends Player {
         }
       }
       return minEval;
+    }
+  }
+
+  private int evaluateFinalGameState(GameState gameState) {
+    if (gameState.isDraw()) {
+      return 0;
+    } else if (gameState.getWinner().equals(this.getCounter())) {
+      return 1;
+    } else {
+      return -1;
     }
   }
 }
