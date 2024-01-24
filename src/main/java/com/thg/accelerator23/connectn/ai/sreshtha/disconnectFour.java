@@ -15,8 +15,8 @@ public class disconnectFour extends Player {
     int board_width = 10;
     int board_height = 8;
 
-    int min = 1;
-    int max = board_width;
+    int min = 0;
+    int max = board_width - 1;
 
     int random = (int)Math.floor(Math.random() * (max - min + 1) + min);
 
