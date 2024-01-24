@@ -12,10 +12,17 @@ public class disconnectFour extends Player {
 
   @Override
   public int makeMove(Board board) {
-    System.out.println("Hello World!");
+    int board_width = 10;
+    int board_height = 8;
+
+    int min = 1;
+    int max = board_width;
+
+    int random = (int)Math.floor(Math.random() * (max - min + 1) + min);
+
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 4;
+    return random;
   }
 
 }
