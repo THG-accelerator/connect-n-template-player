@@ -1,20 +1,19 @@
-package com.thg.accelerator23.connectn.ai.connectn;
+package com.thg.accelerator23.connectn.ai.phoebe;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 
-public class ConnectN extends Player {
-  public ConnectN(Counter counter) {
+public class PhoebeAI extends Player {
+  public PhoebeAI(Counter counter) {
     //TODO: fill in your name here
-    super(counter, ConnectN.class.getName());
+    super(counter, PhoebeAI.class.getName());
   }
 
   @Override
   public int makeMove(Board board) {
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
+
     return 4;
   }
 }
