@@ -69,6 +69,7 @@ public class disconnectFour extends Player {
       }return (int)minEval;
     }
 
+
   }
 
 }
