@@ -1,4 +1,4 @@
-package com.thg.accelerator23.connectn.ai.radek;
+package com.thg.accelerator23.connectn.ai.lucanradek;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
