@@ -4,15 +4,13 @@ import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.GameState;
 
-import java.util.Map;
-
 
 public class ConnectFourDotJason extends Player {
 
   final long MAX_POSSIBLE = Integer.MAX_VALUE;
   final long MIN_POSSIBLE = Integer.MIN_VALUE;
-  final long WIN_SCORE_MAXIMISING_PLAYER = Integer.MAX_VALUE;
-  final long WIN_SCORE_MINIMISING_PLAYER = -100_000_000;
+  final long WIN_SCORE_MAXIMISING_PLAYER = Long.MAX_VALUE / 2;
+  final long WIN_SCORE_MINIMISING_PLAYER = -Integer.MAX_VALUE;
   final long OPEN_THREE_SCORE_MAXIMISING_PLAYER = 6_000_000;
   final long OPEN_THREE_SCORE_MINIMISING_PLAYER = -100_000;
   final long TRIPLE_SCORE_MAXIMISING_PLAYER = 5_000;
@@ -34,13 +32,14 @@ public class ConnectFourDotJason extends Player {
       try {
         Board newBoard = new Board(board, i, this.getCounter());
         long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
-        System.out.println(miniMax);
+        System.out.println("col" + i + " : " + miniMax);
         if (miniMax > curMaxEval) {
           curMaxEval = miniMax;
           curMaximizingMove = i;
         }
       } catch (InvalidMoveException ime) {}
     }
+    System.out.println("Choosing: " + curMaximizingMove);
     return curMaximizingMove;
   }
 
