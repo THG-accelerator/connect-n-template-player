@@ -20,9 +20,9 @@ public class MasterOfFourPlay extends Player {
   final long TRIPLE_SCORE_MINIMISING_PLAYER = -700;
   final long DOUBLE_SCORE_MAXIMISING_PLAYER = 10;
   final long DOUBLE_SCORE_MINIMISING_PLAYER = -1;
-  public MasterOfFourPlayCopy(Counter counter) {
+  public MasterOfFourPlay(Counter counter) {
     //TODO: fill in your name here
-    super(counter, MasterOfFourPlayCopy.class.getName());
+    super(counter, MasterOfFourPlay.class.getName());
   }
 
   @Override
