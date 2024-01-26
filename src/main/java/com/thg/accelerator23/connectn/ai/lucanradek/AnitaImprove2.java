@@ -68,5 +68,35 @@ public class AnitaImprove2 extends Player {
             }
             return false;
         }
+
+        public boolean isWin() {
+            // rows and diagonals winning
+            for (int i = 0; i <= 4; i++) {
+                if (isRowWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                    return true;
+                if (isDiagShiftLeftWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                    return true;
+                if (isDiagShiftRightWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                    return true;
+            }
+            // cols winning
+            for (int i = 0; i < bitCounters.length; i++) {
+                if (isColWin(bitCounters[i]))
+                    return true;
+            }
+            return false;
+        }
+
+        public boolean isFull() {
+            int[] firstEmptyCells = getFirstEmptyCellInAllCols();
+            return firstEmptyCells[0] >= 128 &&
+                    firstEmptyCells[1] >= 128 &&
+                    firstEmptyCells[2] >= 128 &&
+                    firstEmptyCells[3] >= 128 &&
+                    firstEmptyCells[4] >= 128 &&
+                    firstEmptyCells[5] >= 128 &&
+                    firstEmptyCells[6] >= 128 &&
+                    firstEmptyCells[7] >= 128;
+        }
     }
 }
