@@ -3,9 +3,9 @@ package com.thg.accelerator23.connectn.ai.connectfourdotjason;
 import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.GameState;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 
 public class MasterOfFourPlay extends Player {
@@ -20,6 +20,7 @@ public class MasterOfFourPlay extends Player {
   final long TRIPLE_SCORE_MINIMISING_PLAYER = -700;
   final long DOUBLE_SCORE_MAXIMISING_PLAYER = 10;
   final long DOUBLE_SCORE_MINIMISING_PLAYER = -1;
+
   public MasterOfFourPlay(Counter counter) {
     //TODO: fill in your name here
     super(counter, MasterOfFourPlay.class.getName());
@@ -27,69 +28,55 @@ public class MasterOfFourPlay extends Player {
 
   @Override
   public int makeMove(Board board) {
-    AtomicInteger curMaximizingMove = new AtomicInteger(-1);
-    AtomicLong curMaxEval = new AtomicLong(MIN_POSSIBLE);
-    int stepsAhead = 8;
+    int curMaximizingMove = -1;
+    long curMaxEval = MIN_POSSIBLE;
+    int stepsAhead = 7;
 
-    Thread leftThread = new Thread(() -> {
-      for (int i = 0; i < 5; i++) {
+    ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    List<Future<Long>> futures = new ArrayList<>();
+
+    for (int i = 0; i < board.getConfig().getWidth(); i++) {
+      final int column = i;
+      Callable<Long> task = () -> {
         try {
-          Board newBoard = new Board(board, i, this.getCounter());
-          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false, 0, 5);
-          synchronized (curMaxEval) {
-            if (miniMax > curMaxEval.get()) {
-              curMaxEval.set(miniMax);
-              curMaximizingMove.set(i);
-            }
-          }
-        } catch (InvalidMoveException ime) {
+          Board newBoard = new Board(board, column, this.getCounter());
+          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
+          System.out.println("col" + column + " : " + miniMax);
+          return miniMax;
+        } catch (InvalidMoveException e) {
+          return MIN_POSSIBLE;
         }
-      }
-    });
-
-    Thread rightThread = new Thread(() -> {
-      for (int i = 5; i < 10; i++) {
-        try {
-          Board newBoard = new Board(board, i, this.getCounter());
-          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false, 5, 10);
-          synchronized (curMaxEval) {
-            if (miniMax > curMaxEval.get()) {
-              curMaxEval.set(miniMax);
-              curMaximizingMove.set(i);
-            }
-          }
-        } catch (InvalidMoveException ime) {
-        }
-      }
-    });
-
-    leftThread.start();
-    rightThread.start();
-
-    try {
-      leftThread.join();
-      rightThread.join();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      };
+      futures.add(executor.submit(task));
     }
 
+    for (Future<Long> future : futures) {
+      try {
+        long miniMax = future.get();
+        if (miniMax > curMaxEval) {
+          curMaxEval = miniMax;
+          curMaximizingMove = futures.indexOf(future);
+        }
+      } catch (InterruptedException | ExecutionException e) {
+
+      }
+    }
+    executor.shutdown();
     System.out.println("Choosing: " + curMaximizingMove);
-    return curMaximizingMove.get();
+    return curMaximizingMove;
   }
 
-
-
-  private long getMiniMax(Board board, int stepsAhead, long alpha, long beta, boolean maximisingPlayer, int start, int end) {
+  private long getMiniMax(Board board, int stepsAhead, long alpha, long beta, boolean maximisingPlayer) {
     GameState gameState = new BoardAnalyser(board.getConfig()).calculateGameState(board);
     if (stepsAhead == 0 || gameState.isEnd()) {
       return evaluateGame(board);
     }
     if (maximisingPlayer) {
       long maxEval = MIN_POSSIBLE;
-      for (int i = start; i < end; i++) {
+      for (int i = 0; i < board.getConfig().getWidth(); i++) {
         try {
           Board newBoard = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
-          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, false, start, end);
+          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, false);
           maxEval = Math.max(maxEval, intermediateEval);
           alpha = Math.max(alpha, intermediateEval);
           if (alpha >= beta) {
@@ -100,10 +87,10 @@ public class MasterOfFourPlay extends Player {
       return maxEval;
     } else {
       long minEval = MAX_POSSIBLE;
-      for (int i = start; i < end; i++) {
+      for (int i = 0; i < board.getConfig().getWidth(); i++) {
         try {
           Board newBoard = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
-          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, true, start, end);
+          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, true);
           minEval = Math.min(minEval, intermediateEval);
           beta = Math.min(beta, intermediateEval);
           if (alpha >= beta) {
@@ -114,6 +101,7 @@ public class MasterOfFourPlay extends Player {
       return minEval;
     }
   }
+
 
   // use this.getCounter();
   private long evaluateGame(Board board) {
