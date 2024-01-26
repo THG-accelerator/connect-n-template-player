@@ -4,6 +4,9 @@ import com.thehutgroup.accelerator.connectn.player.*;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.BoardAnalyser;
 import com.thg.accelerator23.connectn.ai.connectfourdotjason.analysis.GameState;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 
 public class ConnectFourDotJason extends Player {
 
@@ -13,7 +16,7 @@ public class ConnectFourDotJason extends Player {
   final long WIN_SCORE_MINIMISING_PLAYER = -Integer.MAX_VALUE;
   final long OPEN_THREE_SCORE_MAXIMISING_PLAYER = 6_000_000;
   final long OPEN_THREE_SCORE_MINIMISING_PLAYER = -100_000;
-  final long TRIPLE_SCORE_MAXIMISING_PLAYER = 5_000;
+  final long TRIPLE_SCORE_MAXIMISING_PLAYER  5_000;
   final long TRIPLE_SCORE_MINIMISING_PLAYER = -700;
   final long DOUBLE_SCORE_MAXIMISING_PLAYER = 10;
   final long DOUBLE_SCORE_MINIMISING_PLAYER = -1;
@@ -24,24 +27,56 @@ public class ConnectFourDotJason extends Player {
 
   @Override
   public int makeMove(Board board) {
-
-    int curMaximizingMove = -1;
-    long curMaxEval = MIN_POSSIBLE;
+    AtomicInteger curMaximizingMove = new AtomicInteger(-1);
+    AtomicLong curMaxEval = new AtomicLong(MIN_POSSIBLE);
     int stepsAhead = 6;
-    for (int i = 0; i < board.getConfig().getWidth(); i++) {
-      try {
-        Board newBoard = new Board(board, i, this.getCounter());
-        long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
-        System.out.println("col" + i + " : " + miniMax);
-        if (miniMax > curMaxEval) {
-          curMaxEval = miniMax;
-          curMaximizingMove = i;
+
+    Thread leftThread = new Thread(() -> {
+      for (int i = 0; i < 5; i++) {
+        try {
+          Board newBoard = new Board(board, i, this.getCounter());
+          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
+          synchronized (this) {
+            if (miniMax > curMaxEval.get()) {
+              curMaxEval.set(miniMax);
+              curMaximizingMove.set(i);
+            }
+          }
+        } catch (InvalidMoveException ime) {
         }
-      } catch (InvalidMoveException ime) {}
+      }
+    });
+
+    Thread rightThread = new Thread(() -> {
+      for (int i = 5; i < 10; i++) {
+        try {
+          Board newBoard = new Board(board, i, this.getCounter());
+          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
+          synchronized (this) {
+            if (miniMax > curMaxEval.get()) {
+              curMaxEval.set(miniMax);
+              curMaximizingMove.set(i);
+            }
+          }
+        } catch (InvalidMoveException ime) {
+        }
+      }
+    });
+
+    leftThread.start();
+    rightThread.start();
+
+    try {
+      leftThread.join();
+      rightThread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+
     System.out.println("Choosing: " + curMaximizingMove);
-    return curMaximizingMove;
+    return curMaximizingMove.get();
   }
+
 
   private long getMiniMax(Board board, int stepsAhead, long alpha, long beta, boolean maximisingPlayer) {
     GameState gameState = new BoardAnalyser(board.getConfig()).calculateGameState(board);
