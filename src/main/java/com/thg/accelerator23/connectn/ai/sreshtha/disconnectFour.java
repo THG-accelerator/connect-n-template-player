@@ -12,7 +12,7 @@ public class disconnectFour extends Player {
   public disconnectFour(Counter counter) {
     super(counter, disconnectFour.class.getName());
   }
-
+  // alpha is constantly 16??
   @Override
   public int makeMove(Board board) {
 //    int board_width = 10;
@@ -63,10 +63,10 @@ public class disconnectFour extends Player {
         Board b = new Board(board, i, this.getCounter());
         int new_score = minimax(b, depth-1, alpha, beta, false);
         maxEval = Math.max(maxEval, new_score);
-        alpha = Math.max(alpha, maxEval);
-        if (alpha >= beta){
-        break;
-        }
+//        alpha = Math.max(alpha, maxEval);
+//        if (alpha >= beta){
+//        break;
+//        }
       } return maxEval;
 
     }else{
@@ -75,34 +75,35 @@ public class disconnectFour extends Player {
         Board bo = new Board(board, i, this.getCounter().getOther());
         int new_score = minimax(bo, depth-1, alpha, beta, true);
         minEval = Math.min(minEval, new_score);
-        beta = Math.min(beta, minEval);
-        if(alpha >= beta){
-          break;
-        }
+//        beta = Math.min(beta, minEval);
+//        if(alpha >= beta){
+//          break;
+//        }
       }return minEval;
     }
 
   }
 
-  public int calcScorePos(Board board, int row, int col, int increment_row, int increment_col){
+  public int calcScorePos(Board board, int row, int col, int incrementRow, int incrementCol) {
     int maxingPoints = 0, miningPoints = 0;
-    for(int i=0; i<4; i++){
-      if(board.getCounterAtPosition(new Position(col, row)) == Counter.X){
+    for (int i = 0; i < 4; i++) {
+      if (board.getCounterAtPosition(new Position(col, row)) == Counter.X) {
         maxingPoints++;
-      }else if(board.getCounterAtPosition(new Position(col, row)) == Counter.O){
+      } else if (board.getCounterAtPosition(new Position(col, row)) == Counter.O) {
         miningPoints++;
       }
-      row += increment_row;
-      col += increment_col;
+      row += incrementRow;
+      col += incrementCol;
     }
-    if(maxingPoints == 4){
+    if (maxingPoints == 4) {
       return MAX_VAL;
-    }else if(miningPoints == 4){
-      return MIN_VAL; // change this
-    }else {
+    } else if (miningPoints == 4) {
+      return MIN_VAL;
+    } else {
       return maxingPoints;
     }
   }
+
 
   public int evaluate(Board board) {
     int verticalPoints = 0, horizontalPoints = 0, decsDiagPoint = 0, ascDiagPoints = 0, totalPoints = 0;
