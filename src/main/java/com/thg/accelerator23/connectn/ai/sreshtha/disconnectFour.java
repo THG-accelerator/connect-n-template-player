@@ -6,6 +6,9 @@ import com.thg.accelerator23.connectn.ai.sreshtha.analysis.GameState;
 
 
 public class disconnectFour extends Player {
+
+  public final int MAX_VAL= Integer.MAX_VALUE;
+  public final int MIN_VAL= Integer.MIN_VALUE;
   public disconnectFour(Counter counter) {
     super(counter, disconnectFour.class.getName());
   }
@@ -24,14 +27,14 @@ public class disconnectFour extends Player {
 //    return random;
 
 
-    int bestScore = Integer.MIN_VALUE;
+    int bestScore = MIN_VAL;
     int depth = 7;
-    int bestMove=-1;
+    int bestMove= -1;
 
     for(int i=0; i < board.getConfig().getWidth(); i++){
         try {
             Board newBoard = new Board(board, i, getCounter());
-            int score = minimax(newBoard, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+            int score = minimax(newBoard, depth, MIN_VAL, MAX_VAL, false);
             if(score > bestScore){
               bestScore = score;
               bestMove = i;
@@ -47,7 +50,7 @@ public class disconnectFour extends Player {
 
   // let's try minimax, dunno if it will work :)
   // alpha beta pruning removes the depth of the minimax algorithm, this allows it to take up less tree memory therefore faster : )
-  public int minimax(Board board, int depth, int alpha, int beta, boolean maximisingPlayer) throws InvalidMoveException {
+  public int minimax(Board board, int depth, long alpha, long beta, boolean maximisingPlayer) throws InvalidMoveException {
     GameState gameState = new BoardAnalyser(board.getConfig()).calculateGameState(board);
 
     if(depth==0 || gameState.isWin() || gameState.isEnd()){
@@ -55,30 +58,28 @@ public class disconnectFour extends Player {
     }
 
     if(maximisingPlayer){
-      double maxEval = Double.NEGATIVE_INFINITY;
+      int maxEval = MIN_VAL;
       for(int i=0; i < board.getConfig().getWidth(); i++){
         Board b = new Board(board, i, this.getCounter());
         int new_score = minimax(b, depth-1, alpha, beta, false);
-        if(new_score > maxEval){
-          maxEval = new_score;
-          alpha = (int)Math.max(alpha, maxEval);
-          if (alpha >= beta){
-          break;
-          }
+        maxEval = Math.max(maxEval, new_score);
+        alpha = Math.max(alpha, maxEval);
+        if (alpha >= beta){
+        break;
         }
-      } return (int) maxEval;
+      } return maxEval;
 
     }else{
-      double minEval = Double.POSITIVE_INFINITY;
+      int minEval = MAX_VAL;
       for(int i=0; i< board.getConfig().getWidth(); i++){
         Board bo = new Board(board, i, this.getCounter().getOther());
         int new_score = minimax(bo, depth-1, alpha, beta, true);
-        minEval = Math.max(minEval, new_score);
-        beta = (int)Math.min(beta, minEval);
+        minEval = Math.min(minEval, new_score);
+        beta = Math.min(beta, minEval);
         if(alpha >= beta){
           break;
         }
-      }return (int)minEval;
+      }return minEval;
     }
 
   }
@@ -95,9 +96,9 @@ public class disconnectFour extends Player {
       col += increment_col;
     }
     if(maxingPoints == 4){
-      return Integer.MAX_VALUE;
+      return MAX_VAL;
     }else if(miningPoints == 4){
-      return Integer.MIN_VALUE; // change this
+      return MIN_VAL; // change this
     }else {
       return maxingPoints;
     }
@@ -109,7 +110,7 @@ public class disconnectFour extends Player {
       for (int col = 0; col < board.getConfig().getWidth(); col++) {
         int tempScore = calcScorePos(board, row, col, 1, 0);
         verticalPoints += tempScore;
-        if (tempScore >= Integer.MAX_VALUE || tempScore <= Integer.MIN_VALUE) {
+        if (tempScore >= MAX_VAL || tempScore <= MIN_VAL) {
           return tempScore;
         }
 
@@ -119,7 +120,7 @@ public class disconnectFour extends Player {
       for (int col = 0; col < board.getConfig().getWidth() - 3; col++) {
         int tempScore = calcScorePos(board, row, col, 0, 1);
         horizontalPoints += tempScore;
-        if (tempScore >= Integer.MAX_VALUE || tempScore <= Integer.MIN_VALUE) {
+        if (tempScore >= MAX_VAL || tempScore <= MIN_VAL) {
           return tempScore;
         }
 
@@ -130,7 +131,7 @@ public class disconnectFour extends Player {
       for(int col=0; col < board.getConfig().getHeight() - 3; col++){
         int tempScore = calcScorePos(board, row, col, 1, 1);
         decsDiagPoint += tempScore;
-        if(tempScore>=Integer.MAX_VALUE || tempScore <= Integer.MIN_VALUE){
+        if(tempScore>=MAX_VAL || tempScore <= MIN_VAL){
           return tempScore;
         }
       }
@@ -139,7 +140,7 @@ public class disconnectFour extends Player {
       for(int col=0; col<board.getConfig().getHeight() - 4; col++){
         int tempScore = calcScorePos(board, row, col, -1, 1);
         ascDiagPoints += tempScore;
-        if(tempScore >= Integer.MAX_VALUE || tempScore <= Integer.MIN_VALUE){
+        if(tempScore >= MAX_VAL || tempScore <= MIN_VAL){
           return tempScore;
         }
       }
