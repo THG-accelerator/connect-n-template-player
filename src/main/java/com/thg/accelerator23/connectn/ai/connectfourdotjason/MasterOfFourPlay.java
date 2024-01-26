@@ -16,27 +16,27 @@ public class MasterOfFourPlay extends Player {
   final long WIN_SCORE_MINIMISING_PLAYER = -Integer.MAX_VALUE;
   final long OPEN_THREE_SCORE_MAXIMISING_PLAYER = 6_000_000;
   final long OPEN_THREE_SCORE_MINIMISING_PLAYER = -100_000;
-  final long TRIPLE_SCORE_MAXIMISING_PLAYER  5_000;
+  final long TRIPLE_SCORE_MAXIMISING_PLAYER = 5_000;
   final long TRIPLE_SCORE_MINIMISING_PLAYER = -700;
   final long DOUBLE_SCORE_MAXIMISING_PLAYER = 10;
   final long DOUBLE_SCORE_MINIMISING_PLAYER = -1;
-  public MasterOfFourPlay(Counter counter) {
+  public MasterOfFourPlayCopy(Counter counter) {
     //TODO: fill in your name here
-    super(counter, MasterOfFourPlay.class.getName());
+    super(counter, MasterOfFourPlayCopy.class.getName());
   }
 
   @Override
   public int makeMove(Board board) {
     AtomicInteger curMaximizingMove = new AtomicInteger(-1);
     AtomicLong curMaxEval = new AtomicLong(MIN_POSSIBLE);
-    int stepsAhead = 6;
+    int stepsAhead = 8;
 
     Thread leftThread = new Thread(() -> {
       for (int i = 0; i < 5; i++) {
         try {
           Board newBoard = new Board(board, i, this.getCounter());
-          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
-          synchronized (this) {
+          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false, 0, 5);
+          synchronized (curMaxEval) {
             if (miniMax > curMaxEval.get()) {
               curMaxEval.set(miniMax);
               curMaximizingMove.set(i);
@@ -51,8 +51,8 @@ public class MasterOfFourPlay extends Player {
       for (int i = 5; i < 10; i++) {
         try {
           Board newBoard = new Board(board, i, this.getCounter());
-          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false);
-          synchronized (this) {
+          long miniMax = getMiniMax(newBoard, stepsAhead - 1, MIN_POSSIBLE, MAX_POSSIBLE, false, 5, 10);
+          synchronized (curMaxEval) {
             if (miniMax > curMaxEval.get()) {
               curMaxEval.set(miniMax);
               curMaximizingMove.set(i);
@@ -78,17 +78,18 @@ public class MasterOfFourPlay extends Player {
   }
 
 
-  private long getMiniMax(Board board, int stepsAhead, long alpha, long beta, boolean maximisingPlayer) {
+
+  private long getMiniMax(Board board, int stepsAhead, long alpha, long beta, boolean maximisingPlayer, int start, int end) {
     GameState gameState = new BoardAnalyser(board.getConfig()).calculateGameState(board);
     if (stepsAhead == 0 || gameState.isEnd()) {
       return evaluateGame(board);
     }
     if (maximisingPlayer) {
       long maxEval = MIN_POSSIBLE;
-      for (int i = 0; i < board.getConfig().getWidth(); i++) {
+      for (int i = start; i < end; i++) {
         try {
           Board newBoard = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
-          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, false);
+          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, false, start, end);
           maxEval = Math.max(maxEval, intermediateEval);
           alpha = Math.max(alpha, intermediateEval);
           if (alpha >= beta) {
@@ -99,10 +100,10 @@ public class MasterOfFourPlay extends Player {
       return maxEval;
     } else {
       long minEval = MAX_POSSIBLE;
-      for (int i = 0; i < board.getConfig().getWidth(); i++) {
+      for (int i = start; i < end; i++) {
         try {
           Board newBoard = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
-          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, true);
+          long intermediateEval = getMiniMax(newBoard, stepsAhead - 1, alpha, beta, true, start, end);
           minEval = Math.min(minEval, intermediateEval);
           beta = Math.min(beta, intermediateEval);
           if (alpha >= beta) {
