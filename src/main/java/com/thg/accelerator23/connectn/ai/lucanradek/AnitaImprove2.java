@@ -61,5 +61,12 @@ public class AnitaImprove2 extends Player {
             return isRowWin(col1 << 3, col2 << 2, col3 << 1, col4);
         }
 
+        public boolean isColWin(int colVal) {
+            for (int i = 0b00001111; i <= 0b11110000; i = i << 1) {
+                if ((colVal & i) != 0)
+                    return true;
+            }
+            return false;
+        }
     }
 }
