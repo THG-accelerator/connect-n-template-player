@@ -20,25 +20,26 @@ public class AnitaImprove2 extends Player {
     }
 
     public class BitBoard {
-        int[] bitCounters;
+        int[][] bitCounters;
 
         public BitBoard() {
-            this.bitCounters = new int[10];
-            Arrays.fill(this.bitCounters, 0b00000000);
+            this.bitCounters = new int[2][10];
+            Arrays.fill(this.bitCounters[0], 0b00000000);
+            Arrays.fill(this.bitCounters[1], 0b00000000);
         }
 
-        public BitBoard(int[] input) {
+        public BitBoard(int[][] input) {
             this.bitCounters = input;
         }
 
         public BitBoard deepCopy() {
-            int[] originalBitCounters = this.getBitCounters();
-            int[] copiedBitCounters = new int[originalBitCounters.length];
+            int[][] originalBitCounters = this.getBitCounters();
+            int[][] copiedBitCounters = new int[originalBitCounters.length][originalBitCounters[0].length];
             System.arraycopy(originalBitCounters, 0, copiedBitCounters, 0, originalBitCounters.length);
             return new BitBoard(copiedBitCounters);
         }
 
-        public int[] getBitCounters() {
+        public int[][] getBitCounters() {
             return bitCounters;
         }
 
@@ -50,21 +51,21 @@ public class AnitaImprove2 extends Player {
             return 128;
         }
 
-        public int[] getFirstEmptyCellInAllCols() {
+        public int[] getFirstEmptyCellInAllCols(int playerIndex) {
             int[] firstEmptyCells = new int[10];
             for (int i = 0; i < firstEmptyCells.length; i++) {
-                firstEmptyCells[i] = getFirstEmptyCellInCol(this.bitCounters[i]);
+                firstEmptyCells[i] = getFirstEmptyCellInCol(this.bitCounters[playerIndex][i]);
             }
             return firstEmptyCells;
         }
 
-        public void addToCol(int colIndex) {
-            int firstEmptyCell = getFirstEmptyCellInCol(this.bitCounters[colIndex]);
-            this.bitCounters[colIndex] += firstEmptyCell;
+        public void play(int playerIndex, int colIndex) {
+            int firstEmptyCell = getFirstEmptyCellInCol(this.bitCounters[playerIndex][colIndex]);
+            this.bitCounters[playerIndex][colIndex] += firstEmptyCell;
         }
 
         public boolean isFullAt(int colIndex) {
-            return getFirstEmptyCellInCol(bitCounters[colIndex]) > 128;
+            return getFirstEmptyCellInCol(bitCounters[0][colIndex]) > 128 || getFirstEmptyCellInCol(bitCounters[0][colIndex]) > 128;
         }
 
         public boolean isRowWin(int col1, int col2, int col3, int col4) {
@@ -88,19 +89,19 @@ public class AnitaImprove2 extends Player {
             return false;
         }
 
-        public boolean isWin() {
+        public boolean isWonBy(int playerIndex) {
             // rows and diagonals winning
             for (int i = 0; i <= 4; i++) {
-                if (isRowWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                if (isRowWin(bitCounters[playerIndex][i], bitCounters[playerIndex][i + 1], bitCounters[playerIndex][i + 2], bitCounters[playerIndex][i + 3]))
                     return true;
-                if (isDiagShiftLeftWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                if (isDiagShiftLeftWin(bitCounters[playerIndex][i], bitCounters[playerIndex][i + 1], bitCounters[playerIndex][i + 2], bitCounters[playerIndex][i + 3]))
                     return true;
-                if (isDiagShiftRightWin(bitCounters[i], bitCounters[i + 1], bitCounters[i + 2], bitCounters[i + 3]))
+                if (isDiagShiftRightWin(bitCounters[playerIndex][i], bitCounters[playerIndex][i + 1], bitCounters[playerIndex][i + 2], bitCounters[playerIndex][i + 3]))
                     return true;
             }
             // cols winning
             for (int i = 0; i < bitCounters.length; i++) {
-                if (isColWin(bitCounters[i]))
+                if (isColWin(bitCounters[playerIndex][i]))
                     return true;
             }
             return false;
