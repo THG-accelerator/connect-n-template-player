@@ -28,17 +28,19 @@ public class disconnectFour extends Player {
 
 
     int bestScore = MIN_VAL;
-    int depth = 7;
+    int depth = 3;
     int bestMove= -1;
 
     for(int i=0; i < board.getConfig().getWidth(); i++){
         try {
             Board newBoard = new Board(board, i, getCounter());
             int score = minimax(newBoard, depth, MIN_VAL, MAX_VAL, false);
+            System.out.println("col" + i + " : " + score);
             if(score > bestScore){
               bestScore = score;
               bestMove = i;
             }
+
         } catch (InvalidMoveException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +62,7 @@ public class disconnectFour extends Player {
     if(maximisingPlayer){
       int maxEval = MIN_VAL;
       for(int i=0; i < board.getConfig().getWidth(); i++){
-        Board b = new Board(board, i, this.getCounter());
+        Board b = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
         int new_score = minimax(b, depth-1, alpha, beta, false);
         maxEval = Math.max(maxEval, new_score);
 //        alpha = Math.max(alpha, maxEval);
@@ -72,7 +74,7 @@ public class disconnectFour extends Player {
     }else{
       int minEval = MAX_VAL;
       for(int i=0; i< board.getConfig().getWidth(); i++){
-        Board bo = new Board(board, i, this.getCounter().getOther());
+        Board bo = new Board(board, i, maximisingPlayer ? this.getCounter() : this.getCounter().getOther());
         int new_score = minimax(bo, depth-1, alpha, beta, true);
         minEval = Math.min(minEval, new_score);
 //        beta = Math.min(beta, minEval);
