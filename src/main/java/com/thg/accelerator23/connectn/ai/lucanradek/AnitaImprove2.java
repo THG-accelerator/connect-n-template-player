@@ -64,7 +64,7 @@ public class AnitaImprove2 extends Player {
     }
 
     // BITBOARD CLASS
-    private class BitBoard {
+    /*private class BitBoard {
 
 
         // CONSTRUCTOR TO CREATE A NEW BOARD FROM THE ONE PASSED TO THE AI
@@ -72,7 +72,8 @@ public class AnitaImprove2 extends Player {
         }
 
         // DEEP COPY THE INPUT BITBOARD
-        public void deepCopy(BitBoard currentBoard) {
+        public BitBoard deepCopy() {
+            return new BitBoard();
         }
 
         // CHECK IF BOARD IS FULL AT COLUMN currentX
@@ -97,7 +98,7 @@ public class AnitaImprove2 extends Player {
         // UPDATE BITBOARD WITH BOARD FROM GAME
         public void update(Board board) {
         }
-    }
+    }*/
 
     // SIMULATOR CLASS (AI)
     public class Simulator {
@@ -138,31 +139,31 @@ public class AnitaImprove2 extends Player {
         public void runTrial() {
             //  WE NEED TO DECIDE WHO IS OUR PLAYER AND WHO IS THE OPPONENT (EITHER 0 OR 1).
             // NOW I AM ASSUMING THAT WE ARE PLAYER 1 AND OPPONENT IS PLAYER 0!
-            ntrials++;                                          // Accumulate one trial in counter
-            tmpBoard.deepCopy(currentBoard);                    // Copy initial board
+            ntrials++;                                              // Accumulate one trial in counter
+            tmpBoard = currentBoard.deepCopy();                     // Copy initial board
             // Updated at each turn in each trial
-            int turn = 0;                                       // Start turn counter from 0
+            int turn = 0;                                           // Start turn counter from 0
             boolean play = true;
             while (play) {
-                turn++;                                         // New turn
+                turn++;                                             // New turn
                 // Updated at each turn in each trial
                 int currentX = -1;
                 while (currentX < 0) {
-                    currentX = random.nextInt(0, width);  // Get random x position in board
-                    if (tmpBoard.isFullAt(currentX)) {          // If that column is full
-                        currentX = -1;                          // reject random currentX
+                    currentX = random.nextInt(0, width);      // Get random x position in board
+                    if (tmpBoard.isFullAt(currentX)) {              // If that column is full
+                        currentX = -1;                              // reject random currentX
                     }
-                    if (turn == 1) {                            // If this is the first turn we are playing in this trial game,
-                        initX = currentX;                       // Save played move at first turn
+                    if (turn == 1) {                                // If this is the first turn we are playing in this trial game,
+                        initX = currentX;                           // Save played move at first turn
                     }
                 }
-                tmpBoard.play(turn % 2, currentX);   // Player plays turn
-                if (tmpBoard.isWonBy(turn % 2)) {    // If current Player has won,
-                    probability[initX] += (float) turn % 2;     // This should work fine, if our player is player 1 (100% of winning from initX if player 1 won, 0% of winning from initX if player 0 won)
-                    play = false;                               // Finish the trial.
-                } else if (tmpBoard.isDraw()) {                 // If it's a draw
-                    probability[initX] += 0.50f;                // probability of winning from initX is 50%
-                    play = false;                               // Finish the trial
+                tmpBoard.play(turn % 2, currentX);        // Player plays turn
+                if (tmpBoard.isWonBy(turn % 2)) {         // If current Player has won,
+                    probability[initX] += (float) turn % 2;         // This should work fine, if our player is player 1 (100% of winning from initX if player 1 won, 0% of winning from initX if player 0 won)
+                    play = false;                                   // Finish the trial.
+                } else if (tmpBoard.isDraw()) {                     // If it's a draw
+                    probability[initX] += 0.50f;                    // probability of winning from initX is 50%
+                    play = false;                                   // Finish the trial
                 }
             }
         }
