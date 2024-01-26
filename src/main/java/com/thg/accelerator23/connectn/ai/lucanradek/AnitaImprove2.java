@@ -27,6 +27,21 @@ public class AnitaImprove2 extends Player {
             Arrays.fill(this.bitCounters, 0b00000000);
         }
 
+        public BitBoard(int[] input) {
+            this.bitCounters = input;
+        }
+
+        public BitBoard deepCopy() {
+            int[] originalBitCounters = this.getBitCounters();
+            int[] copiedBitCounters = new int[originalBitCounters.length];
+            System.arraycopy(originalBitCounters, 0, copiedBitCounters, 0, originalBitCounters.length);
+            return new BitBoard(copiedBitCounters);
+        }
+
+        public int[] getBitCounters() {
+            return bitCounters;
+        }
+
         public int getFirstEmptyCellInCol(int colVal) {
             for (int i = 1; i <= 128; i *= 2) {
                 if (colVal < i)
