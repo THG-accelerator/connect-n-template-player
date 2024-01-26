@@ -3,8 +3,11 @@ package com.thg.accelerator23.connectn.ai.lucanradek;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thehutgroup.accelerator.connectn.player.Position;
 
 import java.util.Arrays;
+
+import static java.lang.Math.pow;
 
 
 public class AnitaImprove2 extends Player {
@@ -110,6 +113,23 @@ public class AnitaImprove2 extends Player {
         public boolean isDraw() {
             return isFullAt(0) && isFullAt(1) && isFullAt(2) && isFullAt(3) &&
                     isFullAt(4) && isFullAt(5) && isFullAt(6) && isFullAt(7);
+        }
+
+        public int getUpdatedColumn(Board board, int colIndex, Counter opponentCounter) { // relies on Position(0,0) being at lower left corner
+            int result = 0b00000000;
+            for (int i = 0; i < board.getConfig().getHeight(); i++) {
+                Position tempPosition = new Position(i, colIndex);
+                if (board.hasCounterAtPosition(tempPosition) && board.getCounterAtPosition(tempPosition) == opponentCounter)
+                    result += (int) pow(2, i);
+            }
+            return result;
+        }
+
+        public void update(Counter opponetCounter, Board board) {
+            int opponentIndex = (opponetCounter == Counter.X) ? 0 : 1; // assumes that X is first to start
+            for (int i = 0; i < bitCounters[opponentIndex].length; i++) {
+                bitCounters[opponentIndex][i] = getUpdatedColumn(board, i, opponetCounter);
+            }
         }
     }
 }
