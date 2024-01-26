@@ -48,6 +48,10 @@ public class AnitaImprove2 extends Player {
             this.bitCounters[colIndex] += firstEmptyCell;
         }
 
+        public boolean isFullAt(int colIndex) {
+            return getFirstEmptyCellInCol(bitCounters[colIndex]) > 128;
+        }
+
         public boolean isRowWin(int col1, int col2, int col3, int col4) {
             int result = col1 & col2 & col3 & col4;
             return result != 0;
@@ -87,16 +91,9 @@ public class AnitaImprove2 extends Player {
             return false;
         }
 
-        public boolean isFull() {
-            int[] firstEmptyCells = getFirstEmptyCellInAllCols();
-            return firstEmptyCells[0] >= 128 &&
-                    firstEmptyCells[1] >= 128 &&
-                    firstEmptyCells[2] >= 128 &&
-                    firstEmptyCells[3] >= 128 &&
-                    firstEmptyCells[4] >= 128 &&
-                    firstEmptyCells[5] >= 128 &&
-                    firstEmptyCells[6] >= 128 &&
-                    firstEmptyCells[7] >= 128;
+        public boolean isDraw() {
+            return isFullAt(0) && isFullAt(1) && isFullAt(2) && isFullAt(3) &&
+                    isFullAt(4) && isFullAt(5) && isFullAt(6) && isFullAt(7);
         }
     }
 }
