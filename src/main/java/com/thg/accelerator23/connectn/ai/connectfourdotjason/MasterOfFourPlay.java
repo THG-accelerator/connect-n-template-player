@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class ConnectFourDotJason extends Player {
+public class MasterOfFourPlay extends Player {
 
   final long MAX_POSSIBLE = Integer.MAX_VALUE;
   final long MIN_POSSIBLE = Integer.MIN_VALUE;
@@ -20,9 +20,9 @@ public class ConnectFourDotJason extends Player {
   final long TRIPLE_SCORE_MINIMISING_PLAYER = -700;
   final long DOUBLE_SCORE_MAXIMISING_PLAYER = 10;
   final long DOUBLE_SCORE_MINIMISING_PLAYER = -1;
-  public ConnectFourDotJason(Counter counter) {
+  public MasterOfFourPlay(Counter counter) {
     //TODO: fill in your name here
-    super(counter, ConnectFourDotJason.class.getName());
+    super(counter, MasterOfFourPlay.class.getName());
   }
 
   @Override
