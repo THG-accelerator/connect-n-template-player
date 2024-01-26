@@ -48,6 +48,18 @@ public class AnitaImprove2 extends Player {
             this.bitCounters[colIndex] += firstEmptyCell;
         }
 
+        public boolean isRowWin(int col1, int col2, int col3, int col4) {
+            int result = col1 & col2 & col3 & col4;
+            return result != 0;
+        }
+
+        public boolean isDiagShiftRightWin(int col1, int col2, int col3, int col4) {
+            return isRowWin(col1, col2 << 1, col3 << 2, col4 << 3);
+        }
+
+        public boolean isDiagShiftLeftWin(int col1, int col2, int col3, int col4) {
+            return isRowWin(col1 << 3, col2 << 2, col3 << 1, col4);
+        }
 
     }
 }
