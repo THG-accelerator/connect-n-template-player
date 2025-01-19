@@ -27,7 +27,7 @@ Once you're ready to submit your entry:
 * Perform a release in github (we will go through how to do this)
 * Enter your repo url into https://jitpack.io/, click "get it", then check the status of the job
 * Make a note of the groupId and artifactId -- you will need to specify these in the next step
-* Add a json file representing your team into this [repo](https://github.com/THG-accelerator/23-member-info/tree/main/connect-n). See [example.json](https://github.com/THG-accelerator/23-member-info/blob/main/connect-n/example.json) for an example of the format required.
+* Add a json file representing your team into this [repo](https://github.com/THG-accelerator/24-member-info/tree/main/connect-n). See [example.json](https://github.com/THG-accelerator/24-member-info/blob/main/connect-n/example.json) for an example of the format required.
 * Update the version in this file when you are happy with this version
 
 ## Timelines
