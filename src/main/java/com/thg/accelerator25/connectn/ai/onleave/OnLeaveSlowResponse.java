@@ -80,6 +80,7 @@ public class OnLeaveSlowResponse extends Player {
   private int evaluatePosition(Board board) {
     Counter[][] counterPlacements = board.getCounterPlacements();
     Counter counter = getCounter();
+    int score = 0;
     // Cases
     // 4 in a row: player's counter --> Integer.MAX_VALUE; opponent's counter --> Integer.MIN_VALUE
     if (hasFourInARow(counterPlacements, counter)) {
@@ -87,8 +88,12 @@ public class OnLeaveSlowResponse extends Player {
     } else if (hasFourInARow(counterPlacements, counter.getOther())) {
       return Integer.MIN_VALUE;
     }
+    // 3 in a row and next is empty
+    score += 100 * hasThreeInARow(counterPlacements, counter);
+    score -= 100 * hasThreeInARow(counterPlacements, counter.getOther());
+    // 2 in a row and sides are empty
     // Placeholder
-    return 0;
+    return score;
   }
 
   private boolean isGameOver(Board board) {
@@ -151,5 +156,46 @@ public class OnLeaveSlowResponse extends Player {
       }
     }
     return false;
+  }
+
+  private int hasThreeInARow(Counter[][] counterPlacements, Counter counter) {
+    int count = 0;
+    for (int row = 0; row < counterPlacements.length; row++) {
+      for (int col = 0; col < counterPlacements[row].length; col++) {
+        // check horizontal right
+        if (col + 3 < counterPlacements[row].length &&
+                counter == counterPlacements[row][col + 1] &&
+                counter == counterPlacements[row][col + 2] &&
+                ((counterPlacements[row][col + 3] == null && counter == counterPlacements[row][col]) ||
+                (counterPlacements[row][col] == null && counter == counterPlacements[row][col + 3]))) {
+          count += 1;
+        }
+        // check vertical down
+        if (row + 3 < counterPlacements.length &&
+                counter == counterPlacements[row + 1][col] &&
+                counter == counterPlacements[row + 2][col] &&
+                ((counterPlacements[row + 3][col] == null && counter == counterPlacements[row][col]) ||
+                (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col]))) {
+          count += 1;
+        }
+        // check diagonal (down, right)
+        if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
+                counter == counterPlacements[row + 1][col + 1] &&
+                counter == counterPlacements[row + 2][col + 2] &&
+                ((counterPlacements[row + 3][col + 3] == null && counter == counterPlacements[row][col]) ||
+                (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col + 3]))) {
+          count += 1;
+        }
+        // check diagonal (down, left)
+        if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                counter == counterPlacements[row + 1][col - 1] &&
+                counter == counterPlacements[row + 2][col - 2] &&
+                ((counterPlacements[row + 3][col - 3] == null && counter == counterPlacements[row][col])
+                || (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col - 3]))) {
+          count += 1;
+        }
+      }
+    }
+    return count;
   }
 }
