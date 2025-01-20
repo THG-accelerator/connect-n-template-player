@@ -1,14 +1,14 @@
-package com.thg.accelerator23.connectn.ai.robbot;
+package com.thg.accelerator23.connectn.ai.bibblebobbleshrimpbot;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 
-public class RobBot extends Player {
-  public RobBot(Counter counter) {
+public class BibbleBobbleShrimpBot extends Player {
+  public BibbleBobbleShrimpBot(Counter counter) {
     //TODO: fill in your name here
-    super(counter, RobBot.class.getName());
+    super(counter, BibbleBobbleShrimpBot.class.getName());
   }
 
   @Override
