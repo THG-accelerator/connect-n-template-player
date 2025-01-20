@@ -3,7 +3,6 @@ package com.thg.accelerator25.connectn.ai.onleave;
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
-import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 import java.util.ArrayList;
@@ -46,11 +45,16 @@ public class OnLeaveSlowResponse extends Player {
 
     private void searchMovesAtDepth(Board board, int depth, List<Integer> legalMoves) throws TimeoutException {
         for (int move : legalMoves) {
+            int score;
             if (isTimeUp()) {
                 throw new TimeoutException();
             }
-            // do minimax
-            int score = 0;
+            try {
+                Board newBoard = new Board(board, move, getCounter());
+                score = minimax(newBoard, depth-1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, getCounter().getOther());
+            } catch (InvalidMoveException e){
+                break;
+            }
 
             if (score > bestScoreFound) {
                 bestScoreFound = score;
@@ -79,7 +83,7 @@ public class OnLeaveSlowResponse extends Player {
     }
 
   private int minimax(Board board, int depth, boolean isMaximizing,
-                      int alpha, int beta, Counter currentCounter) throws TimeoutException, InvalidMoveException, InvalidMoveException {
+                      int alpha, int beta, Counter currentCounter) throws TimeoutException, InvalidMoveException {
     if (isTimeUp()) {
       throw new TimeoutException();
     }
@@ -92,7 +96,7 @@ public class OnLeaveSlowResponse extends Player {
       int maxScore = Integer.MIN_VALUE;
       for (int move : moves) {
         Board newBoard = new Board(board, move, currentCounter);
-        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter);
+        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther());
         maxScore = Math.max(maxScore, score);
         alpha = Math.max(alpha, score);
         if (beta <= alpha) {
@@ -103,8 +107,7 @@ public class OnLeaveSlowResponse extends Player {
     } else {
       int minScore = Integer.MAX_VALUE;
       for (int move : moves) {
-
-        Board newBoard = new Board(board, move, currentCounter.getOther());
+        Board newBoard = new Board(board, move, currentCounter);
         int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther());
         minScore = Math.min(minScore, score);
         beta = Math.min(beta, score);
