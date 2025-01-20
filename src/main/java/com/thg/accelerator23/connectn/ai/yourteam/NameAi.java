@@ -5,7 +5,7 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 
-public class NameAi extends Player {
+public class Jack extends Player {
   public NameAi(Counter counter) {
     //TODO: fill in your name here
     super(counter, NameAi.class.getName());
