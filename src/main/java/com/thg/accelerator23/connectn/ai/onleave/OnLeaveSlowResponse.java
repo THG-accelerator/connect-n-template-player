@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class onLeaveSlowResponse extends Player {
+public class OnLeaveSlowResponse extends Player {
 
   // timeout value, gives 500ms buffer
   private static final long TIMEOUT_SECONDS = 9500;
@@ -17,9 +17,9 @@ public class onLeaveSlowResponse extends Player {
   private int bestScoreFound;
   private long startTime;
 
-  public onLeaveSlowResponse(Counter counter) {
+  public OnLeaveSlowResponse(Counter counter) {
     //TODO: fill in your name here
-    super(counter, onLeaveSlowResponse.class.getName());
+    super(counter, OnLeaveSlowResponse.class.getName());
   }
 
   @Override
@@ -52,6 +52,7 @@ public class onLeaveSlowResponse extends Player {
       if (isTimeUp()) {
         throw new TimeoutException();
       }
+
       // do minimax
       int score = 0;
 
