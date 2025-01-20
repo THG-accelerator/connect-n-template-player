@@ -85,4 +85,66 @@ public class OnLeaveSlowResponse extends Player {
     // Placeholder
     return 0;
   }
+
+  private boolean isGameOver(Board board) {
+    Counter[][] counterPlacements = board.getCounterPlacements();
+    if (isBoardFull(counterPlacements)) {
+      return true;
+    }
+    if (hasFourInARow(counterPlacements, Counter.O) || (hasFourInARow(counterPlacements, Counter.X))) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private boolean isBoardFull(Counter[][] counterPlacements) {
+    // returns false if any space is empty, otherwise return true
+      for (Counter[] counterPlacement : counterPlacements) {
+          for (Counter counter : counterPlacement) {
+              if (counter == null) {
+                  return false;
+              }
+          }
+      }
+    return true;
+  }
+
+  private boolean hasFourInARow(Counter[][] counterPlacements, Counter counter) {
+    for (int row = 0; row < counterPlacements.length; row++) {
+      for (int col = 0; col < counterPlacements[row].length; col++) {
+        if (counter == counterPlacements[row][col]) {
+          // check horizontal right
+          if (col + 3 < counterPlacements[row].length &&
+          counter == counterPlacements[row][col + 1] &&
+          counter == counterPlacements[row][col + 2] &&
+          counter == counterPlacements[row][col + 3]) {
+            return true;
+          }
+          // check vertical down
+          if (row + 3 < counterPlacements.length &&
+          counter == counterPlacements[row + 1][col] &&
+          counter == counterPlacements[row + 2][col] &&
+          counter == counterPlacements[row + 3][col]) {
+            return true;
+          }
+          // check diagonal (down, right)
+          if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
+          counter == counterPlacements[row + 1][col + 1] &&
+          counter == counterPlacements[row + 2][col + 2] &&
+          counter == counterPlacements[row + 3][col + 3]) {
+            return true;
+          }
+          // check diagonal (down, left)
+          if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+          counter == counterPlacements[row + 1][col - 1] &&
+          counter == counterPlacements[row + 2][col - 2] &&
+          counter == counterPlacements[row + 3][col - 3]) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 }
