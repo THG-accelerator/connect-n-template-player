@@ -189,7 +189,7 @@ public class OnLeaveSlowResponse extends Player {
                         return true;
                     }
                     // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                             counter == counterPlacements[row + 1][col - 1] &&
                             counter == counterPlacements[row + 2][col - 2] &&
                             counter == counterPlacements[row + 3][col - 3]) {
@@ -230,7 +230,7 @@ public class OnLeaveSlowResponse extends Player {
                     count += 1;
                 }
                 // check diagonal (down, left)
-                if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                         counter == counterPlacements[row + 1][col - 1] &&
                         counter == counterPlacements[row + 2][col - 2] &&
                         ((counterPlacements[row + 3][col - 3] == null && counter == counterPlacements[row][col])
@@ -269,7 +269,7 @@ public class OnLeaveSlowResponse extends Player {
                         count += 1;
                     }
                     // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                             counter == counterPlacements[row + 1][col - 1] &&
                             counter == counterPlacements[row + 2][col - 2] &&
                             null == counterPlacements[row + 3][col - 3]) {
