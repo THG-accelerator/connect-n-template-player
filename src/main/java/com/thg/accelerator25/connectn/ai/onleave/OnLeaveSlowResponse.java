@@ -79,9 +79,14 @@ public class OnLeaveSlowResponse extends Player {
 
   private int evaluatePosition(Board board) {
     Counter[][] counterPlacements = board.getCounterPlacements();
+    Counter counter = getCounter();
     // Cases
     // 4 in a row: player's counter --> Integer.MAX_VALUE; opponent's counter --> Integer.MIN_VALUE
-
+    if (hasFourInARow(counterPlacements, counter)) {
+      return Integer.MAX_VALUE;
+    } else if (hasFourInARow(counterPlacements, counter.getOther())) {
+      return Integer.MIN_VALUE;
+    }
     // Placeholder
     return 0;
   }
