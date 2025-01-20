@@ -2,6 +2,7 @@ package com.thg.accelerator25.connectn.ai.onleave;
 
 import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
+import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 import java.util.ArrayList;
@@ -77,4 +78,41 @@ public class OnLeaveSlowResponse extends Player {
     return legalMoves;
   }
 
+  private int minimax(Board board, int depth, boolean isMaximizing,
+                      int alpha, int beta, Counter currentCounter) throws TimeoutException, InvalidMoveException {
+    if (isTimeUp()) {
+      throw new TimeoutException();
+    }
+    if (depth == 0 || isGameOver()) {
+      return evaluatePosition(board);
+    }
+
+    List<Integer> moves = getLegalMoves(board);
+    if (isMaximizing) {
+      int maxScore = Integer.MIN_VALUE;
+      for (int move : moves) {
+        Board newBoard = new Board(board, move, currentCounter);
+        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter);
+        maxScore = Math.max(maxScore, score);
+        alpha = Math.max(alpha, score);
+        if (beta <= alpha) {
+          break;
+        }
+      }
+      return maxScore;
+    } else {
+      int minScore = Integer.MAX_VALUE;
+      for (int move : moves) {
+
+        Board newBoard = new Board(board, move, currentCounter.getOther());
+        int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther());
+        minScore = Math.min(minScore, score);
+        beta = Math.min(beta, score);
+        if (beta <= alpha) {
+          break;
+        }
+      }
+      return minScore;
+    }
+  }
 }
