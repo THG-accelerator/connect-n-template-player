@@ -11,10 +11,27 @@ public class onLeaveSlowResponse extends Player {
     super(counter, onLeaveSlowResponse.class.getName());
   }
 
+
+
   @Override
   public int makeMove(Board board) {
     //TODO: some crazy analysis
     //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
     return 4;
   }
+
+  private boolean isValidMove(Board board, int column) {
+    if (column < 0 || column >= board.getConfig().getWidth()) {
+      return false;
+    }
+    Counter[][] counterPlacements = board.getCounterPlacements();
+    for (int row = 0; row < board.getConfig().getHeight(); row++) {
+      if (counterPlacements[row][column] == null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 }
