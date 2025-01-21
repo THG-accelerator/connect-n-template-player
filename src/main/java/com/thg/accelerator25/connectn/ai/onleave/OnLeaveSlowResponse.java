@@ -65,7 +65,7 @@ public class OnLeaveSlowResponse extends Player {
             }
             try {
                 Board newBoard = new Board(board, move, getCounter());
-                score = minimax(newBoard, depth-1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, getCounter().getOther());
+                score = minimax(newBoard, depth-1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, getCounter().getOther(), depth-1);
             } catch (InvalidMoveException e){
                 break;
             }
@@ -100,12 +100,12 @@ public class OnLeaveSlowResponse extends Player {
     }
 
   private int minimax(Board board, int depth, boolean isMaximizing,
-                      int alpha, int beta, Counter currentCounter) throws TimeoutException, InvalidMoveException {
+                      int alpha, int beta, Counter currentCounter, int initialDepth) throws TimeoutException, InvalidMoveException {
     if (isTimeUp()) {
       throw new TimeoutException();
     }
     if (depth == 0 || isGameOver(board)) {
-      return evaluatePosition(board);
+      return evaluatePosition(board, initialDepth);
     }
 
     List<Integer> moves = getLegalMoves(board);
@@ -113,7 +113,7 @@ public class OnLeaveSlowResponse extends Player {
       int maxScore = Integer.MIN_VALUE;
       for (int move : moves) {
         Board newBoard = new Board(board, move, currentCounter);
-        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther());
+        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther(), initialDepth);
         maxScore = Math.max(maxScore, score);
         alpha = Math.max(alpha, score);
         if (beta <= alpha) {
@@ -125,7 +125,7 @@ public class OnLeaveSlowResponse extends Player {
       int minScore = Integer.MAX_VALUE;
       for (int move : moves) {
         Board newBoard = new Board(board, move, currentCounter);
-        int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther());
+        int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther(), initialDepth);
         minScore = Math.min(minScore, score);
         beta = Math.min(beta, score);
         if (beta <= alpha) {
@@ -135,10 +135,10 @@ public class OnLeaveSlowResponse extends Player {
       return minScore;
     }
   }
-    private int evaluatePosition(Board board) {
+    private int evaluatePosition(Board board, int initialDepth) {
         Counter[][] counterPlacements = board.getCounterPlacements();
         Counter counter = getCounter();
-        int score = 0;
+        int score = -10*initialDepth;
         // Cases
         // 4 in a row: player's counter --> Integer.MAX_VALUE; opponent's counter --> Integer.MIN_VALUE
         if (hasFourInARow(counterPlacements, counter)) {
@@ -147,11 +147,11 @@ public class OnLeaveSlowResponse extends Player {
             return Integer.MIN_VALUE;
         }
         // 3 in a row and next is empty
-        score += 100 * hasThreeInARow(counterPlacements, counter);
-        score -= 50 * hasThreeInARow(counterPlacements, counter.getOther());
+        score += 1000 * hasThreeInARow(counterPlacements, counter);
+        score -= 700 * hasThreeInARow(counterPlacements, counter.getOther());
         // 2 in a row and both sides are empty
-        score += 30 * hasTwoInARow(counterPlacements, counter);
-        score -= 10 * hasTwoInARow(counterPlacements, counter.getOther());
+        score += 100 * hasTwoInARow(counterPlacements, counter);
+        score -= 50 * hasTwoInARow(counterPlacements, counter.getOther());
         // Placeholder
         return score;
     }
