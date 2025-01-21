@@ -6,6 +6,7 @@ import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -13,8 +14,6 @@ public class OnLeaveSlowResponse extends Player {
 
     // timeout value, gives 500ms buffer
     private static final long TIMEOUT_SECONDS = 9500;
-    private int bestMoveFound;
-    private int bestScoreFound;
     private long startTime;
 
     public OnLeaveSlowResponse(Counter counter) {
@@ -27,26 +26,41 @@ public class OnLeaveSlowResponse extends Player {
         //TODO: some crazy analysis
         //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
         startTime = System.currentTimeMillis();
-        bestMoveFound = 4;
-        bestScoreFound = Integer.MIN_VALUE;
+        int bestMoveFound = 4;
+        int bestScoreFound = Integer.MIN_VALUE;
+        int bestDepthFound = 0;
+        // for a given depth, first value is the best move, second value is the best score
+        List<Integer> depthBest;
 
         List<Integer> legalMoves = getLegalMoves(board);
 
-        for (int depth = 1; !isTimeUp(); depth++) {
+        for (int depth = 7; !isTimeUp(); depth++) {
             try {
-                searchMovesAtDepth(board, depth, legalMoves);
+                depthBest = searchMovesAtDepth(board, depth, legalMoves);
+                if (depthBest.get(1) > bestScoreFound) {
+                    bestMoveFound = depthBest.get(0);
+                    bestScoreFound = depthBest.get(1);
+                    bestDepthFound = depth;
+                }
             } catch (TimeoutException e) {
                 break;
             }
         }
+        System.out.println("Best move found: " + bestMoveFound);
+        System.out.println("Best score found: " + bestScoreFound);
+        System.out.println("Best depth found: " + bestDepthFound);
         return bestMoveFound;
     }
 
 
-    private void searchMovesAtDepth(Board board, int depth, List<Integer> legalMoves) throws TimeoutException {
+    private List<Integer> searchMovesAtDepth(Board board, int depth, List<Integer> legalMoves) throws TimeoutException {
+        int depthBestScore = Integer.MIN_VALUE;
+        int depthBestMove = 4;
+        System.out.println("Searching for moves at depth " + depth);
         for (int move : legalMoves) {
             int score;
             if (isTimeUp()) {
+                System.out.println("Timeout, use previous best result");
                 throw new TimeoutException();
             }
             try {
@@ -56,11 +70,14 @@ public class OnLeaveSlowResponse extends Player {
                 break;
             }
 
-            if (score > bestScoreFound) {
-                bestScoreFound = score;
-                bestMoveFound = move;
+            if (score > depthBestScore) {
+                depthBestScore = score;
+                depthBestMove = move;
             }
         }
+        System.out.println("Best score found: " + depthBestScore);
+        System.out.println("Best move found: " + depthBestMove);
+        return Arrays.asList(depthBestMove, depthBestScore);
     }
 
     private boolean isTimeUp() {
@@ -189,7 +206,7 @@ public class OnLeaveSlowResponse extends Player {
                         return true;
                     }
                     // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                             counter == counterPlacements[row + 1][col - 1] &&
                             counter == counterPlacements[row + 2][col - 2] &&
                             counter == counterPlacements[row + 3][col - 3]) {
@@ -230,7 +247,7 @@ public class OnLeaveSlowResponse extends Player {
                     count += 1;
                 }
                 // check diagonal (down, left)
-                if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                         counter == counterPlacements[row + 1][col - 1] &&
                         counter == counterPlacements[row + 2][col - 2] &&
                         ((counterPlacements[row + 3][col - 3] == null && counter == counterPlacements[row][col])
@@ -269,7 +286,7 @@ public class OnLeaveSlowResponse extends Player {
                         count += 1;
                     }
                     // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 <= 0 &&
+                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
                             counter == counterPlacements[row + 1][col - 1] &&
                             counter == counterPlacements[row + 2][col - 2] &&
                             null == counterPlacements[row + 3][col - 3]) {
