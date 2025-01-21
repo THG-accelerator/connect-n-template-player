@@ -11,6 +11,20 @@ public class GoodAiMate extends Player {
     super(counter, GoodAiMate.class.getName());
   }
 
+  public int getScore(Board board) {
+    int score = 0;
+    Window[] windows;
+
+    //Centre Column - for now we will treat as more important - for a 10-column board there are two central columns
+    Counter[] centre_array_left;
+    Counter[] centre_array_right;
+
+
+
+    return score;
+
+  }
+
   @Override
   public int makeMove(Board board) {
     //TODO: some crazy analysis
