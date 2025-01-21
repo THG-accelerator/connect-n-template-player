@@ -220,81 +220,142 @@ public class OnLeaveSlowResponse extends Player {
 
     private int hasThreeInARow(Counter[][] counterPlacements, Counter counter) {
         int count = 0;
+
         for (int row = 0; row < counterPlacements.length; row++) {
             for (int col = 0; col < counterPlacements[row].length; col++) {
-                // check horizontal right
-                if (col + 3 < counterPlacements[row].length &&
-                        counter == counterPlacements[row][col + 1] &&
-                        counter == counterPlacements[row][col + 2] &&
-                        ((counterPlacements[row][col + 3] == null && counter == counterPlacements[row][col]) ||
-                                (counterPlacements[row][col] == null && counter == counterPlacements[row][col + 3]))) {
-                    count += 1;
+                // Horizontal right check (4 consecutive cells)
+                if (col + 3 < counterPlacements[row].length) {
+                    int filled = 0;
+                    // Count how many of the 4 positions are filled with the same counter
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row][col + i]) {
+                            filled++;
+                        }
+                    }
+                    // If there are exactly 3 filled and 1 empty, count it
+                    if (filled == 3 && counterPlacements[row][col + 3] == null) {
+                        count += 1;
+                    }
                 }
-                // check vertical down
-                if (row + 3 < counterPlacements.length &&
-                        counter == counterPlacements[row + 1][col] &&
-                        counter == counterPlacements[row + 2][col] &&
-                        ((counterPlacements[row + 3][col] == null && counter == counterPlacements[row][col]) ||
-                                (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col]))) {
-                    count += 1;
+
+                // Vertical down check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length) {
+                    int filled = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col]) {
+                            filled++;
+                        }
+                    }
+                    if (filled == 3 && counterPlacements[row + 3][col] == null) {
+                        count += 1;
+                    }
                 }
-                // check diagonal (down, right)
-                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
-                        counter == counterPlacements[row + 1][col + 1] &&
-                        counter == counterPlacements[row + 2][col + 2] &&
-                        ((counterPlacements[row + 3][col + 3] == null && counter == counterPlacements[row][col]) ||
-                                (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col + 3]))) {
-                    count += 1;
+
+                // Diagonal (down-right) check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
+                    int filled = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col + i]) {
+                            filled++;
+                        }
+                    }
+                    if (filled == 3 && counterPlacements[row + 3][col + 3] == null) {
+                        count += 1;
+                    }
                 }
-                // check diagonal (down, left)
-                if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
-                        counter == counterPlacements[row + 1][col - 1] &&
-                        counter == counterPlacements[row + 2][col - 2] &&
-                        ((counterPlacements[row + 3][col - 3] == null && counter == counterPlacements[row][col])
-                                || (counterPlacements[row][col] == null && counter == counterPlacements[row + 3][col - 3]))) {
-                    count += 1;
+
+                // Diagonal (down-left) check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length && col - 3 >= 0) {
+                    int filled = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col - i]) {
+                            filled++;
+                        }
+                    }
+                    if (filled == 3 && counterPlacements[row + 3][col - 3] == null) {
+                        count += 1;
+                    }
                 }
             }
         }
+
         return count;
     }
 
     private int hasTwoInARow(Counter[][] counterPlacements, Counter counter) {
         int count = 0;
+        Counter opponentCounter = (counter == Counter.O) ? Counter.X : Counter.O;
+
         for (int row = 0; row < counterPlacements.length; row++) {
             for (int col = 0; col < counterPlacements[row].length; col++) {
-                if (counterPlacements[row][col] == null) {
-                    // check horizontal right
-                    if (col + 3 < counterPlacements[row].length &&
-                            counter == counterPlacements[row][col + 1] &&
-                            counter == counterPlacements[row][col + 2] &&
-                            null == counterPlacements[row][col + 3]) {
+                // Horizontal right check (4 consecutive cells)
+                if (col + 3 < counterPlacements[row].length) {
+                    int filled = 0;
+                    int emptyOrOpponent = 0;
+                    // Count how many of the 4 positions are filled with the same counter
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row][col + i]) {
+                            filled++;
+                        } else if (counterPlacements[row][col + i] == null || counterPlacements[row][col + i] == opponentCounter) {
+                            emptyOrOpponent++;
+                        }
+                    }
+                    // If there are exactly 2 filled and 2 empty or opponent, count it
+                    if (filled == 2 && emptyOrOpponent == 2) {
                         count += 1;
                     }
-                    // check vertical down
-                    if (row + 3 < counterPlacements.length &&
-                            counter == counterPlacements[row + 1][col] &&
-                            counter == counterPlacements[row + 2][col] &&
-                            null == counterPlacements[row + 3][col]) {
+                }
+
+                // Vertical down check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length) {
+                    int filled = 0;
+                    int emptyOrOpponent = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col]) {
+                            filled++;
+                        } else if (counterPlacements[row + i][col] == null || counterPlacements[row + i][col] == opponentCounter) {
+                            emptyOrOpponent++;
+                        }
+                    }
+                    if (filled == 2 && emptyOrOpponent == 2) {
                         count += 1;
                     }
-                    // check diagonal (down, right)
-                    if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
-                            counter == counterPlacements[row + 1][col + 1] &&
-                            counter == counterPlacements[row + 2][col + 2] &&
-                            null == counterPlacements[row + 3][col + 3]) {
+                }
+
+                // Diagonal (down-right) check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
+                    int filled = 0;
+                    int emptyOrOpponent = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col + i]) {
+                            filled++;
+                        } else if (counterPlacements[row + i][col + i] == null || counterPlacements[row + i][col + i] == opponentCounter) {
+                            emptyOrOpponent++;
+                        }
+                    }
+                    if (filled == 2 && emptyOrOpponent == 2) {
                         count += 1;
                     }
-                    // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
-                            counter == counterPlacements[row + 1][col - 1] &&
-                            counter == counterPlacements[row + 2][col - 2] &&
-                            null == counterPlacements[row + 3][col - 3]) {
+                }
+
+                // Diagonal (down-left) check (4 consecutive cells)
+                if (row + 3 < counterPlacements.length && col - 3 >= 0) {
+                    int filled = 0;
+                    int emptyOrOpponent = 0;
+                    for (int i = 0; i < 4; i++) {
+                        if (counter == counterPlacements[row + i][col - i]) {
+                            filled++;
+                        } else if (counterPlacements[row + i][col - i] == null || counterPlacements[row + i][col - i] == opponentCounter) {
+                            emptyOrOpponent++;
+                        }
+                    }
+                    if (filled == 2 && emptyOrOpponent == 2) {
                         count += 1;
                     }
                 }
             }
         }
+
         return count;
     }
 }
