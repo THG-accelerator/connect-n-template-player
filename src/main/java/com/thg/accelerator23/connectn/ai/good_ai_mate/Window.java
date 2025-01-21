@@ -4,10 +4,13 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 
 public class Window {
     private int score;
-    private final Counter[] array;
+    private final Counter[] array = new Counter[4];
 
-    public Window(Counter[] array){
-        this.array = array;
+    public Window(Counter a, Counter b, Counter c, Counter d) {
+        this.array[0] = a;
+        this.array[1] = b;
+        this.array[2] = c;
+        this.array[3] = d;
     }
 
     public int getWindowScore(){
