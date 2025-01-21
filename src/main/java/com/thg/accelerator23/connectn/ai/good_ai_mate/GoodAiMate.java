@@ -11,6 +11,14 @@ public class GoodAiMate extends Player {
     super(counter, GoodAiMate.class.getName());
   }
 
+  public int getScore(Board board) {
+    int score = 0;
+
+    //Centre Column - for now we will treat as more important
+    return 0;
+
+  }
+
   @Override
   public int makeMove(Board board) {
     //TODO: some crazy analysis
