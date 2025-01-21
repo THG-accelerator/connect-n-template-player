@@ -1,20 +1,34 @@
 package com.thg.accelerator23.connectn.ai.bibblebobbleshrimpbot;
 
-import com.thehutgroup.accelerator.connectn.player.Board;
-import com.thehutgroup.accelerator.connectn.player.Counter;
-import com.thehutgroup.accelerator.connectn.player.Player;
+import com.thehutgroup.accelerator.connectn.player.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BibbleBobbleShrimpBot extends Player {
   public BibbleBobbleShrimpBot(Counter counter) {
-    //TODO: fill in your name here
     super(counter, BibbleBobbleShrimpBot.class.getName());
   }
+    private int randomNum(int max) {
+      return (int) (Math.random() * max);
+    }
 
   @Override
   public int makeMove(Board board) {
-    //TODO: some crazy analysis
-    //TODO: make sure said analysis uses less than 2G of heap and returns within 10 seconds on whichever machine is running it
-    return 4;
+
+    GameConfig config = board.getConfig();
+    int width = config.getWidth();
+    int height = config.getHeight();
+
+    List<Integer> validColumns = new ArrayList<>();
+    for (int i = 0; i < width; i++) {
+      Position position = new Position(i, height - 1);
+      if (!board.hasCounterAtPosition(position)) {
+        validColumns.add(i);
+      }
+    }
+
+    return randomNum(validColumns.size());
   }
 }
