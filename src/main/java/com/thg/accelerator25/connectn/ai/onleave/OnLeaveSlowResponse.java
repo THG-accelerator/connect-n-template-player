@@ -165,6 +165,14 @@ public class OnLeaveSlowResponse extends Player {
         // Centre control
         score += centreControlColumn(counterPlacements, counter);
         score -= centreControlColumn(counterPlacements, counter.getOther());
+
+        // Additional offensive strategies
+        // Additional offensive strategies
+        score += evaluateStackedPairs(counterPlacements, counter);
+        score += evaluateTriangleSetup(counterPlacements, counter);
+        score += evaluateDoubleThreatSetup(counterPlacements, counter);
+        score += evaluateBottomRowControl(counterPlacements, counter);
+
         return score;
     }
 
@@ -477,17 +485,94 @@ public class OnLeaveSlowResponse extends Player {
         return count;
     }
 
-    private int contreControlColumnRow(Counter[][] counterPlacements, Counter counter){
-        int count = 0;
-        int[] columnWeight = {0, 1, 2, 3, 4, 4, 3, 2, 1, 0};
-        int[] rowWeight = {0, 1, 2, 3, 3, 2, 1, 0};
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
-                if (counterPlacements[row][col] == counter) {
-                    count = count + columnWeight[col] + rowWeight[row];
+    // Evaluate pairs of pieces stacked vertically (good for building)
+    private int evaluateStackedPairs(Counter[][] counterPlacements, Counter counter) {
+        int score = 0;
+        for (int col = 0; col < counterPlacements[0].length; col++) {
+            for (int row = counterPlacements.length - 1; row > 0; row--) {
+                if (counterPlacements[row][col] == counter &&
+                        counterPlacements[row-1][col] == counter) {
+                    score += 50;  // Bonus for vertical pairs
                 }
             }
         }
-        return count;
+        return score;
     }
+
+    // Evaluate triangle setups (three pieces forming a triangle)
+    private int evaluateTriangleSetup(Counter[][] counterPlacements, Counter counter) {
+        int score = 0;
+        for (int row = counterPlacements.length - 1; row > 1; row--) {
+            for (int col = 1; col < counterPlacements[0].length - 1; col++) {
+                if (counterPlacements[row][col] == counter) {
+                    // Check for triangle pattern
+                    if ((counterPlacements[row-1][col-1] == counter &&
+                            counterPlacements[row-1][col+1] == counter) ||
+                            (counterPlacements[row-1][col] == counter &&
+                                    counterPlacements[row-2][col] == counter)) {
+                        score += 150;  // Bonus for triangle formation
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
+    // Evaluate positions that could lead to double threats
+    private int evaluateDoubleThreatSetup(Counter[][] counterPlacements, Counter counter) {
+        int score = 0;
+        for (int row = 0; row < counterPlacements.length - 1; row++) {
+            for (int col = 0; col < counterPlacements[0].length - 3; col++) {
+                if (isDoubleThreatPattern(counterPlacements, row, col, counter)) {
+                    score += 200;  // Significant bonus for potential double threats
+                }
+            }
+        }
+        return score;
+    }
+
+    private boolean isDoubleThreatPattern(Counter[][] board, int row, int col, Counter counter) {
+        // Check for patterns that could lead to double threats
+        // Example: X_X_ pattern with support underneath
+        if (col + 3 >= board[0].length) return false;
+
+        boolean hasSupport = (row == board.length - 1) ||
+                (board[row + 1][col] != null &&
+                        board[row + 1][col + 2] != null);
+
+        return hasSupport &&
+                board[row][col] == counter &&
+                board[row][col + 1] == null &&
+                board[row][col + 2] == counter &&
+                board[row][col + 3] == null;
+    }
+
+    // Evaluate control of bottom row (foundation for building)
+    private int evaluateBottomRowControl(Counter[][] counterPlacements, Counter counter) {
+        int score = 0;
+        int bottomRow = counterPlacements.length - 1;
+
+        for (int col = 0; col < counterPlacements[0].length; col++) {
+            if (counterPlacements[bottomRow][col] == counter) {
+                // More value for central positions
+                int centerDistance = Math.abs(col - counterPlacements[0].length/2);
+                score += 75 - (10 * centerDistance);  // More points for center
+            }
+        }
+        return score;
+    }
+
+//    private int contreControlColumnRow(Counter[][] counterPlacements, Counter counter){
+//        int count = 0;
+//        int[] columnWeight = {0, 1, 2, 3, 4, 4, 3, 2, 1, 0};
+//        int[] rowWeight = {0, 1, 2, 3, 3, 2, 1, 0};
+//        for (int row = 0; row < counterPlacements.length; row++) {
+//            for (int col = 0; col < counterPlacements[row].length; col++) {
+//                if (counterPlacements[row][col] == counter) {
+//                    count = count + columnWeight[col] + rowWeight[row];
+//                }
+//            }
+//        }
+//        return count;
+//    }
 }
