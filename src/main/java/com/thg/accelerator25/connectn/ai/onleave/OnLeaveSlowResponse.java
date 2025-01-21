@@ -33,7 +33,7 @@ public class OnLeaveSlowResponse extends Player {
         // for a given depth, first value is the best move, second value is the best score
         List<Integer> depthBest;
 
-        for (int depth = 7; !isTimeUp(); depth++) {
+        for (int depth = 2; !isTimeUp(); depth++) {
             try {
                 depthBest = searchMovesAtDepth(board, depth, legalMoves);
                 if (depthBest.get(1) > bestScoreFound) {
@@ -162,6 +162,9 @@ public class OnLeaveSlowResponse extends Player {
         score += 100 * hasTwoInARow(counterPlacements, counter);
         score -= 100 * hasTwoInARow(counterPlacements, counter.getOther());  // Make this equally weighted
 
+        // Centre control
+        score += centreControlColumn(counterPlacements, counter);
+        score -= centreControlColumn(counterPlacements, counter.getOther());
         return score;
     }
 
@@ -234,20 +237,25 @@ public class OnLeaveSlowResponse extends Player {
             for (int col = 0; col < counterPlacements[row].length; col++) {
                 // Horizontal check
                 if (col + 3 < counterPlacements[row].length) {
-                    // Check all possible three-in-four patterns
                     for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
                         int filled = 0;
                         boolean validPattern = true;
+                        boolean validMove = true;
 
                         for (int i = 0; i < 4; i++) {
                             if (i == emptyPos) {
-                                // This position should be empty
                                 if (counterPlacements[row][col + i] != null) {
                                     validPattern = false;
                                     break;
                                 }
+                                // Check if move is valid (either bottom row or has support)
+                                if (row == counterPlacements.length - 1 ||
+                                        counterPlacements[row + 1][col + i] != null) {
+                                    validMove = true;
+                                } else {
+                                    validMove = false;
+                                }
                             } else {
-                                // This position should have our counter
                                 if (counter == counterPlacements[row][col + i]) {
                                     filled++;
                                 } else {
@@ -256,7 +264,7 @@ public class OnLeaveSlowResponse extends Player {
                                 }
                             }
                         }
-                        if (validPattern && filled == 3) {
+                        if (validPattern && validMove && filled == 3) {
                             count++;
                         }
                     }
@@ -289,8 +297,77 @@ public class OnLeaveSlowResponse extends Player {
                     }
                 }
 
-                // Add similar checks for diagonals
-                // ... (following same pattern for both diagonal directions)
+                // Diagonal check
+                // Diagonal (down-right) check
+                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
+                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                        int filled = 0;
+                        boolean validPattern = true;
+                        boolean validMove = true;
+
+                        for (int i = 0; i < 4; i++) {
+                            if (i == emptyPos) {
+                                // Check if empty position is valid (has support or is bottom row)
+                                if (counterPlacements[row + i][col + i] != null) {
+                                    validPattern = false;
+                                    break;
+                                }
+                                // Check if move is valid (either bottom row or has support)
+                                if (row + i == counterPlacements.length - 1 ||
+                                        counterPlacements[row + i + 1][col + i] != null) {
+                                    validMove = true;
+                                } else {
+                                    validMove = false;
+                                }
+                            } else {
+                                if (counter == counterPlacements[row + i][col + i]) {
+                                    filled++;
+                                } else {
+                                    validPattern = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (validPattern && validMove && filled == 3) {
+                            count++;
+                        }
+                    }
+                }
+
+                // Diagonal (down-left) check
+                if (row + 3 < counterPlacements.length && col - 3 >= 0) {
+                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                        int filled = 0;
+                        boolean validPattern = true;
+                        boolean validMove = true;
+
+                        for (int i = 0; i < 4; i++) {
+                            if (i == emptyPos) {
+                                if (counterPlacements[row + i][col - i] != null) {
+                                    validPattern = false;
+                                    break;
+                                }
+                                // Check if move is valid (either bottom row or has support)
+                                if (row + i == counterPlacements.length - 1 ||
+                                        counterPlacements[row + i + 1][col - i] != null) {
+                                    validMove = true;
+                                } else {
+                                    validMove = false;
+                                }
+                            } else {
+                                if (counter == counterPlacements[row + i][col - i]) {
+                                    filled++;
+                                } else {
+                                    validPattern = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (validPattern && validMove && filled == 3) {
+                            count++;
+                        }
+                    }
+                }
             }
         }
         return count;
@@ -298,78 +375,119 @@ public class OnLeaveSlowResponse extends Player {
 
     private int hasTwoInARow(Counter[][] counterPlacements, Counter counter) {
         int count = 0;
-        Counter opponentCounter = (counter == Counter.O) ? Counter.X : Counter.O;
 
         for (int row = 0; row < counterPlacements.length; row++) {
             for (int col = 0; col < counterPlacements[row].length; col++) {
                 // Horizontal right check (4 consecutive cells)
                 if (col + 3 < counterPlacements[row].length) {
                     int filled = 0;
-                    int emptyOrOpponent = 0;
+                    int empty = 0;
                     // Count how many of the 4 positions are filled with the same counter
                     for (int i = 0; i < 4; i++) {
                         if (counter == counterPlacements[row][col + i]) {
                             filled++;
-                        } else if (counterPlacements[row][col + i] == null || counterPlacements[row][col + i] == opponentCounter) {
-                            emptyOrOpponent++;
+                        } else if (counterPlacements[row][col + i] == null) {
+                            empty++;
                         }
                     }
-                    // If there are exactly 2 filled and 2 empty or opponent, count it
-                    if (filled == 2 && emptyOrOpponent == 2) {
+                    // If there are exactly 2 filled and 2 empty (no opponent pieces), count it
+                    if (filled == 2 && empty == 2) {
                         count += 1;
                     }
                 }
 
-                // Vertical down check (4 consecutive cells)
+                // Vertical down check
                 if (row + 3 < counterPlacements.length) {
                     int filled = 0;
-                    int emptyOrOpponent = 0;
+                    int empty = 0;
                     for (int i = 0; i < 4; i++) {
                         if (counter == counterPlacements[row + i][col]) {
                             filled++;
-                        } else if (counterPlacements[row + i][col] == null || counterPlacements[row + i][col] == opponentCounter) {
-                            emptyOrOpponent++;
+                        } else if (counterPlacements[row + i][col] == null) {
+                            empty++;
                         }
                     }
-                    if (filled == 2 && emptyOrOpponent == 2) {
+                    if (filled == 2 && empty == 2) {
                         count += 1;
                     }
                 }
 
-                // Diagonal (down-right) check (4 consecutive cells)
+                // Diagonal (down-right) check
                 if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
                     int filled = 0;
-                    int emptyOrOpponent = 0;
+                    int empty = 0;
+                    boolean validEmpty = true;
+
                     for (int i = 0; i < 4; i++) {
                         if (counter == counterPlacements[row + i][col + i]) {
                             filled++;
-                        } else if (counterPlacements[row + i][col + i] == null || counterPlacements[row + i][col + i] == opponentCounter) {
-                            emptyOrOpponent++;
+                        } else if (counterPlacements[row + i][col + i] == null) {
+                            // Check if empty position has support
+                            if (row + i == counterPlacements.length - 1 ||
+                                    counterPlacements[row + i + 1][col + i] != null) {
+                                empty++;
+                            } else {
+                                validEmpty = false;
+                            }
                         }
                     }
-                    if (filled == 2 && emptyOrOpponent == 2) {
-                        count += 1;
+                    if (filled == 2 && empty == 2 && validEmpty) {
+                        count++;
                     }
                 }
 
-                // Diagonal (down-left) check (4 consecutive cells)
+                // Diagonal (down-left) check
                 if (row + 3 < counterPlacements.length && col - 3 >= 0) {
                     int filled = 0;
-                    int emptyOrOpponent = 0;
+                    int empty = 0;
+                    boolean validEmpty = true;
+
                     for (int i = 0; i < 4; i++) {
                         if (counter == counterPlacements[row + i][col - i]) {
                             filled++;
-                        } else if (counterPlacements[row + i][col - i] == null || counterPlacements[row + i][col - i] == opponentCounter) {
-                            emptyOrOpponent++;
+                        } else if (counterPlacements[row + i][col - i] == null) {
+                            // Check if empty position has support
+                            if (row + i == counterPlacements.length - 1 ||
+                                    counterPlacements[row + i + 1][col - i] != null) {
+                                empty++;
+                            } else {
+                                validEmpty = false;
+                            }
                         }
                     }
-                    if (filled == 2 && emptyOrOpponent == 2) {
-                        count += 1;
+                    if (filled == 2 && empty == 2 && validEmpty) {
+                        count++;
                     }
                 }
             }
         }
+        return count;
+    }
 
+    private int centreControlColumn(Counter[][] counterPlacements, Counter counter){
+        int count = 0;
+        int[] columnWeight = {0, 1, 2, 3, 4, 4, 3, 2, 1, 0};
+        for (int row = 0; row < counterPlacements.length; row++) {
+            for (int col = 0; col < counterPlacements[row].length; col++) {
+                if (counterPlacements[row][col] == counter) {
+                    count +=  columnWeight[col];
+                }
+            }
+        }
+        return count;
+    }
+
+    private int contreControlColumnRow(Counter[][] counterPlacements, Counter counter){
+        int count = 0;
+        int[] columnWeight = {0, 1, 2, 3, 4, 4, 3, 2, 1, 0};
+        int[] rowWeight = {0, 1, 2, 3, 3, 2, 1, 0};
+        for (int row = 0; row < counterPlacements.length; row++) {
+            for (int col = 0; col < counterPlacements[row].length; col++) {
+                if (counterPlacements[row][col] == counter) {
+                    count = count + columnWeight[col] + rowWeight[row];
+                }
+            }
+        }
         return count;
     }
 }
