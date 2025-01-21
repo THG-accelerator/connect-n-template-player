@@ -33,7 +33,7 @@ public class OnLeaveSlowResponse extends Player {
         // for a given depth, first value is the best move, second value is the best score
         List<Integer> depthBest;
 
-        for (int depth = 2; !isTimeUp(); depth++) {
+        for (int depth = 2; !isTimeUp() && depth < 80; depth++) {
             try {
                 depthBest = searchMovesAtDepth(board, depth, legalMoves);
                 if (depthBest.get(1) > bestScoreFound) {
