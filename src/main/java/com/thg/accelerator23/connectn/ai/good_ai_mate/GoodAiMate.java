@@ -4,6 +4,8 @@ import com.thehutgroup.accelerator.connectn.player.Board;
 import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
+import java.util.ArrayList;
+
 
 public class GoodAiMate extends Player {
   public GoodAiMate(Counter counter) {
@@ -13,11 +15,11 @@ public class GoodAiMate extends Player {
 
   public int getScore(Board board) {
     int score = 0;
-    Window[] windows;
+    ArrayList<Window> windows = new ArrayList<>();
 
     //Centre Column - for now we will treat as more important - for a 10-column board there are two central columns
-    Counter[] centre_array_left;
-    Counter[] centre_array_right;
+    Window centre_array_left;
+    Window centre_array_right;
 
 
 
