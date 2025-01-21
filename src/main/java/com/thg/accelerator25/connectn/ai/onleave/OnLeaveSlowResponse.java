@@ -155,23 +155,26 @@ public class OnLeaveSlowResponse extends Player {
             return Integer.MIN_VALUE + 1;  // Not quite as bad as an actual loss
         }
 
-        score += 1000 * myThrees;
-        score -= 1000 * oppThrees;  // Make this equally weighted
+        score += 2000 * myThrees;
+        score -= 2000 * oppThrees;  // Make this equally weighted
 
         // Two in a row scenarios
-        score += 100 * hasTwoInARow(counterPlacements, counter);
-        score -= 100 * hasTwoInARow(counterPlacements, counter.getOther());  // Make this equally weighted
+        score += 400 * hasTwoInARow(counterPlacements, counter);
+        score -= 400 * hasTwoInARow(counterPlacements, counter.getOther());  // Make this equally weighted
 
         // Centre control
         score += centreControlColumn(counterPlacements, counter);
         score -= centreControlColumn(counterPlacements, counter.getOther());
 
         // Additional offensive strategies
-        // Additional offensive strategies
         score += evaluateStackedPairs(counterPlacements, counter);
+        score -= evaluateStackedPairs(counterPlacements, counter.getOther());
         score += evaluateTriangleSetup(counterPlacements, counter);
+        score -= evaluateTriangleSetup(counterPlacements, counter.getOther());
         score += evaluateDoubleThreatSetup(counterPlacements, counter);
+        score -= evaluateDoubleThreatSetup(counterPlacements, counter.getOther());
         score += evaluateBottomRowControl(counterPlacements, counter);
+        score -= evaluateBottomRowControl(counterPlacements, counter.getOther());
 
         return score;
     }
