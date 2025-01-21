@@ -12,10 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GetScoreTest {
     @Test
     public void test() {
-        Counter[][] placement = new Counter[][] {{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null},{Counter.X,Counter.O,Counter.X,Counter.O,null,null}};
-        GameConfig myConfig = new GameConfig(10,6,4);
-        Board board = new Board(placement,myConfig);
         GoodAiMate ai = new GoodAiMate(Counter.X);
-        assertEquals(0,ai.getScore(board));
+        assertEquals(704,ai.getScore());
     }
 }
