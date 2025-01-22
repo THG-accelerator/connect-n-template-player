@@ -20,7 +20,7 @@ public class forScoring {
         for (int i = 1; i < 4; i++) {
             Position newPos = new Position(pos.getX(), pos.getY() - i);
             if (!board.isWithinBoard(newPos)) {
-                break;
+                continue;
             }
             cline.add(grid[newPos.getX()][newPos.getY()]);
         }
@@ -59,11 +59,8 @@ public class forScoring {
             scores.add(getRunsInLine(cline, counter));
         }
         scores.add(getRunsInLine(hline, counter));
-
         scores.add(getRunsInLine(diagLline, counter));
-
         scores.add(getRunsInLine(diagRline, counter));
-
         return calculateScore(scores, counter);
     }
 
@@ -92,6 +89,7 @@ public class forScoring {
         if (current != null && Math.max(currentRunLength, 1) > inARow.get(current)) {
             inARow.put(current, Math.max(currentRunLength, 1));
         }
+        System.out.println(line);
         return inARow;
     }
 
