@@ -10,18 +10,15 @@ import java.util.ArrayList;
 
 public class GoodAiMate extends Player {
   //Fields we only want to calculate once (will this work or the player instantiated each time?)
-  private final ArrayList<Position> horizontalQuadruplets;
-  private final ArrayList<Position> verticalQuadruplets;
-  private final ArrayList<Position> positiveDiagonalQuadruplets;
-  private final ArrayList<Position> negativeDiagonalQuadruplets;
+  private final ArrayList<Position> quadruplets;
 
   public GoodAiMate(Counter counter) {
     //TODO: fill in your name here
     super(counter, GoodAiMate.class.getName());
-    horizontalQuadruplets = setHorizontalQuadruplets(10,8,4);
-    verticalQuadruplets = setVerticalQuadruplets(10,8,4);
-    positiveDiagonalQuadruplets = setPositiveDiagonalQuadruplets(10,8,4);
-    negativeDiagonalQuadruplets = setNegativeDiagonalQuadruplets(10,8,4);
+    this.quadruplets = setHorizontalQuadruplets(10,8,4);
+    quadruplets.addAll(setVerticalQuadruplets(10,8,4));
+    quadruplets.addAll(setPositiveDiagonalQuadruplets(10,8,4));
+    quadruplets.addAll(setNegativeDiagonalQuadruplets(10,8,4));
   }
 
   private ArrayList<Position> setHorizontalQuadruplets(int width, int height, int nToWin) {
@@ -38,7 +35,7 @@ public class GoodAiMate extends Player {
     return horizontalQuadruplets;
   }
 
-  public ArrayList<Position> setVerticalQuadruplets(int width, int height, int nToWin) {
+  private ArrayList<Position> setVerticalQuadruplets(int width, int height, int nToWin) {
     ArrayList<Position> verticalQuadruplets = new ArrayList<>();
     for (int col = 0; col < width; col++){
       for (int row = 0; row <= height - nToWin; row++) {
@@ -51,7 +48,7 @@ public class GoodAiMate extends Player {
     return verticalQuadruplets;
   }
 
-  public ArrayList<Position> setPositiveDiagonalQuadruplets(int width, int height, int nToWin) {
+  private ArrayList<Position> setPositiveDiagonalQuadruplets(int width, int height, int nToWin) {
     ArrayList<Position> positiveDiagonalQuadruplets = new ArrayList<>();
     //Positive diagonals (col and row increase)
     for (int row = 0; row <= height - nToWin; row++) {
@@ -65,7 +62,7 @@ public class GoodAiMate extends Player {
     return positiveDiagonalQuadruplets;
   }
 
-  public ArrayList<Position> setNegativeDiagonalQuadruplets(int width, int height, int nToWin) {
+  private ArrayList<Position> setNegativeDiagonalQuadruplets(int width, int height, int nToWin) {
     ArrayList<Position> negativeDiagonalQuadruplets = new ArrayList<>();
     //Negative diagonals (col decreases, row increases)
     for (int col = width - 1; col >= 3; col--) {
@@ -79,8 +76,20 @@ public class GoodAiMate extends Player {
     return negativeDiagonalQuadruplets;
   }
 
-  public int getScore() {
-    return this.horizontalQuadruplets.size() + this.verticalQuadruplets.size() + this.negativeDiagonalQuadruplets.size() + this.positiveDiagonalQuadruplets.size();
+  public int getScore(Board board) {
+    int score = 0;
+    for (int i = 0; i < this.quadruplets.size() / 4; i++){
+      Counter a = board.getCounterAtPosition(quadruplets.get(i*4));
+      Counter b = board.getCounterAtPosition(quadruplets.get(i*4+1));
+      Counter c = board.getCounterAtPosition(quadruplets.get(i*4+2));
+      Counter d = board.getCounterAtPosition(quadruplets.get(i*4+3));
+      score = score + placeholderScoreFunction(a,b,c,d);
+    }
+    return score;
+  }
+
+  public int placeholderScoreFunction(Counter a, Counter b, Counter c, Counter d) {
+    return 1;
   }
 
   //public boolean winningMove(Board board) {  }
