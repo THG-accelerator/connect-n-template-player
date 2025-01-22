@@ -157,31 +157,32 @@ public class OnLeaveSlowResponse extends Player {
                 List<Integer> myThreesHere = hasThreeInARow(counterPlacements, row, col, counter);
                 List<Integer> oppThreesHere = hasThreeInARow(counterPlacements, row, col, counter.getOther());
                 myThrees += myThreesHere.get(0) + myThreesHere.get(1);
-                score += 10000 * myThreesHere.get(0);
-                score += 5000 * myThreesHere.get(1);
+                myThrees += myThreesHere.get(0) + myThreesHere.get(1);
+                score += 5000 * myThreesHere.get(0);
+                score += 2500 * myThreesHere.get(1);
                 oppThrees += oppThreesHere.get(0) + oppThreesHere.get(1);
-                score -= 10000 * oppThreesHere.get(0);
-                score -= 5000 * oppThreesHere.get(1);
+                score -= 5000 * oppThreesHere.get(0);
+                score -= 2500 * oppThreesHere.get(1);
 
                 // Two in a row scenarios
                 List<Integer> myTwosHere = hasTwoInARow(counterPlacements, row, col, counter);
                 List<Integer> oppTwosHere = hasTwoInARow(counterPlacements, row, col, counter.getOther());
-                score += 2000 * myTwosHere.get(0);
-                score += 1000 * myTwosHere.get(1);
-                score -= 2000 * oppTwosHere.get(0);
-                score -= 1000 * oppTwosHere.get(1);
+                score += 1500 * myTwosHere.get(0);
+                score += 750 * myTwosHere.get(1);
+                score -= 1500 * oppTwosHere.get(0);
+                score -= 750 * oppTwosHere.get(1);
 
                 // Centre control
                 score += centreControlColumn(counterPlacements, row, col, counter);
                 score -= centreControlColumn(counterPlacements, row, col, counter.getOther());
 
                 // Additional offensive strategies
-                score += 50 * ((isStackedPairs(counterPlacements, row, col, counter)) ? 1 : 0);
-                score -= 50 * ((isStackedPairs(counterPlacements, row, col, counter.getOther()) ? 1 : 0));
+                score += 200 * ((isStackedPairs(counterPlacements, row, col, counter)) ? 1 : 0);
+                score -= 200 * ((isStackedPairs(counterPlacements, row, col, counter.getOther()) ? 1 : 0));
                 score += 300 * evaluateTriangleSetup(counterPlacements, row, col, counter);
                 score -= 400 * evaluateTriangleSetup(counterPlacements, row, col, counter.getOther());
-                score += 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter);
-                score -= 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter.getOther());
+                //              score += 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter);
+                //               score -= 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter.getOther());
 //                score += evaluateBottomRowControl(counterPlacements, counter);
 //                score -= evaluateBottomRowControl(counterPlacements, counter.getOther());
             }
