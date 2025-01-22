@@ -13,6 +13,8 @@ public class GetScoreTest {
     @Test
     public void test() {
         GoodAiMate ai = new GoodAiMate(Counter.X);
-        assertEquals(704,ai.getScore());
+        GameConfig myConfig = new GameConfig(10,8,4);
+        Board myBoard = new Board(myConfig);
+        assertEquals(176,ai.getScore(myBoard));
     }
 }
