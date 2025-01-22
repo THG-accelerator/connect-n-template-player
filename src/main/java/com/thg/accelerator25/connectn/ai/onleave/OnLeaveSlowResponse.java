@@ -33,7 +33,7 @@ public class OnLeaveSlowResponse extends Player {
         // for a given depth, first value is the best move, second value is the best score
         List<Integer> depthBest;
 
-        for (int depth = 5; !isTimeUp() && depth < 80; depth++) {
+        for (int depth = 4; !isTimeUp() && depth < 80; depth++) {
             try {
                 depthBest = searchMovesAtDepth(board, depth, legalMoves);
                 if (depthBest.get(1) > bestScoreFound) {
@@ -141,8 +141,8 @@ public class OnLeaveSlowResponse extends Player {
         int score = 0;
         int myThrees = 0;
         int oppThrees = 0;
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
+        for (int col = 0; col < counterPlacements.length; col++) {
+            for (int row = 0; row < counterPlacements[col].length; row++) {
 
                 // Immediate wins/losses, should choose option that wins in fastest way
                 if (hasFourInARow(counterPlacements, row, col, counter)) {
@@ -213,8 +213,8 @@ public class OnLeaveSlowResponse extends Player {
     }
 
     private boolean hasFourInARow(Counter[][] counterPlacements, Counter counter) {
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
+        for (int col = 0; col < counterPlacements.length; col++) {
+            for (int row = 0; row < counterPlacements[col].length; row++) {
                 if (hasFourInARow(counterPlacements, row, col, counter)) {
                     return true;
                 }
@@ -224,33 +224,33 @@ public class OnLeaveSlowResponse extends Player {
     }
 
     private boolean hasFourInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
-        if (counter == counterPlacements[row][col]) {
+        if (counter == counterPlacements[col][row]) {
             // check horizontal right
-            if (col + 3 < counterPlacements[row].length &&
-                    counter == counterPlacements[row][col + 1] &&
-                    counter == counterPlacements[row][col + 2] &&
-                    counter == counterPlacements[row][col + 3]) {
+            if (col + 3 < counterPlacements.length &&
+                    counter == counterPlacements[col + 1][row] &&
+                    counter == counterPlacements[col + 2][row] &&
+                    counter == counterPlacements[col + 3][row]) {
                 return true;
             }
-            // check vertical down
-            if (row + 3 < counterPlacements.length &&
-                    counter == counterPlacements[row + 1][col] &&
-                    counter == counterPlacements[row + 2][col] &&
-                    counter == counterPlacements[row + 3][col]) {
+            // check vertical up
+            if (row + 3 < counterPlacements[col].length &&
+                    counter == counterPlacements[col][row + 1] &&
+                    counter == counterPlacements[col][row + 2] &&
+                    counter == counterPlacements[col][row + 3]) {
+                return true;
+            }
+            // check diagonal (up, right)
+            if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length &&
+                    counter == counterPlacements[col + 1][row + 1] &&
+                    counter == counterPlacements[col + 2][row + 2] &&
+                    counter == counterPlacements[col + 3][row + 3]) {
                 return true;
             }
             // check diagonal (down, right)
-            if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
-                    counter == counterPlacements[row + 1][col + 1] &&
-                    counter == counterPlacements[row + 2][col + 2] &&
-                    counter == counterPlacements[row + 3][col + 3]) {
-                return true;
-            }
-            // check diagonal (down, left)
-            if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
-                    counter == counterPlacements[row + 1][col - 1] &&
-                    counter == counterPlacements[row + 2][col - 2] &&
-                    counter == counterPlacements[row + 3][col - 3]) {
+            if (col + 3 < counterPlacements.length && row - 3 >= 0 &&
+                    counter == counterPlacements[col + 1][row - 1] &&
+                    counter == counterPlacements[col + 2][row - 2] &&
+                    counter == counterPlacements[col + 3][row - 3]) {
                 return true;
             }
         }
@@ -260,7 +260,7 @@ public class OnLeaveSlowResponse extends Player {
     private int hasThreeInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
         int count = 0;
         // Horizontal check
-        if (col + 3 < counterPlacements[row].length) {
+        if (col + 3 < counterPlacements.length) {
             for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
                 int filled = 0;
                 boolean validPattern = true;
@@ -268,19 +268,19 @@ public class OnLeaveSlowResponse extends Player {
 
                 for (int i = 0; i < 4; i++) {
                     if (i == emptyPos) {
-                        if (counterPlacements[row][col + i] != null) {
+                        if (counterPlacements[col + i][row] != null) {
                             validPattern = false;
                             break;
                         }
                         // Check if move is valid (either bottom row or has support)
-                        if (row == counterPlacements.length - 1 ||
-                                counterPlacements[row + 1][col + i] != null) {
+                        if (row == 0 ||
+                                counterPlacements[col + i][row - 1] != null) {
                             validMove = true;
                         } else {
                             validMove = false;
                         }
                     } else {
-                        if (counter == counterPlacements[row][col + i]) {
+                        if (counter == counterPlacements[col + i][row]) {
                             filled++;
                         } else {
                             validPattern = false;
@@ -295,19 +295,19 @@ public class OnLeaveSlowResponse extends Player {
         }
 
         // Vertical check (similar pattern)
-        if (row + 3 < counterPlacements.length) {
+        if (row + 3 < counterPlacements[col].length) {
             for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
                 int filled = 0;
                 boolean validPattern = true;
 
                 for (int i = 0; i < 4; i++) {
                     if (i == emptyPos) {
-                        if (counterPlacements[row + i][col] != null) {
+                        if (counterPlacements[col][row + i] != null) {
                             validPattern = false;
                             break;
                         }
                     } else {
-                        if (counter == counterPlacements[row + i][col]) {
+                        if (counter == counterPlacements[col][row + i]) {
                             filled++;
                         } else {
                             validPattern = false;
@@ -322,8 +322,8 @@ public class OnLeaveSlowResponse extends Player {
         }
 
         // Diagonal check
-        // Diagonal (down-right) check
-        if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
+        // Diagonal up right check
+        if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length) {
             for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
                 int filled = 0;
                 boolean validPattern = true;
@@ -332,19 +332,19 @@ public class OnLeaveSlowResponse extends Player {
                 for (int i = 0; i < 4; i++) {
                     if (i == emptyPos) {
                         // Check if empty position is valid (has support or is bottom row)
-                        if (counterPlacements[row + i][col + i] != null) {
+                        if (counterPlacements[col + i][row + i] != null) {
                             validPattern = false;
                             break;
                         }
                         // Check if move is valid (either bottom row or has support)
-                        if (row + i == counterPlacements.length - 1 ||
-                                counterPlacements[row + i + 1][col + i] != null) {
+                        if (row + i == 0 ||
+                                counterPlacements[col + i][row + i - 1] != null) {
                             validMove = true;
                         } else {
                             validMove = false;
                         }
                     } else {
-                        if (counter == counterPlacements[row + i][col + i]) {
+                        if (counter == counterPlacements[col + i][row + i]) {
                             filled++;
                         } else {
                             validPattern = false;
@@ -358,8 +358,8 @@ public class OnLeaveSlowResponse extends Player {
             }
         }
 
-        // Diagonal (down-left) check
-        if (row + 3 < counterPlacements.length && col - 3 >= 0) {
+        // Diagonal (up-left) check
+        if (row + 3 < counterPlacements[col].length && col - 3 >= 0) {
             for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
                 int filled = 0;
                 boolean validPattern = true;
@@ -367,19 +367,19 @@ public class OnLeaveSlowResponse extends Player {
 
                 for (int i = 0; i < 4; i++) {
                     if (i == emptyPos) {
-                        if (counterPlacements[row + i][col - i] != null) {
+                        if (counterPlacements[col - i][row + i] != null) {
                             validPattern = false;
                             break;
                         }
                         // Check if move is valid (either bottom row or has support)
-                        if (row + i == counterPlacements.length - 1 ||
-                                counterPlacements[row + i + 1][col - i] != null) {
+                        if (row + i == 0 ||
+                                counterPlacements[col - i][row + i - 1] != null) {
                             validMove = true;
                         } else {
                             validMove = false;
                         }
                     } else {
-                        if (counter == counterPlacements[row + i][col - i]) {
+                        if (counter == counterPlacements[col - i][row + i]) {
                             filled++;
                         } else {
                             validPattern = false;
@@ -398,14 +398,14 @@ public class OnLeaveSlowResponse extends Player {
     private int hasTwoInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
         int count = 0;
         // Horizontal right check (4 consecutive cells)
-        if (col + 3 < counterPlacements[row].length) {
+        if (col + 3 < counterPlacements.length) {
             int filled = 0;
             int empty = 0;
             // Count how many of the 4 positions are filled with the same counter
             for (int i = 0; i < 4; i++) {
-                if (counter == counterPlacements[row][col + i]) {
+                if (counter == counterPlacements[col + i][row]) {
                     filled++;
-                } else if (counterPlacements[row][col + i] == null) {
+                } else if (counterPlacements[col + i][row] == null) {
                     empty++;
                 }
             }
@@ -415,14 +415,14 @@ public class OnLeaveSlowResponse extends Player {
             }
         }
 
-        // Vertical down check
-        if (row + 3 < counterPlacements.length) {
+        // Vertical up check
+        if (row + 3 < counterPlacements[col].length) {
             int filled = 0;
             int empty = 0;
             for (int i = 0; i < 4; i++) {
-                if (counter == counterPlacements[row + i][col]) {
+                if (counter == counterPlacements[col][row + i]) {
                     filled++;
-                } else if (counterPlacements[row + i][col] == null) {
+                } else if (counterPlacements[col][row + i] == null) {
                     empty++;
                 }
             }
@@ -431,19 +431,19 @@ public class OnLeaveSlowResponse extends Player {
             }
         }
 
-        // Diagonal (down-right) check
-        if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
+        // Diagonal (up-right) check
+        if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length) {
             int filled = 0;
             int empty = 0;
             boolean validEmpty = true;
 
             for (int i = 0; i < 4; i++) {
-                if (counter == counterPlacements[row + i][col + i]) {
+                if (counter == counterPlacements[col + i][row + i]) {
                     filled++;
-                } else if (counterPlacements[row + i][col + i] == null) {
+                } else if (counterPlacements[col + i][row + i] == null) {
                     // Check if empty position has support
-                    if (row + i == counterPlacements.length - 1 ||
-                            counterPlacements[row + i + 1][col + i] != null) {
+                    if (row + i == 0 ||
+                            counterPlacements[col + i][row + i - 1] != null) {
                         empty++;
                     } else {
                         validEmpty = false;
@@ -455,19 +455,19 @@ public class OnLeaveSlowResponse extends Player {
             }
         }
 
-        // Diagonal (down-left) check
-        if (row + 3 < counterPlacements.length && col - 3 >= 0) {
+        // Diagonal up left check
+        if (col - 3 > 0 && row + 3 < counterPlacements[col].length) {
             int filled = 0;
             int empty = 0;
             boolean validEmpty = true;
 
             for (int i = 0; i < 4; i++) {
-                if (counter == counterPlacements[row + i][col - i]) {
+                if (counter == counterPlacements[col - i][row + i]) {
                     filled++;
-                } else if (counterPlacements[row + i][col - i] == null) {
+                } else if (counterPlacements[col - i][row + i] == null) {
                     // Check if empty position has support
-                    if (row + i == counterPlacements.length - 1 ||
-                            counterPlacements[row + i + 1][col - i] != null) {
+                    if (row + i == 0 ||
+                            counterPlacements[col - i][row + i - 1] != null) {
                         empty++;
                     } else {
                         validEmpty = false;
@@ -482,7 +482,7 @@ public class OnLeaveSlowResponse extends Player {
     }
 
     private int centreControlColumn(Counter[][] counterPlacements, int row, int col, Counter counter) {
-        if (counterPlacements[row][col] == counter) {
+        if (counterPlacements[col][row] == counter) {
             return (int) (4.5 - Math.abs(col - 4.5));
         }
         return 0;
@@ -490,32 +490,32 @@ public class OnLeaveSlowResponse extends Player {
 
     // has pairs of pieces stacked vertically (good for building)
     private boolean isStackedPairs(Counter[][] counterPlacements, int row, int col, Counter counter) {
-        return row > 1 && counterPlacements[row][col] == counter &&
-                counterPlacements[row - 1][col] == counter;
+        return row > 1 && counterPlacements[col][row] == counter &&
+                counterPlacements[col][row - 1] == counter;
     }
 
     // evaluate triangle setups (three pieces forming a triangle, 4 directions)
     private int evaluateTriangleSetup(Counter[][] counterPlacements, int row, int col, Counter counter) {
         int count = 0;
-        if (counterPlacements[row][col] == counter) {
+        if (counterPlacements[col][row] == counter) {
             // Check for triangle pattern
-            if (row > 0 && col > 0) {
-                if (counterPlacements[row - 1][col] == counter && counterPlacements[row][col - 1] == counter) {
+            if (col > 0 && row > 0) {
+                if (counterPlacements[col - 1][row] == counter && counterPlacements[col][row - 1] == counter) {
                     count += 1;
                 }
             }
-            if (row > 0 && col < counterPlacements[row].length - 1) {
-                if (counterPlacements[row - 1][col] == counter && counterPlacements[row][col + 1] == counter) {
+            if (col < counterPlacements.length - 1 && row > 0) {
+                if (counterPlacements[col + 1][row] == counter && counterPlacements[col][row - 1] == counter) {
                     count += 1;
                 }
             }
-            if (row < counterPlacements.length - 1 && col > 0) {
-                if (counterPlacements[row + 1][col] == counter && counterPlacements[row][col - 1] == counter) {
+            if (col > 0 && row < counterPlacements[col].length - 1) { // swapped conditions
+                if (counterPlacements[col - 1][row] == counter && counterPlacements[col][row + 1] == counter) {
                     count += 1;
                 }
             }
-            if (row < counterPlacements.length - 1 && col < counterPlacements[row].length - 1) {
-                if (counterPlacements[row + 1][col] == counter && counterPlacements[row][col + 1] == counter) {
+            if (col < counterPlacements.length - 1 && row < counterPlacements[col].length - 1) {
+                if (counterPlacements[col + 1][row] == counter && counterPlacements[col][row + 1] == counter) {
                     count += 1;
                 }
             }
@@ -529,26 +529,27 @@ public class OnLeaveSlowResponse extends Player {
         // Example: X_X_ pattern with support underneath
         // Example: _X_X
         int count = 0;
-        if (col + 3 < counterPlacements[0].length && row > 0) {
-            if (counterPlacements[row - 1][col + 1] != null &&
-                    counterPlacements[row - 1][col + 3] != null &&
-                    counterPlacements[row][col] == counter &&
-                    counterPlacements[row][col + 1] == null &&
-                    counterPlacements[row][col + 2] == counter &&
-                    counterPlacements[row][col + 3] == null) {
+        if (col + 3 < counterPlacements.length && row > 0) {
+            if (counterPlacements[col + 1][row - 1] != null &&
+                    counterPlacements[col + 3][row - 1] != null &&
+                    counterPlacements[col][row] == counter &&
+                    counterPlacements[col + 1][row] == null &&
+                    counterPlacements[col + 2][row] == counter &&
+                    counterPlacements[col + 3][row] == null) {
                 count += 1;
             }
-            if (counterPlacements[row - 1][col] != null &&
-                    counterPlacements[row - 1][col + 2] != null &&
-                    counterPlacements[row][col] == null &&
-                    counterPlacements[row][col + 1] == counter &&
-                    counterPlacements[row][col + 2] == null &&
-                    counterPlacements[row][col + 3] == counter) {
+            if (counterPlacements[col][row - 1] != null &&
+                    counterPlacements[col + 2][row - 1] != null &&
+                    counterPlacements[col][row] == null &&
+                    counterPlacements[col + 1][row] == counter &&
+                    counterPlacements[col + 2][row] == null &&
+                    counterPlacements[col + 3][row] == counter) {
                 count += 1;
             }
         }
         return count;
     }
+
 
     // Evaluate control of bottom row (foundation for building)
     private int evaluateBottomRowControl(Counter[][] counterPlacements, Counter counter) {
