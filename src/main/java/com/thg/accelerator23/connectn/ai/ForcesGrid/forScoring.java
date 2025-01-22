@@ -12,6 +12,18 @@ import java.util.List;
 import static java.lang.Math.pow;
 
 public class forScoring {
+    /*
+    public methods:
+    - scorePosition(Board, Position, Counter) -> int
+        returns a 'score' of a potential position on the board
+
+    private methods:
+    - getRunsInLine(ArrayList<Line>) -> HashMap<Counter, Integer>
+        same function as getBestRunByColour in BoardAnalyser.java
+    - calculateScore(List<Hashmap<Counter,Integer>>, Counter) -> int
+        weighing of different scenarios
+    */
+
     public static int scorePosition(Board board, Position pos, Counter counter) {
         List<HashMap<Counter, Integer>> scores = new ArrayList<>();
 
@@ -56,15 +68,15 @@ public class forScoring {
             }
         }
         if (!cline.isEmpty()) {
-            scores.add(getRunsInLine(cline, counter));
+            scores.add(getRunsInLine(cline));
         }
-        scores.add(getRunsInLine(hline, counter));
-        scores.add(getRunsInLine(diagLline, counter));
-        scores.add(getRunsInLine(diagRline, counter));
+        scores.add(getRunsInLine(hline));
+        scores.add(getRunsInLine(diagLline));
+        scores.add(getRunsInLine(diagRline));
         return calculateScore(scores, counter);
     }
 
-    private static HashMap<Counter, Integer> getRunsInLine(ArrayList<Counter> line, Counter counter) {
+    private static HashMap<Counter, Integer> getRunsInLine(ArrayList<Counter> line) {
         Iterator<Counter> iterator = line.iterator();
         HashMap<Counter, Integer> inARow = new HashMap<>();
         for (Counter c : Counter.values()) {
@@ -89,7 +101,6 @@ public class forScoring {
         if (current != null && Math.max(currentRunLength, 1) > inARow.get(current)) {
             inARow.put(current, Math.max(currentRunLength, 1));
         }
-        System.out.println(line);
         return inARow;
     }
 
@@ -99,9 +110,9 @@ public class forScoring {
         int opp = 0;
         for (HashMap<Counter, Integer> scores : runs) {
             if (scores.get(counter) == 3) {
-                score += 100;
+                score += 200;   // 1st priority to place winning move
             } else if (scores.get(counter.getOther()) == 3) {
-                score += 50;
+                score += 100;   // 2nd priority to block opponent winning move
             } else {
                 forcesG += scores.get(counter);
                 opp += scores.get(counter.getOther());
