@@ -5,9 +5,7 @@ import com.thehutgroup.accelerator.connectn.player.Counter;
 import com.thehutgroup.accelerator.connectn.player.InvalidMoveException;
 import com.thehutgroup.accelerator.connectn.player.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class OnLeaveSlowResponse extends Player {
@@ -15,6 +13,8 @@ public class OnLeaveSlowResponse extends Player {
     // timeout value, gives 500ms buffer
     private static final long TIMEOUT_SECONDS = 9500;
     private long startTime;
+
+    private final Map<Long, Integer> boardHashMap = new HashMap<>();
 
     public OnLeaveSlowResponse(Counter counter) {
         //TODO: fill in your name here
@@ -33,6 +33,10 @@ public class OnLeaveSlowResponse extends Player {
         // for a given depth, first value is the best move, second value is the best score
         List<Integer> depthBest;
 
+        if (boardHashMap.size() > 100000) {
+            clearCache();
+        }
+
         for (int depth = 4; !isTimeUp() && depth < 80; depth++) {
             try {
                 depthBest = searchMovesAtDepth(board, depth, legalMoves);
@@ -49,14 +53,27 @@ public class OnLeaveSlowResponse extends Player {
         System.out.println("Best move found: " + bestMoveFound);
         System.out.println("Best score found: " + bestScoreFound);
         System.out.println("Best depth found: " + bestDepthFound);
+        System.out.println("Cache Size: " + boardHashMap.size());
         return bestMoveFound;
     }
 
+    private long hashCode(Board board) {
+        Counter[][] counterPlacement = board.getCounterPlacements();
+        long result = 1;
+        for (Counter[] counters : counterPlacement) {
+            result = 31 * result + Arrays.hashCode(counters);
+        }
+        return result;
+    }
+
+    private void clearCache() {
+        boardHashMap.clear();
+    }
 
     private List<Integer> searchMovesAtDepth(Board board, int depth, List<Integer> legalMoves) throws TimeoutException {
         int depthBestScore = Integer.MIN_VALUE;
         int depthBestMove = legalMoves.get(0);
-        System.out.println("Searching for moves at depth " + depth);
+//        System.out.println("Searching for moves at depth " + depth);
         for (int move : legalMoves) {
             int score;
             if (isTimeUp()) {
@@ -74,8 +91,8 @@ public class OnLeaveSlowResponse extends Player {
                 depthBestMove = move;
             }
         }
-        System.out.println("Best score found: " + depthBestScore);
-        System.out.println("Best move found: " + depthBestMove);
+//        System.out.println("Best score found: " + depthBestScore);
+//        System.out.println("Best move found: " + depthBestMove);
         return Arrays.asList(depthBestMove, depthBestScore);
     }
 
@@ -107,33 +124,36 @@ public class OnLeaveSlowResponse extends Player {
             return evaluatePosition(board, initialDepth);
         }
 
-        List<Integer> moves = getLegalMoves(board);
-        if (isMaximizing) {
-            int maxScore = Integer.MIN_VALUE;
-            for (int move : moves) {
-                Board newBoard = new Board(board, move, currentCounter);
-                int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther(), initialDepth);
-                maxScore = Math.max(maxScore, score);
-                alpha = Math.max(alpha, score);
-                if (beta <= alpha) {
-                    break;
-                }
-            }
-            return maxScore;
-        } else {
-            int minScore = Integer.MAX_VALUE;
-            for (int move : moves) {
-                Board newBoard = new Board(board, move, currentCounter);
-                int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther(), initialDepth);
-                minScore = Math.min(minScore, score);
-                beta = Math.min(beta, score);
-                if (beta <= alpha) {
-                    break;
-                }
-            }
-            return minScore;
+        long boardHash = hashCode(board);
+        if (boardHashMap.containsKey(boardHash)) {
+            return boardHashMap.get(boardHash);
         }
+
+        List<Integer> moves = getLegalMoves(board);
+        int bestScore = isMaximizing ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        for (int move : moves) {
+            Board newBoard = new Board(board, move, currentCounter);
+            int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther(), initialDepth);
+
+            if (isMaximizing) {
+                bestScore = Math.max(score, bestScore);
+                alpha = Math.max(alpha, score);
+            } else {
+                bestScore = Math.min(score, bestScore);
+                beta = Math.min(beta, score);
+            }
+            if (beta <= alpha) {
+                break;
+            }
+        }
+
+        // Store the result in hash map
+        boardHashMap.put(boardHash, bestScore);
+
+        return bestScore;
     }
+
     private int evaluatePosition(Board board, int initialDepth) {
         Counter[][] counterPlacements = board.getCounterPlacements();
         Counter counter = getCounter();
@@ -310,14 +330,11 @@ public class OnLeaveSlowResponse extends Player {
         // Vertical check
         if (row + 3 < counterPlacements[col].length) {
             // Only check bottom empty position since pieces must stack
-            int filled = 0;
             boolean validPattern = true;
 
             // Check the bottom three positions for counters
             for (int i = 0; i < 3; i++) {
-                if (counter == counterPlacements[col][row + i]) {
-                    filled++;
-                } else {
+                if (counter != counterPlacements[col][row + i]) {
                     validPattern = false;
                     break;
                 }
