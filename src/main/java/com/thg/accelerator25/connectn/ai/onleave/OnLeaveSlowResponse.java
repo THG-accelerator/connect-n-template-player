@@ -33,7 +33,7 @@ public class OnLeaveSlowResponse extends Player {
         // for a given depth, first value is the best move, second value is the best score
         List<Integer> depthBest;
 
-        for (int depth = 2; !isTimeUp() && depth < 80; depth++) {
+        for (int depth = 4; !isTimeUp() && depth < 80; depth++) {
             try {
                 depthBest = searchMovesAtDepth(board, depth, legalMoves);
                 if (depthBest.get(1) > bestScoreFound) {
@@ -64,8 +64,8 @@ public class OnLeaveSlowResponse extends Player {
             }
             try {
                 Board newBoard = new Board(board, move, getCounter());
-                score = minimax(newBoard, depth-1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, getCounter().getOther(), depth-1);
-            } catch (InvalidMoveException e){
+                score = minimax(newBoard, depth - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE, getCounter().getOther(), depth - 1);
+            } catch (InvalidMoveException e) {
                 break;
             }
 
@@ -98,84 +98,101 @@ public class OnLeaveSlowResponse extends Player {
         return legalMoves;
     }
 
-  private int minimax(Board board, int depth, boolean isMaximizing,
-                      int alpha, int beta, Counter currentCounter, int initialDepth) throws TimeoutException, InvalidMoveException {
-    if (isTimeUp()) {
-      throw new TimeoutException();
-    }
-    if (depth == 0 || isGameOver(board)) {
-      return evaluatePosition(board, initialDepth);
-    }
+    private int minimax(Board board, int depth, boolean isMaximizing,
+                        int alpha, int beta, Counter currentCounter, int initialDepth) throws TimeoutException, InvalidMoveException {
+        if (isTimeUp()) {
+            throw new TimeoutException();
+        }
+        if (depth == 0 || isGameOver(board)) {
+            return evaluatePosition(board, initialDepth);
+        }
 
-    List<Integer> moves = getLegalMoves(board);
-    if (isMaximizing) {
-      int maxScore = Integer.MIN_VALUE;
-      for (int move : moves) {
-        Board newBoard = new Board(board, move, currentCounter);
-        int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther(), initialDepth);
-        maxScore = Math.max(maxScore, score);
-        alpha = Math.max(alpha, score);
-        if (beta <= alpha) {
-          break;
+        List<Integer> moves = getLegalMoves(board);
+        if (isMaximizing) {
+            int maxScore = Integer.MIN_VALUE;
+            for (int move : moves) {
+                Board newBoard = new Board(board, move, currentCounter);
+                int score = minimax(newBoard, depth - 1, false, alpha, beta, currentCounter.getOther(), initialDepth);
+                maxScore = Math.max(maxScore, score);
+                alpha = Math.max(alpha, score);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return maxScore;
+        } else {
+            int minScore = Integer.MAX_VALUE;
+            for (int move : moves) {
+                Board newBoard = new Board(board, move, currentCounter);
+                int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther(), initialDepth);
+                minScore = Math.min(minScore, score);
+                beta = Math.min(beta, score);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return minScore;
         }
-      }
-      return maxScore;
-    } else {
-      int minScore = Integer.MAX_VALUE;
-      for (int move : moves) {
-        Board newBoard = new Board(board, move, currentCounter);
-        int score = minimax(newBoard, depth - 1, true, alpha, beta, currentCounter.getOther(), initialDepth);
-        minScore = Math.min(minScore, score);
-        beta = Math.min(beta, score);
-        if (beta <= alpha) {
-          break;
-        }
-      }
-      return minScore;
     }
-  }
     private int evaluatePosition(Board board, int initialDepth) {
         Counter[][] counterPlacements = board.getCounterPlacements();
         Counter counter = getCounter();
-        int score = -5 * initialDepth;  // Reduced depth penalty
+        int score = 0;
+        int myThrees = 0;
+        int oppThrees = 0;
+        for (int col = 0; col < counterPlacements.length; col++) {
+            for (int row = 0; row < counterPlacements[col].length; row++) {
 
-        // Immediate wins/losses
-        if (hasFourInARow(counterPlacements, counter)) {
-            return Integer.MAX_VALUE;
-        } else if (hasFourInARow(counterPlacements, counter.getOther())) {
-            return Integer.MIN_VALUE;
+                // Immediate wins/losses, should choose option that wins in fastest way
+                if (hasFourInARow(counterPlacements, row, col, counter)) {
+                    return Integer.MAX_VALUE - initialDepth;
+                } else if (hasFourInARow(counterPlacements, row, col, counter.getOther())) {
+                    return Integer.MIN_VALUE + initialDepth;
+                }
+
+                // some weight based on depth
+                score -= 5 * initialDepth;
+
+                // Three in a row scenarios
+                List<Integer> myThreesHere = hasThreeInARow(counterPlacements, row, col, counter);
+                List<Integer> oppThreesHere = hasThreeInARow(counterPlacements, row, col, counter.getOther());
+                myThrees += myThreesHere.get(0) + myThreesHere.get(1);
+                myThrees += myThreesHere.get(0) + myThreesHere.get(1);
+                score += 5000 * myThreesHere.get(0);
+                score += 2500 * myThreesHere.get(1);
+                oppThrees += oppThreesHere.get(0) + oppThreesHere.get(1);
+                score -= 5000 * oppThreesHere.get(0);
+                score -= 2500 * oppThreesHere.get(1);
+
+                // Two in a row scenarios
+                List<Integer> myTwosHere = hasTwoInARow(counterPlacements, row, col, counter);
+                List<Integer> oppTwosHere = hasTwoInARow(counterPlacements, row, col, counter.getOther());
+                score += 1500 * myTwosHere.get(0);
+                score += 750 * myTwosHere.get(1);
+                score -= 1500 * oppTwosHere.get(0);
+                score -= 750 * oppTwosHere.get(1);
+
+                // Centre control
+                score += centreControlColumn(counterPlacements, row, col, counter);
+                score -= centreControlColumn(counterPlacements, row, col, counter.getOther());
+
+                // Additional offensive strategies
+                score += 200 * ((isStackedPairs(counterPlacements, row, col, counter)) ? 1 : 0);
+                score -= 200 * ((isStackedPairs(counterPlacements, row, col, counter.getOther()) ? 1 : 0));
+                score += 300 * evaluateTriangleSetup(counterPlacements, row, col, counter);
+                score -= 400 * evaluateTriangleSetup(counterPlacements, row, col, counter.getOther());
+                //              score += 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter);
+                //               score -= 200 * evaluateDoubleThreatPattern(counterPlacements, row, col, counter.getOther());
+//                score += evaluateBottomRowControl(counterPlacements, counter);
+//                score -= evaluateBottomRowControl(counterPlacements, counter.getOther());
+            }
         }
-
-        // Three in a row scenarios
-        int myThrees = hasThreeInARow(counterPlacements, counter);
-        int oppThrees = hasThreeInARow(counterPlacements, counter.getOther());
-
         // If opponent has three in a row and we don't, this is very bad
         if (oppThrees > 0 && myThrees == 0) {
-            return Integer.MIN_VALUE + 1;  // Not quite as bad as an actual loss
+            return Integer.MIN_VALUE / 2;  // Not quite as bad as an actual loss
         }
-
-        score += 2000 * myThrees;
-        score -= 2000 * oppThrees;  // Make this equally weighted
-
-        // Two in a row scenarios
-        score += 400 * hasTwoInARow(counterPlacements, counter);
-        score -= 400 * hasTwoInARow(counterPlacements, counter.getOther());  // Make this equally weighted
-
-        // Centre control
-        score += centreControlColumn(counterPlacements, counter);
-        score -= centreControlColumn(counterPlacements, counter.getOther());
-
-        // Additional offensive strategies
-        score += evaluateStackedPairs(counterPlacements, counter);
-        score -= evaluateStackedPairs(counterPlacements, counter.getOther());
-        score += evaluateTriangleSetup(counterPlacements, counter);
-        score -= evaluateTriangleSetup(counterPlacements, counter.getOther());
-        score += evaluateDoubleThreatSetup(counterPlacements, counter);
-        score -= evaluateDoubleThreatSetup(counterPlacements, counter.getOther());
-        score += evaluateBottomRowControl(counterPlacements, counter);
-        score -= evaluateBottomRowControl(counterPlacements, counter.getOther());
-
+        if (myThrees >= 2) score += 15000;
+        if (oppThrees >= 2) score -= 15000;
         return score;
     }
 
@@ -204,361 +221,418 @@ public class OnLeaveSlowResponse extends Player {
     }
 
     private boolean hasFourInARow(Counter[][] counterPlacements, Counter counter) {
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
-                if (counter == counterPlacements[row][col]) {
-                    // check horizontal right
-                    if (col + 3 < counterPlacements[row].length &&
-                            counter == counterPlacements[row][col + 1] &&
-                            counter == counterPlacements[row][col + 2] &&
-                            counter == counterPlacements[row][col + 3]) {
-                        return true;
-                    }
-                    // check vertical down
-                    if (row + 3 < counterPlacements.length &&
-                            counter == counterPlacements[row + 1][col] &&
-                            counter == counterPlacements[row + 2][col] &&
-                            counter == counterPlacements[row + 3][col]) {
-                        return true;
-                    }
-                    // check diagonal (down, right)
-                    if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length &&
-                            counter == counterPlacements[row + 1][col + 1] &&
-                            counter == counterPlacements[row + 2][col + 2] &&
-                            counter == counterPlacements[row + 3][col + 3]) {
-                        return true;
-                    }
-                    // check diagonal (down, left)
-                    if (row + 3 < counterPlacements.length && col - 3 >= 0 &&
-                            counter == counterPlacements[row + 1][col - 1] &&
-                            counter == counterPlacements[row + 2][col - 2] &&
-                            counter == counterPlacements[row + 3][col - 3]) {
-                        return true;
-                    }
+        for (int col = 0; col < counterPlacements.length; col++) {
+            for (int row = 0; row < counterPlacements[col].length; row++) {
+                if (hasFourInARow(counterPlacements, row, col, counter)) {
+                    return true;
                 }
             }
         }
         return false;
     }
 
-    private int hasThreeInARow(Counter[][] counterPlacements, Counter counter) {
+    private boolean hasFourInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
+        if (counter == counterPlacements[col][row]) {
+            // check horizontal right
+            if (col + 3 < counterPlacements.length &&
+                    counter == counterPlacements[col + 1][row] &&
+                    counter == counterPlacements[col + 2][row] &&
+                    counter == counterPlacements[col + 3][row]) {
+                return true;
+            }
+            // check vertical up
+            if (row + 3 < counterPlacements[col].length &&
+                    counter == counterPlacements[col][row + 1] &&
+                    counter == counterPlacements[col][row + 2] &&
+                    counter == counterPlacements[col][row + 3]) {
+                return true;
+            }
+            // check diagonal (up, right)
+            if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length &&
+                    counter == counterPlacements[col + 1][row + 1] &&
+                    counter == counterPlacements[col + 2][row + 2] &&
+                    counter == counterPlacements[col + 3][row + 3]) {
+                return true;
+            }
+            // check diagonal (down, right)
+            if (col + 3 < counterPlacements.length && row - 3 >= 0 &&
+                    counter == counterPlacements[col + 1][row - 1] &&
+                    counter == counterPlacements[col + 2][row - 2] &&
+                    counter == counterPlacements[col + 3][row - 3]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<Integer> hasThreeInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
+        int countCanPlay = 0;
+        int countCantPlay = 0;
+        // Horizontal check
+        if (col + 3 < counterPlacements.length) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        if (counterPlacements[col + i][row] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row == 0 ||
+                                counterPlacements[col + i][row - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col + i][row]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 3) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+
+        // Vertical check
+        if (row + 3 < counterPlacements[col].length) {
+            // Only check bottom empty position since pieces must stack
+            int filled = 0;
+            boolean validPattern = true;
+
+            // Check the bottom three positions for counters
+            for (int i = 0; i < 3; i++) {
+                if (counter == counterPlacements[col][row + i]) {
+                    filled++;
+                } else {
+                    validPattern = false;
+                    break;
+                }
+            }
+
+            // Check if top position is empty
+            if (validPattern && counterPlacements[col][row + 3] == null) {
+                countCanPlay++; // Vertical threes are always playable immediately
+            }
+        }
+
+        // Diagonal check
+        // Diagonal up right check
+        if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        // Check if empty position is valid (has support or is bottom row)
+                        if (counterPlacements[col + i][row + i] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row + i == 0 ||
+                                counterPlacements[col + i][row + i - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col + i][row + i]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 3) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+
+        // Diagonal (up-left) check
+        if (row + 3 < counterPlacements[col].length && col - 3 >= 0) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        if (counterPlacements[col - i][row + i] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row + i == 0 ||
+                                counterPlacements[col - i][row + i - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col - i][row + i]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 3) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+        return Arrays.asList(countCanPlay,countCantPlay);
+    }
+
+    private List<Integer> hasTwoInARow(Counter[][] counterPlacements, int row, int col, Counter counter) {
+        int countCanPlay = 0;
+        int countCantPlay = 0;
+        // Horizontal check
+        if (col + 3 < counterPlacements.length) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        if (counterPlacements[col + i][row] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row == 0 ||
+                                counterPlacements[col + i][row - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col + i][row]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 2) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+
+//        // Vertical check (similar pattern)
+//        if (row + 2 < counterPlacements[col].length) {
+//            boolean validPattern = true;
+//            for (int i = 0; i < 2; i++) {
+//                if (counter != counterPlacements[col][row + i]) {
+//                    validPattern = false;
+//                    break;
+//                }
+//            }
+//            if (counterPlacements[col][row + 2] != null) {
+//                validPattern = false;
+//            }
+//            if (validPattern) {
+//                countCanPlay++;
+//            }
+//        }
+
+        // Diagonal check
+        // Diagonal up right check
+        if (col + 3 < counterPlacements.length && row + 3 < counterPlacements[col].length) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        // Check if empty position is valid (has support or is bottom row)
+                        if (counterPlacements[col + i][row + i] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row + i == 0 ||
+                                counterPlacements[col + i][row + i - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col + i][row + i]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 2) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+
+        // Diagonal (up-left) check
+        if (row + 3 < counterPlacements[col].length && col - 3 >= 0) {
+            for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
+                int filled = 0;
+                boolean validPattern = true;
+                boolean validMove = true;
+
+                for (int i = 0; i < 4; i++) {
+                    if (i == emptyPos) {
+                        if (counterPlacements[col - i][row + i] != null) {
+                            validPattern = false;
+                            break;
+                        }
+                        // Check if move is valid (either bottom row or has support)
+                        if (row + i == 0 ||
+                                counterPlacements[col - i][row + i - 1] != null) {
+                            validMove = true;
+                        } else {
+                            validMove = false;
+                        }
+                    } else {
+                        if (counter == counterPlacements[col - i][row + i]) {
+                            filled++;
+                        } else {
+                            validPattern = false;
+                            break;
+                        }
+                    }
+                }
+                if (validPattern && filled == 2) {
+                    if (validMove) {
+                        countCanPlay++;
+                    } else {
+                        countCantPlay++;
+                    }
+                }
+            }
+        }
+        return Arrays.asList(countCanPlay,countCantPlay);
+    }
+
+    private int centreControlColumn(Counter[][] counterPlacements, int row, int col, Counter counter) {
+        if (counterPlacements[col][row] == counter) {
+            return (int) (4.5 - Math.abs(col - 4.5));
+        }
+        return 0;
+    }
+
+    // has pairs of pieces stacked vertically (good for building)
+    private boolean isStackedPairs(Counter[][] counterPlacements, int row, int col, Counter counter) {
+        return row > 1 && row < counterPlacements[col].length - 1 &&
+                counterPlacements[col][row] == counter &&
+                counterPlacements[col][row - 1] == counter &&
+                counterPlacements[col][row + 1] == null;
+    }
+
+    // evaluate triangle setups (three pieces forming a triangle, 4 directions)
+    private int evaluateTriangleSetup(Counter[][] counterPlacements, int row, int col, Counter counter) {
         int count = 0;
-
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
-                // Horizontal check
-                if (col + 3 < counterPlacements[row].length) {
-                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
-                        int filled = 0;
-                        boolean validPattern = true;
-                        boolean validMove = true;
-
-                        for (int i = 0; i < 4; i++) {
-                            if (i == emptyPos) {
-                                if (counterPlacements[row][col + i] != null) {
-                                    validPattern = false;
-                                    break;
-                                }
-                                // Check if move is valid (either bottom row or has support)
-                                if (row == counterPlacements.length - 1 ||
-                                        counterPlacements[row + 1][col + i] != null) {
-                                    validMove = true;
-                                } else {
-                                    validMove = false;
-                                }
-                            } else {
-                                if (counter == counterPlacements[row][col + i]) {
-                                    filled++;
-                                } else {
-                                    validPattern = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (validPattern && validMove && filled == 3) {
-                            count++;
-                        }
-                    }
+        if (counterPlacements[col][row] == counter) {
+            // Check for triangle pattern
+            if (col > 0 && row > 0) {
+                if (counterPlacements[col - 1][row] == counter && counterPlacements[col][row - 1] == counter) {
+                    count += 1;
                 }
-
-                // Vertical check (similar pattern)
-                if (row + 3 < counterPlacements.length) {
-                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
-                        int filled = 0;
-                        boolean validPattern = true;
-
-                        for (int i = 0; i < 4; i++) {
-                            if (i == emptyPos) {
-                                if (counterPlacements[row + i][col] != null) {
-                                    validPattern = false;
-                                    break;
-                                }
-                            } else {
-                                if (counter == counterPlacements[row + i][col]) {
-                                    filled++;
-                                } else {
-                                    validPattern = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (validPattern && filled == 3) {
-                            count++;
-                        }
-                    }
+            }
+            if (col < counterPlacements.length - 1 && row > 0) {
+                if (counterPlacements[col + 1][row] == counter && counterPlacements[col][row - 1] == counter) {
+                    count += 1;
                 }
-
-                // Diagonal check
-                // Diagonal (down-right) check
-                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
-                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
-                        int filled = 0;
-                        boolean validPattern = true;
-                        boolean validMove = true;
-
-                        for (int i = 0; i < 4; i++) {
-                            if (i == emptyPos) {
-                                // Check if empty position is valid (has support or is bottom row)
-                                if (counterPlacements[row + i][col + i] != null) {
-                                    validPattern = false;
-                                    break;
-                                }
-                                // Check if move is valid (either bottom row or has support)
-                                if (row + i == counterPlacements.length - 1 ||
-                                        counterPlacements[row + i + 1][col + i] != null) {
-                                    validMove = true;
-                                } else {
-                                    validMove = false;
-                                }
-                            } else {
-                                if (counter == counterPlacements[row + i][col + i]) {
-                                    filled++;
-                                } else {
-                                    validPattern = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (validPattern && validMove && filled == 3) {
-                            count++;
-                        }
-                    }
+            }
+            if (col > 0 && row < counterPlacements[col].length - 1) { // swapped conditions
+                if (counterPlacements[col - 1][row] == counter && counterPlacements[col][row + 1] == counter) {
+                    count += 1;
                 }
-
-                // Diagonal (down-left) check
-                if (row + 3 < counterPlacements.length && col - 3 >= 0) {
-                    for (int emptyPos = 0; emptyPos < 4; emptyPos++) {
-                        int filled = 0;
-                        boolean validPattern = true;
-                        boolean validMove = true;
-
-                        for (int i = 0; i < 4; i++) {
-                            if (i == emptyPos) {
-                                if (counterPlacements[row + i][col - i] != null) {
-                                    validPattern = false;
-                                    break;
-                                }
-                                // Check if move is valid (either bottom row or has support)
-                                if (row + i == counterPlacements.length - 1 ||
-                                        counterPlacements[row + i + 1][col - i] != null) {
-                                    validMove = true;
-                                } else {
-                                    validMove = false;
-                                }
-                            } else {
-                                if (counter == counterPlacements[row + i][col - i]) {
-                                    filled++;
-                                } else {
-                                    validPattern = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (validPattern && validMove && filled == 3) {
-                            count++;
-                        }
-                    }
+            }
+            if (col < counterPlacements.length - 1 && row < counterPlacements[col].length - 1) {
+                if (counterPlacements[col + 1][row] == counter && counterPlacements[col][row + 1] == counter) {
+                    count += 1;
                 }
             }
         }
         return count;
-    }
-
-    private int hasTwoInARow(Counter[][] counterPlacements, Counter counter) {
-        int count = 0;
-
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
-                // Horizontal right check (4 consecutive cells)
-                if (col + 3 < counterPlacements[row].length) {
-                    int filled = 0;
-                    int empty = 0;
-                    // Count how many of the 4 positions are filled with the same counter
-                    for (int i = 0; i < 4; i++) {
-                        if (counter == counterPlacements[row][col + i]) {
-                            filled++;
-                        } else if (counterPlacements[row][col + i] == null) {
-                            empty++;
-                        }
-                    }
-                    // If there are exactly 2 filled and 2 empty (no opponent pieces), count it
-                    if (filled == 2 && empty == 2) {
-                        count += 1;
-                    }
-                }
-
-                // Vertical down check
-                if (row + 3 < counterPlacements.length) {
-                    int filled = 0;
-                    int empty = 0;
-                    for (int i = 0; i < 4; i++) {
-                        if (counter == counterPlacements[row + i][col]) {
-                            filled++;
-                        } else if (counterPlacements[row + i][col] == null) {
-                            empty++;
-                        }
-                    }
-                    if (filled == 2 && empty == 2) {
-                        count += 1;
-                    }
-                }
-
-                // Diagonal (down-right) check
-                if (row + 3 < counterPlacements.length && col + 3 < counterPlacements[row].length) {
-                    int filled = 0;
-                    int empty = 0;
-                    boolean validEmpty = true;
-
-                    for (int i = 0; i < 4; i++) {
-                        if (counter == counterPlacements[row + i][col + i]) {
-                            filled++;
-                        } else if (counterPlacements[row + i][col + i] == null) {
-                            // Check if empty position has support
-                            if (row + i == counterPlacements.length - 1 ||
-                                    counterPlacements[row + i + 1][col + i] != null) {
-                                empty++;
-                            } else {
-                                validEmpty = false;
-                            }
-                        }
-                    }
-                    if (filled == 2 && empty == 2 && validEmpty) {
-                        count++;
-                    }
-                }
-
-                // Diagonal (down-left) check
-                if (row + 3 < counterPlacements.length && col - 3 >= 0) {
-                    int filled = 0;
-                    int empty = 0;
-                    boolean validEmpty = true;
-
-                    for (int i = 0; i < 4; i++) {
-                        if (counter == counterPlacements[row + i][col - i]) {
-                            filled++;
-                        } else if (counterPlacements[row + i][col - i] == null) {
-                            // Check if empty position has support
-                            if (row + i == counterPlacements.length - 1 ||
-                                    counterPlacements[row + i + 1][col - i] != null) {
-                                empty++;
-                            } else {
-                                validEmpty = false;
-                            }
-                        }
-                    }
-                    if (filled == 2 && empty == 2 && validEmpty) {
-                        count++;
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
-    private int centreControlColumn(Counter[][] counterPlacements, Counter counter){
-        int count = 0;
-        int[] columnWeight = {0, 1, 2, 3, 4, 4, 3, 2, 1, 0};
-        for (int row = 0; row < counterPlacements.length; row++) {
-            for (int col = 0; col < counterPlacements[row].length; col++) {
-                if (counterPlacements[row][col] == counter) {
-                    count +=  columnWeight[col];
-                }
-            }
-        }
-        return count;
-    }
-
-    // Evaluate pairs of pieces stacked vertically (good for building)
-    private int evaluateStackedPairs(Counter[][] counterPlacements, Counter counter) {
-        int score = 0;
-        for (int col = 0; col < counterPlacements[0].length; col++) {
-            for (int row = counterPlacements.length - 1; row > 0; row--) {
-                if (counterPlacements[row][col] == counter &&
-                        counterPlacements[row-1][col] == counter) {
-                    score += 50;  // Bonus for vertical pairs
-                }
-            }
-        }
-        return score;
-    }
-
-    // Evaluate triangle setups (three pieces forming a triangle)
-    private int evaluateTriangleSetup(Counter[][] counterPlacements, Counter counter) {
-        int score = 0;
-        for (int row = counterPlacements.length - 1; row > 1; row--) {
-            for (int col = 1; col < counterPlacements[0].length - 1; col++) {
-                if (counterPlacements[row][col] == counter) {
-                    // Check for triangle pattern
-                    if ((counterPlacements[row-1][col-1] == counter &&
-                            counterPlacements[row-1][col+1] == counter) ||
-                            (counterPlacements[row-1][col] == counter &&
-                                    counterPlacements[row-2][col] == counter)) {
-                        score += 150;  // Bonus for triangle formation
-                    }
-                }
-            }
-        }
-        return score;
     }
 
     // Evaluate positions that could lead to double threats
-    private int evaluateDoubleThreatSetup(Counter[][] counterPlacements, Counter counter) {
-        int score = 0;
-        for (int row = 0; row < counterPlacements.length - 1; row++) {
-            for (int col = 0; col < counterPlacements[0].length - 3; col++) {
-                if (isDoubleThreatPattern(counterPlacements, row, col, counter)) {
-                    score += 200;  // Significant bonus for potential double threats
-                }
-            }
-        }
-        return score;
-    }
-
-    private boolean isDoubleThreatPattern(Counter[][] board, int row, int col, Counter counter) {
+    private int evaluateDoubleThreatPattern(Counter[][] counterPlacements, int row, int col, Counter counter) {
         // Check for patterns that could lead to double threats
         // Example: X_X_ pattern with support underneath
-        if (col + 3 >= board[0].length) return false;
-
-        boolean hasSupport = (row == board.length - 1) ||
-                (board[row + 1][col] != null &&
-                        board[row + 1][col + 2] != null);
-
-        return hasSupport &&
-                board[row][col] == counter &&
-                board[row][col + 1] == null &&
-                board[row][col + 2] == counter &&
-                board[row][col + 3] == null;
+        // Example: _X_X
+        int count = 0;
+        if (col + 3 < counterPlacements.length && row > 0) {
+            if (counterPlacements[col + 1][row - 1] != null &&
+                    counterPlacements[col + 3][row - 1] != null &&
+                    counterPlacements[col][row] == counter &&
+                    counterPlacements[col + 1][row] == null &&
+                    counterPlacements[col + 2][row] == counter &&
+                    counterPlacements[col + 3][row] == null) {
+                count += 1;
+            }
+            if (counterPlacements[col][row - 1] != null &&
+                    counterPlacements[col + 2][row - 1] != null &&
+                    counterPlacements[col][row] == null &&
+                    counterPlacements[col + 1][row] == counter &&
+                    counterPlacements[col + 2][row] == null &&
+                    counterPlacements[col + 3][row] == counter) {
+                count += 1;
+            }
+        }
+        return count;
     }
+
 
     // Evaluate control of bottom row (foundation for building)
     private int evaluateBottomRowControl(Counter[][] counterPlacements, Counter counter) {
         int score = 0;
-        int bottomRow = counterPlacements.length - 1;
+        int bottomRow = 0;
 
         for (int col = 0; col < counterPlacements[0].length; col++) {
             if (counterPlacements[bottomRow][col] == counter) {
                 // More value for central positions
-                int centerDistance = Math.abs(col - counterPlacements[0].length/2);
+                int centerDistance = Math.abs(col - counterPlacements[0].length / 2);
                 score += 75 - (10 * centerDistance);  // More points for center
             }
         }
